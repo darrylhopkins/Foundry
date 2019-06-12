@@ -49,8 +49,8 @@ namespace Foundry
 
         public User GetUserById(string UserId)
         {
-            RestRequest request = new RestRequest("...{id}", Method.GET);
-            request.AddParameter("id", "ID GOES HERE", ParameterType.UrlSegment);
+            RestRequest request = new RestRequest("admin/users/{id}", Method.GET);
+            request.AddParameter("id", UserId, ParameterType.UrlSegment);
 
             var queryResult = _client.Execute(request);
             Console.WriteLine(queryResult.Content);
