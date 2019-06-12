@@ -43,7 +43,25 @@ namespace Foundry
             RestRequest request = new RestRequest("admin/registration_sets", Method.POST);
             request.AddJsonBody(MyUser);
             _client.Execute(request);
+            // return something to track status
 
         }
+
+        public User GetUserById(string UserId)
+        {
+            RestRequest request = new RestRequest("...{id}", Method.GET);
+            request.AddParameter("id", "ID GOES HERE", ParameterType.UrlSegment);
+
+            var queryResult = _client.Execute(request);
+            Console.WriteLine(queryResult.Content);
+
+            User myUser = new User();
+            return myUser;
+        }
+
+        /*public List<User> GetUsers()
+        {
+
+        }*/
     }
 }
