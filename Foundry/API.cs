@@ -11,7 +11,7 @@ namespace Foundry
 {
     public class API
     {
-        const string BaseUrl = "https://api.fifoundry-staging.net/v1";
+        const string BaseUrl = "https://api.fifoundry-staging.net/v1/";
 
         readonly IRestClient _client;
 
@@ -40,9 +40,9 @@ namespace Foundry
 
         public void AddUser(User MyUser)
         {
-            RestRequest request = new RestRequest("/admin/registration_sets", Method.POST);
-
+            RestRequest request = new RestRequest("admin/registration_sets", Method.POST);
             request.AddJsonBody(MyUser);
+            _client.Execute(request);
 
         }
     }
