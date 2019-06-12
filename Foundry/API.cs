@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json;
+using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Foundry
             _accountSid = accountSid;
         }
 
-        private T Execute<T>(RestRequest request) where T : new() // private or public
+        public T Execute<T>(RestRequest request) where T : new() // might make this private
         {
             request.AddParameter("AccountSid", _accountSid, ParameterType.UrlSegment); // used on every request
             var response = _client.Execute<T>(request);
@@ -39,11 +40,9 @@ namespace Foundry
 
         public void AddUser(User MyUser)
         {
-            RestRequest request = new RestRequest("/admin/registration_sets", Method.POST); // is this right?
-            request.AddParameter("application/json", MyUser.GetJson(), ParameterType.RequestBody);
-            request.RequestFormat = DataFormat.Json;
+            RestRequest request = new RestRequest("/admin/registration_sets", Method.POST);
 
-            var response = _client.Execute(request);
+            request.AddJsonBody(MyUser);
 
         }
     }
