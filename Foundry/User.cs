@@ -47,7 +47,7 @@ namespace Foundry
         /* to indicate if there is another ruleset (admin) */
         public bool IsAdmin { get; set; }
 
-        protected string GetJson()
+        public string GetJson()
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
@@ -56,22 +56,22 @@ namespace Foundry
                 "\"registrations\": [\n" +
                 "{\n" +
                 "\"rule_set\": \"user_rule_set\",\n" +
-                "'first_name': '" + this.FirstName + "',\n" +
-                "'last_name': '" + this.LastName + "',\n" +
-                "'email': '" + this.Email + "',\n" +
-                "'sso_id': '" + this.SingleSignOnId + "',\n" +
-                "'employee_id': '" + this.EmployeeId + "',\n" +
-                "'location_id': '" + this.LocationId + "',\n" +
+                "\"first_name\": \"" + this.FirstName + "\",\n" +
+                "\"last_name\": \"" + this.LastName + "\",\n" +
+                "\"email\": \"" + this.Email + "\",\n" +
+                "\"sso_id\": \"" + this.SingleSignOnId + "\",\n" +
+                "\"employee_id\": \"" + this.EmployeeId + "\",\n" +
+                "\"location_id\": \"" + this.LocationId + "\",\n" +
                 "},\n";
 
             for (var i = 0; i < Types.Count; i++)
             {
                 Json += "{\n" +
-                    "'rule_set': '" + UserType.GetDescription(Types.ElementAt(i).Type) + "',\n" +
-                    "'role': '" + UserType.GetDescription(Types.ElementAt(i).Role) + "',\n" +
-                    "'position': '" + this.Position + "',\n" +
-                    "'first_day_of_work': '" + this.FirstDay +"',\n" +
-                    "'last_day_of_work': '" + this.LastDay + "',\n" +
+                    "\"rule_set\": \"" + UserType.GetDescription(Types.ElementAt(i).Type) + "\",\n" +
+                    "\"role\": \"" + UserType.GetDescription(Types.ElementAt(i).Role) + "\",\n" +
+                    "\"position\": \"" + this.Position + "\",\n" +
+                    "\"first_day_of_work\": \"" + this.FirstDay +"\",\n" +
+                    "\"last_day_of_work\": \"" + this.LastDay + "\",\n" +
                     "}";
 
                 if (i != Types.Count-1)
