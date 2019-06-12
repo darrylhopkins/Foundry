@@ -44,9 +44,6 @@ namespace Foundry
         [DeserializeAs(Name = "last_day_of_work")]
         public DateTime LastDay { get; set; }
 
-        /* to indicate if there is another ruleset (admin) */
-        public bool IsAdmin { get; set; }
-
         public string GetJson()
         {
             string Json = "{\n" +
