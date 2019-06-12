@@ -55,8 +55,9 @@ namespace Foundry
             var queryResult = _client.Execute(request);
             Console.WriteLine(queryResult.Content);
 
-            User myUser = new User();
-            return myUser;
+            User newUser = new User();
+            //newUser.FromJson();
+            return newUser;
         }
 
         /*public List<User> GetUsers()
