@@ -8,50 +8,6 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
-    public enum Types
-    {
-        [Description("he_learner")]
-        HELearner,
-        [Description("he_admin")]
-        HEAdmin,
-        [Description("fac_staff_learner")]
-        FacStaffLearner,
-        [Description("fac_staff_admin")]
-        FacStaffAdmin,
-        [Description("cc_learner")]
-        CCLearner,
-        [Description("cc_admin")]
-        CCAdmin,
-        [Description("next_learner")]
-        AdultFinancialLearner,
-        [Description("at_work_manager")]
-        AdultFinancialManager,
-        [Description("event_volunteer")]
-        EventVolunteer,
-        [Description("event_manager")]
-        EventManager
-    };
-
-    public enum Roles
-    {
-        [Description("undergrad")]
-        Undergraduate,
-        [Description("graduate")]
-        Graduate,
-        [Description("non_traditional")]
-        NonTraditional,
-        [Description("greek")]
-        Greek,
-        [Description("primary")]
-        Primary,
-        [Description("supervisor")]
-        Supervisor,
-        [Description("non_supervisor")]
-        NonSupervisor,
-        [Description("default")]
-        Default
-    };
-
     public class UserType
     {
         public Types Type { get; set; }

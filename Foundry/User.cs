@@ -2,12 +2,56 @@
 using RestSharp.Deserializers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Foundry
 {
+    public enum Type
+    {
+        [Description("he_learner")]
+        HELearner,
+        [Description("he_admin")]
+        HEAdmin,
+        [Description("fac_staff_learner")]
+        FacStaffLearner,
+        [Description("fac_staff_admin")]
+        FacStaffAdmin,
+        [Description("cc_learner")]
+        CCLearner,
+        [Description("cc_admin")]
+        CCAdmin,
+        [Description("next_learner")]
+        AdultFinancialLearner,
+        [Description("at_work_manager")]
+        AdultFinancialManager,
+        [Description("event_volunteer")]
+        EventVolunteer,
+        [Description("event_manager")]
+        EventManager
+    };
+
+    public enum Role
+    {
+        [Description("undergrad")]
+        Undergraduate,
+        [Description("graduate")]
+        Graduate,
+        [Description("non_traditional")]
+        NonTraditional,
+        [Description("greek")]
+        Greek,
+        [Description("primary")]
+        Primary,
+        [Description("supervisor")]
+        Supervisor,
+        [Description("non_supervisor")]
+        NonSupervisor,
+        [Description("default")]
+        Default
+    };
     public class User
     {
         /* what falls under user_rule_set */
@@ -33,7 +77,11 @@ namespace Foundry
         public string LocationId { get; set; }
 
         /* second registration array */
-        public List<UserType> Types { get; set; }
+        public Type UserType { get; set; }
+
+        public Role UserRole { get; set; }
+
+        public bool isAdmin { get; set; }
 
         [DeserializeAs(Name = "position")]
         public string Position { get; set; }
