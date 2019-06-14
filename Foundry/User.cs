@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -81,7 +82,7 @@ namespace Foundry
 
         public Role UserRole { get; set; }
 
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
 
         [DeserializeAs(Name = "position")]
         public string Position { get; set; }
@@ -92,9 +93,21 @@ namespace Foundry
         [DeserializeAs(Name = "last_day_of_work")]
         public DateTime LastDay { get; set; }
 
+        public string GetDescription(Enum value)
+        {
+            return
+                value
+                    .GetType()
+                    .GetMember(value.ToString())
+                    .FirstOrDefault()
+                    ?.GetCustomAttribute<DescriptionAttribute>()
+                    ?.Description
+                ?? value.ToString();
+        }
+
         public string GetJson()
         {
-            string Json = "{\n" +
+            /*string Json = "{\n" +
                 "\"data\": {\n" +
                 "\"type\": \"registration_sets\",\n" +
                 "\"attributes\": {\n" +
@@ -106,29 +119,87 @@ namespace Foundry
                 "\"email\": \"" + this.Email + "\",\n" +
                 "\"sso_id\": \"" + this.SingleSignOnId + "\",\n" +
                 "\"employee_id\": \"" + this.EmployeeId + "\",\n" +
+                "\"student_id\": \"" + this.StudentId + "\",\n" +
                 "\"location_id\": \"" + this.LocationId + "\",\n" +
-                "},\n";
+                "},\n";*/
 
-            for (var i = 0; i < Types.Count; i++)
+            string Json = "{\n" +
+                "\"data\": {\n" +
+                "\"type\": \"registration_sets\",\n" +
+                "\"attributes\": {\n" +
+                "\"registrations\": [\n" +
+                "{\n" +
+                "\"rule_set\": \"user_rule_set\",\n" +
+                "\"first_name\": \"" + this.FirstName + "\",\n" +
+                "\"last_name\": \"" + this.LastName + "\",\n" +
+                "\"email\": \"" + this.Email + "\"";
+
+            if (this.SingleSignOnId != null)
             {
-                Json += "{\n" +
-                    "\"rule_set\": \"" + UserType.GetDescription(Types.ElementAt(i).Type) + "\",\n" +
-                    "\"role\": \"" + UserType.GetDescription(Types.ElementAt(i).Role) + "\",\n" +
-                    "\"position\": \"" + this.Position + "\",\n" +
-                    "\"first_day_of_work\": \"" + this.FirstDay +"\",\n" +
-                    "\"last_day_of_work\": \"" + this.LastDay + "\",\n" +
-                    "}";
-
-                if (i != Types.Count-1)
-                {
-                    Json += ",";
-                }
-                Json += "\n";
+                Json += "\"sso_id\": \"" + this.SingleSignOnId + "\"";
             }
+            if (this.EmployeeId != null)
+            {
+                Json += ",\n\"employee_id\": \"" + this.EmployeeId + "\"";
+            }
+            if (this.StudentId != null)
+            {
+                Json += ",\n\"student_id\": \"" + this.StudentId + "\"";
+            }
+            Json += ",\n\"location_id\": \"" + this.LocationId + "\"" +
+                "\n},\n";
+
+            Json += "{\n" +
+                "\"rule_set\": \"" + this.GetDescription(UserType) + "\",\n" +
+                "\"role\": \"" + this.GetDescription(UserRole) + "\"";
+            if (this.Position != null)
+            {
+                Json += ",\n\"position\": \"" + this.Position + "\"";
+            }
+            if (!this.FirstDay.Equals(DateTime.MinValue))
+            {
+                Json += ",\n\"first_day_of_work\": \"" + this.FirstDay + "\"";
+            }
+            if (!this.LastDay.Equals(DateTime.MinValue))
+            {
+                Json += ",\n\"last_day_of_work\": \"" + this.LastDay + "\"";
+            }
+
+            Json += "\n}";
+
+            if (this.IsAdmin)
+            {
+                Json += ",\n" +
+                    "{\n" +
+                    "\"rule_set\": \"" + this.GetAdmin(UserType) + "\",\n" +
+                    "\"role\": \"primary\"\n" +
+                    "}";
+            }
+
+            Json += "\n";
 
             Json += "]\n}\n}\n}";
 
             return Json;
+        }
+
+        private string GetAdmin(Type type)
+        {
+            switch (type)
+            {
+                case Type.HELearner:
+                    return "he_admin";
+                case Type.FacStaffLearner:
+                    return "fac_staff_admin";
+                case Type.CCLearner:
+                    return "cc_admin";
+                case Type.AdultFinancialLearner:
+                    return "at_work_manager";
+                case Type.EventVolunteer:
+                    return "event_manager";
+                default:
+                    return "";
+            }
         }
     }
 }
