@@ -10,49 +10,6 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
-    public enum Type
-    {
-        [Description("he_learner")]
-        HELearner,
-        [Description("he_admin")]
-        HEAdmin,
-        [Description("fac_staff_learner")]
-        FacStaffLearner,
-        [Description("fac_staff_admin")]
-        FacStaffAdmin,
-        [Description("cc_learner")]
-        CCLearner,
-        [Description("cc_admin")]
-        CCAdmin,
-        [Description("next_learner")]
-        AdultFinancialLearner,
-        [Description("at_work_manager")]
-        AdultFinancialManager,
-        [Description("event_volunteer")]
-        EventVolunteer,
-        [Description("event_manager")]
-        EventManager
-    };
-
-    public enum Role
-    {
-        [Description("undergrad")]
-        Undergraduate,
-        [Description("graduate")]
-        Graduate,
-        [Description("non_traditional")]
-        NonTraditional,
-        [Description("greek")]
-        Greek,
-        [Description("primary")]
-        Primary,
-        [Description("supervisor")]
-        Supervisor,
-        [Description("non_supervisor")]
-        NonSupervisor,
-        [Description("default")]
-        Default
-    };
     public class User
     {
         /* what falls under user_rule_set */
@@ -78,13 +35,7 @@ namespace Foundry
         public string LocationId { get; set; }
 
         /* second registration array */
-        [DeserializeAs(Name = "rule_set")]
-        public Type UserType { get; set; }
-
-        [DeserializeAs(Name = "role")]
-        public Role UserRole { get; set; }
-
-        public bool IsAdmin { get; set; }
+        public List<UserType> UserTypes { get; set; }
 
         [DeserializeAs(Name = "position")]
         public string Position { get; set; }
@@ -95,17 +46,7 @@ namespace Foundry
         [DeserializeAs(Name = "last_day_of_work")]
         public DateTime LastDay { get; set; }
 
-        public string GetDescription(Enum value)
-        {
-            return
-                value
-                    .GetType()
-                    .GetMember(value.ToString())
-                    .FirstOrDefault()
-                    ?.GetCustomAttribute<DescriptionAttribute>()
-                    ?.Description
-                ?? value.ToString();
-        }
+        // In default constructor, initialize UserTypes list
 
         public string GetJson()
         {
@@ -133,33 +74,30 @@ namespace Foundry
                 Json += ",\n\"student_id\": \"" + this.StudentId + "\"";
             }
             Json += ",\n\"location_id\": \"" + this.LocationId + "\"" +
-                "\n},\n";
+                "\n}";
 
-            Json += "{\n" +
-                "\"rule_set\": \"" + this.GetDescription(UserType) + "\",\n" +
-                "\"role\": \"" + this.GetDescription(UserRole) + "\"";
-            if (this.Position != null)
+            for (var i = 0; i < UserTypes.Count; i++)
             {
-                Json += ",\n\"position\": \"" + this.Position + "\"";
-            }
-            if (!this.FirstDay.Equals(DateTime.MinValue))
-            {
-                Json += ",\n\"first_day_of_work\": \"" + this.FirstDay + "\"";
-            }
-            if (!this.LastDay.Equals(DateTime.MinValue))
-            {
-                Json += ",\n\"last_day_of_work\": \"" + this.LastDay + "\"";
-            }
+                Json += ",\n{\n" +
+                "\"rule_set\": \"" + Foundry.UserType.GetDescription(this.UserTypes.ElementAt(i).Type) + "\",\n" +
+                "\"role\": \"" + Foundry.UserType.GetDescription(this.UserTypes.ElementAt(i).Role) + "\"";
+                if (i == 0)
+                {
+                    if (this.Position != null)
+                    {
+                        Json += ",\n\"position\": \"" + this.Position + "\"";
+                    }
+                    if (!this.FirstDay.Equals(DateTime.MinValue))
+                    {
+                        Json += ",\n\"first_day_of_work\": \"" + this.FirstDay + "\"";
+                    }
+                    if (!this.LastDay.Equals(DateTime.MinValue))
+                    {
+                        Json += ",\n\"last_day_of_work\": \"" + this.LastDay + "\"";
+                    }
+                }
 
-            Json += "\n}";
-
-            if (this.IsAdmin)
-            {
-                Json += ",\n" +
-                    "{\n" +
-                    "\"rule_set\": \"" + this.GetAdmin(UserType) + "\",\n" +
-                    "\"role\": \"primary\"\n" +
-                    "}";
+                Json += "\n}";
             }
 
             Json += "\n";
@@ -167,25 +105,6 @@ namespace Foundry
             Json += "]\n}\n}\n}";
 
             return Json;
-        }
-
-        private string GetAdmin(Type type)
-        {
-            switch (type)
-            {
-                case Type.HELearner:
-                    return "he_admin";
-                case Type.FacStaffLearner:
-                    return "fac_staff_admin";
-                case Type.CCLearner:
-                    return "cc_admin";
-                case Type.AdultFinancialLearner:
-                    return "at_work_manager";
-                case Type.EventVolunteer:
-                    return "event_manager";
-                default:
-                    return "";
-            }
         }
     }
 }
