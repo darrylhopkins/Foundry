@@ -78,8 +78,10 @@ namespace Foundry
         public string LocationId { get; set; }
 
         /* second registration array */
+        [DeserializeAs(Name = "rule_set")]
         public Type UserType { get; set; }
 
+        [DeserializeAs(Name = "role")]
         public Role UserRole { get; set; }
 
         public bool IsAdmin { get; set; }
