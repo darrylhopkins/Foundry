@@ -107,22 +107,6 @@ namespace Foundry
 
         public string GetJson()
         {
-            /*string Json = "{\n" +
-                "\"data\": {\n" +
-                "\"type\": \"registration_sets\",\n" +
-                "\"attributes\": {\n" +
-                "\"registrations\": [\n" +
-                "{\n" +
-                "\"rule_set\": \"user_rule_set\",\n" +
-                "\"first_name\": \"" + this.FirstName + "\",\n" +
-                "\"last_name\": \"" + this.LastName + "\",\n" +
-                "\"email\": \"" + this.Email + "\",\n" +
-                "\"sso_id\": \"" + this.SingleSignOnId + "\",\n" +
-                "\"employee_id\": \"" + this.EmployeeId + "\",\n" +
-                "\"student_id\": \"" + this.StudentId + "\",\n" +
-                "\"location_id\": \"" + this.LocationId + "\",\n" +
-                "},\n";*/
-
             string Json = "{\n" +
                 "\"data\": {\n" +
                 "\"type\": \"registration_sets\",\n" +
