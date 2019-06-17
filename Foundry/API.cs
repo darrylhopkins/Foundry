@@ -59,13 +59,23 @@ namespace Foundry
         }
 
         public void AddUser(User MyUser)
+        public string AddUser(User MyUser)
         {
             RestRequest request = new RestRequest("{ver}/admin/registration_sets", Method.POST);
             request.AddParameter("ver", _ver, ParameterType.UrlSegment);
             request.AddJsonBody(MyUser);
             _client.Execute(request);
             // return something to track status
+            RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", MyUser.GetJson(), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            var response = _client.Execute(request);
+
+            return response.Content;
         }
 
         public User GetUserById(string UserId)
