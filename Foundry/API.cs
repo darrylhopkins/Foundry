@@ -11,7 +11,8 @@ namespace Foundry
 {
     public class API
     {
-        const string BaseUrl = "https://api.fifoundry-staging.net/v1/";
+        const string BaseUrl = "https://api.fifoundry-staging.net/";
+        const string _ver = "v1";
 
         readonly IRestClient _client;
         AccessToken _token;
@@ -59,7 +60,8 @@ namespace Foundry
 
         public void AddUser(User MyUser)
         {
-            RestRequest request = new RestRequest("admin/registration_sets", Method.POST);
+            RestRequest request = new RestRequest("{ver}/admin/registration_sets", Method.POST);
+            request.AddParameter("ver", _ver, ParameterType.UrlSegment);
             request.AddJsonBody(MyUser);
             _client.Execute(request);
             // return something to track status
@@ -68,7 +70,8 @@ namespace Foundry
 
         public User GetUserById(string UserId)
         {
-            RestRequest request = new RestRequest("admin/users/{id}", Method.GET);
+            RestRequest request = new RestRequest("{ver}/admin/users/{id}", Method.GET);
+            request.AddParameter("ver", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
 
             var queryResult = _client.Execute(request);
