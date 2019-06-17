@@ -21,10 +21,10 @@ namespace Foundry
 
         public API(string accountSid, string secretKey)
         {
-            _client = new RestClient(BaseUrl+"/oauth/token");
+            _client = new RestClient(BaseUrl);
             _client.Authenticator = new HttpBasicAuthenticator(accountSid, secretKey);
 
-            RestRequest request = new RestRequest(Method.POST);
+            RestRequest request = new RestRequest("/oauth/token", Method.POST);
 
             request.Parameters.Clear();
             request.AddParameter("grant_type", "client_credentials");
