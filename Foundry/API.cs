@@ -14,13 +14,32 @@ namespace Foundry
         const string BaseUrl = "https://api.fifoundry-staging.net/v1/";
 
         readonly IRestClient _client;
+        AccessToken _token;
 
         string _accountSid;
 
         public API(string accountSid, string secretKey)
         {
-            _client = new RestClient(BaseUrl);
+            _client = new RestClient(BaseUrl+"/oauth/token");
             _client.Authenticator = new HttpBasicAuthenticator(accountSid, secretKey);
+
+            RestRequest request = new RestRequest(Method.POST);
+
+            request.Parameters.Clear();
+            request.AddParameter("grant_type", "client_credentials");
+            request.AddParameter("username", accountSid);
+            request.AddParameter("password", secretKey);
+
+            //make the API request and get the response
+            IRestResponse response = _client.Execute<AccessToken>(request);
+
+            Console.WriteLine(response.Content);
+            Console.WriteLine("Waiting here...");
+            Console.ReadLine();
+
+            //return an AccessToken
+            _token = JsonConvert.DeserializeObject<AccessToken>(response.Content);
+
             _accountSid = accountSid;
         }
 
