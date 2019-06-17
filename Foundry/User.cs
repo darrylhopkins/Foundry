@@ -1,5 +1,5 @@
-﻿using RestSharp;
-using RestSharp.Deserializers;
+﻿using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,37 +13,38 @@ namespace Foundry
     public class User
     {
         /* what falls under user_rule_set */
-        [DeserializeAs(Name = "first_name")]
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
 
-        [DeserializeAs(Name = "last_name")]
+        [JsonProperty("last_name")]
         public string LastName { get; set; }
 
-        [DeserializeAs(Name = "email")]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [DeserializeAs(Name = "sso_id")]
+        [JsonProperty("sso_id")]
         public string SingleSignOnId { get; set; }
 
-        [DeserializeAs(Name = "employee_id")]
+        [JsonProperty("employee_id")]
         public string EmployeeId { get; set; }
 
-        [DeserializeAs(Name = "student_id")]
+        [JsonProperty("student_id")]
         public string StudentId { get; set; }
 
-        [DeserializeAs(Name = "location_id")]
+        [JsonProperty("location_id")]
         public string LocationId { get; set; }
 
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
 
-        [DeserializeAs(Name = "position")]
+        [JsonProperty("position")]
         public string Position { get; set; }
 
-        [DeserializeAs(Name = "first_day_of_work")]
+        // Might need to deserialize as string and then put into datetime
+        [JsonProperty("first_day_of_work")]
         public DateTime FirstDay { get; set; }
 
-        [DeserializeAs(Name = "last_day_of_work")]
+        [JsonProperty("last_day_of_work")]
         public DateTime LastDay { get; set; }
 
         // In default constructor, initialize UserTypes list
