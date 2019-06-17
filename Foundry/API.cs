@@ -15,7 +15,7 @@ namespace Foundry
         const string _ver = "v1";
 
         readonly IRestClient _client;
-        AccessToken _token;
+        readonly AccessToken _token;
 
         string _accountSid;
 
