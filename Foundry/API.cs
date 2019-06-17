@@ -82,10 +82,15 @@ namespace Foundry
         {
             RestRequest request = new RestRequest("{ver}/admin/users/{id}", Method.GET);
             request.AddParameter("ver", _ver, ParameterType.UrlSegment);
+            RestRequest request = new RestRequest("{version}/admin/users/{id}", Method.GET);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            var queryResult = _client.Execute(request);
-            Console.WriteLine(queryResult.Content);
+            IRestResponse response = _client.Execute<User>(request);
+            User RetrievedUser = JsonConvert.DeserializeObject<User>(response.Content);
+
 
             User newUser = new User();
             //newUser.FromJson();
