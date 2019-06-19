@@ -33,13 +33,13 @@ namespace Foundry
 
     internal partial class ExternalAttributes
     {
-        [JsonProperty("position")]
+        [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
         public string Position { get; set; }
 
-        [JsonProperty("first_day_of_work")]
+        [JsonProperty("first_day_of_work", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime FirstDay { get; set; }
 
-        [JsonProperty("last_day_of_work")]
+        [JsonProperty("last_day_of_work", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime LastDay { get; set; }
     }
 
