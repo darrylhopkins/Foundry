@@ -74,21 +74,22 @@ namespace Foundry
 
         public User GetUserById(string UserId)
         {
-            RestRequest request = new RestRequest("{ver}/admin/users/{id}", Method.GET);
-            request.AddParameter("ver", _ver, ParameterType.UrlSegment);
             RestRequest request = new RestRequest("{version}/admin/users/{id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute<User>(request);
-            User RetrievedUser = JsonConvert.DeserializeObject<User>(response.Content);
+            IRestResponse response = _client.Execute<UserData>(request);
+            UserData userData = JsonConvert.DeserializeObject<UserData>(response.Content);
 
+            Console.WriteLine(response.Content);
+            Console.ReadLine();
 
-            User newUser = new User();
-            //newUser.FromJson();
-            return newUser;
+            User retrievedUser = userData.Data.UserAttributes;
+            retrievedUser.ConfigureUserData();
+
+            return retrievedUser;
         }
 
         /*public List<User> GetUsers()
