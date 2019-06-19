@@ -34,12 +34,17 @@ namespace Foundry
             //make the API request and get the response
             IRestResponse response = _client.Execute<AccessToken>(request);
 
-            Console.WriteLine(response.Content);
-            Console.WriteLine("Waiting here...");
-            Console.ReadLine();
-
             //return an AccessToken
             _token = JsonConvert.DeserializeObject<AccessToken>(response.Content);
+            if (_token.token_type == null)
+            {
+                Console.WriteLine(response.Content);
+                Console.ReadLine();
+                Environment.Exit(1);
+            } else
+            {
+                Console.WriteLine("Authorization Succeed. You are now accessing EVERFI Foundry.");
+            }
 
             _accountSid = accountSid;
         }

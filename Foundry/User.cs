@@ -16,6 +16,12 @@ namespace Foundry
         public Data Data { get; set; }
     }
 
+    internal partial class UserDataList
+    {
+        [JsonProperty("data")]
+        public List<Data> Data { get; set; }
+    }
+
     internal partial class Data
     {
         [JsonProperty("id")]
