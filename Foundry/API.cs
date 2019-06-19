@@ -102,7 +102,7 @@ namespace Foundry
 
         }*/
 
-        public string GetUsers()
+        public List<User> GetUsers()
         {
             RestRequest request = new RestRequest("/{version}/admin/users/", Method.GET);
             request.Parameters.Clear();
@@ -110,8 +110,18 @@ namespace Foundry
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            var response = _client.Execute(request);
-            return response.Content;
+            IRestResponse response = _client.Execute(request);
+            List<UserData> data = JsonConvert.DeserializeObject<List<UserData>>(response.Content);
+            List<User> users = new List<User>();
+
+            foreach (UserData userData in data)
+            {
+                User newUser = userData.Data.UserAttributes;
+                newUser.ConfigureUserData();
+                users.Add(newUser);
+            }
+
+            return users;
         }
     }
 }
