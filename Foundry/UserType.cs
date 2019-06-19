@@ -61,7 +61,7 @@ namespace Foundry
             this.Role = MyRole;
         }
 
-        public static string GetDescription(Enum value)
+        internal static string GetDescription(Enum value)
         {
             return
                 value
