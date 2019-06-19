@@ -72,5 +72,56 @@ namespace Foundry
                     ?.Description
                 ?? value.ToString();
         }
+
+        internal static Types StringToType(string value)
+        {
+            switch (value)
+            {
+                case "Higher Education Student":
+                    return Types.HELearner;
+                case "High Education Training Admin":
+                    return Types.HEAdmin;
+                case "Faculty/Staff Admin":
+                    return Types.FacStaffAdmin;
+                case "Faculty/Staff Learner":
+                    return Types.FacStaffLearner;
+                case "Employee Learner":
+                    return Types.CCLearner;
+                case "Employee Training Admin":
+                    return Types.CCAdmin;
+                case "Events Admin":
+                    return Types.EventManager;
+                case "Events Volunteer":
+                    return Types.EventVolunteer;
+                // TODO: Add Financial Learner and Manager
+                default:
+                    return Types.HELearner; // TODO: return something for default
+            }
+        }
+
+        internal static Roles StringToRole(string value)
+        {
+            switch (value)
+            {
+                case "Undergrad":
+                    return Roles.Undergraduate;
+                case "Primary":
+                    return Roles.Primary;
+                case "Graduate":
+                    return Roles.Graduate;
+                case "Greek":
+                    return Roles.Greek;
+                case "Non-supervisor": // Check to make sure the s is not capitalized
+                    return Roles.NonSupervisor;
+                case "Non-Traditional":
+                    return Roles.NonTraditional;
+                case "Supervisor":
+                    return Roles.Supervisor;
+                case "Default":
+                    return Roles.Default;
+                default:
+                    return Roles.Default; // TODO: return something for default
+            }
+        }
     }
 }

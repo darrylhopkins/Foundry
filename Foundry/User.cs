@@ -139,5 +139,17 @@ namespace Foundry
 
             return Json;
         }
+
+        internal void ConfigureUserData()
+        {
+            this.Position = this.ExternalAttributes.Position;
+            this.FirstDay = this.ExternalAttributes.FirstDay;
+            this.LastDay = this.ExternalAttributes.LastDay;
+            
+            foreach (var type in this.TypesDictionary.Keys)
+            {
+                this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
+            }
+        }
     }
 }
