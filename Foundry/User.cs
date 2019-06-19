@@ -10,16 +10,51 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
+    internal partial class UserData
+    {
+        [JsonProperty("data")]
+        public Data Data { get; set; }
+    }
+
+    internal partial class Data
+    {
+        [JsonProperty("id")]
+        public string UserId { get; set; }
+
+        [JsonProperty("attributes")]
+        public User UserAttributes { get; set; }
+    }
+
+    internal partial class ExternalAttributes
+    {
+        [JsonProperty("position")]
+        public string Position { get; set; }
+
+        [JsonProperty("first_day_of_work")]
+        public DateTime FirstDay { get; set; }
+
+        [JsonProperty("last_day_of_work")]
+        public DateTime LastDay { get; set; }
+    }
+
     public class User
     {
         /* what falls under user_rule_set */
         [JsonProperty("first_name")]
+        [JsonProperty("external_attributes")]
+        private ExternalAttributes ExternalAttributes { get; set; }
+
+        [JsonProperty("user_types")]
+        private Dictionary<string, string> TypesDictionary { get; set; }
+
+        /* user_rule_set */
+        [JsonProperty("first_name", Required = Required.Always)]
         public string FirstName { get; set; }
 
-        [JsonProperty("last_name")]
+        [JsonProperty("last_name", Required = Required.Always)]
         public string LastName { get; set; }
 
-        [JsonProperty("email")]
+        [JsonProperty("email", Required = Required.Always)]
         public string Email { get; set; }
 
         [JsonProperty("sso_id")]
@@ -37,17 +72,12 @@ namespace Foundry
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
 
-        [JsonProperty("position")]
         public string Position { get; set; }
 
-        // Might need to deserialize as string and then put into datetime
-        [JsonProperty("first_day_of_work")]
         public DateTime FirstDay { get; set; }
 
-        [JsonProperty("last_day_of_work")]
         public DateTime LastDay { get; set; }
 
-        // In default constructor, initialize UserTypes list
 
         public string GetJson()
         {
