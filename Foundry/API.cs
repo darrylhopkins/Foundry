@@ -111,12 +111,12 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            List<UserData> data = JsonConvert.DeserializeObject<List<UserData>>(response.Content);
+            UserDataList userData = JsonConvert.DeserializeObject<UserDataList>(response.Content);
             List<User> users = new List<User>();
 
-            foreach (UserData userData in data)
+            foreach (Data data in userData.Data)
             {
-                User newUser = userData.Data.UserAttributes;
+                User newUser = data.UserAttributes;
                 newUser.ConfigureUserData();
                 users.Add(newUser);
             }
