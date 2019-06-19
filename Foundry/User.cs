@@ -39,8 +39,6 @@ namespace Foundry
 
     public class User
     {
-        /* what falls under user_rule_set */
-        [JsonProperty("first_name")]
         [JsonProperty("external_attributes")]
         private ExternalAttributes ExternalAttributes { get; set; }
 
