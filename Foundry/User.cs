@@ -78,6 +78,10 @@ namespace Foundry
 
         public DateTime LastDay { get; set; }
 
+        public User()
+        {
+            this.UserTypes = new List<UserType>();
+        }
 
         public string GetJson()
         {
