@@ -2,7 +2,7 @@
 C# SDK for the [EVERFI](https://www.everfi.com) Foundry API
 
 ## General Info
-The Foundry API allows EVERFI partners to manage their organization by adding users, tracking progress, and other features. This C# SDK makes it easy for .NET developers to use the Foundry API.
+The Foundry API allows EVERFI partners to manage their organization by adding users, tracking progress, and other features. This C# SDK makes it easy for .NET developers to use the Foundry API. 
 
 ## Setup
 To build the solution, you need a .NET developer environment.
@@ -43,3 +43,4 @@ We have defined a UserType as it's own class, holding a user's role and type, in
 ```c#
 user.UserTypes.Add(new UserType(Types.FacStaffLearner, Roles.NonSupervisor));
 ```
+These are other attributes you can add to a user: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
