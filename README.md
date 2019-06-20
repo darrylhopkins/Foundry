@@ -43,4 +43,17 @@ We have defined a UserType as it's own class, holding a user's role and type, in
 ```c#
 user.UserTypes.Add(new UserType(Types.FacStaffLearner, Roles.NonSupervisor));
 ```
-These are other attributes you can add to a user: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
+There are other attributes you can add to a user: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
+### Adding a user
+```c#
+foundry.AddUser(user);
+```
+### Getting a user by id
+```c#
+string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
+User retrievedUser = foundry.GetUserById(UserId);
+```
+### Getting all users
+```c#
+List<User> allUsers = foundry.GetUsers();
+```
