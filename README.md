@@ -19,3 +19,27 @@ Time Elapsed 00:00:02.43
 The associated .dll file will be located in `/Foundry/bin/Debug`. When creating a new project, include the .dll file by adding a reference.
 
 ## Usage
+TODO: Obtaining id and secret
+### Creating a client
+Once you have obtained your client id and secret, you can simply create a new instance of the API. The OAuth is taken care of in the backend!
+```c#
+string client_id = "ydWpq0jt4k8tsgAovEUQf8c4FOYHVyr1uMkkZHaMTp4";
+string client_secret = "7RkwoL2IAMcOAgeMdItlBMg7dch7ZdQ7rzyaXRSAwm8";
+
+API foundry = new API(client_id, client_secret);
+```
+You can now interact with API with the all of it's functionalities.
+### Creating a new user
+There are four required components of any user: First Name, Last Name, Email, and at least one UserType.
+```c#
+User user = new User
+{
+    FirstName = "First",
+    LastName = "Last",
+    Email = "flast@everfi.com"
+};
+```
+We have defined a UserType as it's own class, holding a user's role and type, in order to make it easier to interact with them throughout the API. There are 10 different user types and varying roles according to the type. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
+```c#
+user.UserTypes.Add(new UserType(Types.FacStaffLearner, Roles.NonSupervisor));
+```
