@@ -19,6 +19,7 @@ namespace Foundry
 
         string _accountSid;
 
+        // TODO: Add try catch to make sure id and key are valid
         public API(string accountSid, string secretKey)
         {
             _client = new RestClient(BaseUrl);
@@ -65,6 +66,8 @@ namespace Foundry
 
         public string AddUser(User MyUser)
         {
+            Console.WriteLine("Adding User...");
+
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
             request.Parameters.Clear();
@@ -79,6 +82,8 @@ namespace Foundry
 
         public User GetUserById(string UserId)
         {
+            Console.WriteLine("Getting User " + UserId + "...");
+
             RestRequest request = new RestRequest("{version}/admin/users/{id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
@@ -104,6 +109,8 @@ namespace Foundry
 
         public List<User> GetUsers()
         {
+            Console.WriteLine("Getting all users...");
+
             RestRequest request = new RestRequest("/{version}/admin/users/", Method.GET);
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
