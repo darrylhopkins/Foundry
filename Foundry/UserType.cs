@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
+    // TODO: only certain roles available for certain types (Ex. Admin = Primary, FacStaffLearner = Supervisor or Nonsupervisor
     public enum Types
     {
         [Description("he_learner")]
