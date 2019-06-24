@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
-    internal partial class UserData
+    internal class UserData
     {
         [JsonProperty("data")]
         public Data Data { get; set; }
     }
 
-    internal partial class UserDataList
+    internal class UserDataList
     {
         [JsonProperty("data")]
         public List<Data> Data { get; set; }
     }
 
-    internal partial class Data
+    internal class Data
     {
         [JsonProperty("id")]
         public string UserId { get; set; }
@@ -31,7 +31,7 @@ namespace Foundry
         public User UserAttributes { get; set; }
     }
 
-    internal partial class ExternalAttributes
+    internal class ExternalAttributes
     {
         [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
         public string Position { get; set; }
