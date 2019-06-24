@@ -43,7 +43,8 @@ namespace Foundry
                 Console.WriteLine(response.Content);
                 Console.ReadLine();
                 Environment.Exit(1);
-            } else
+            }
+            else
             {
                 Console.WriteLine("Authorization Succeed. You are now accessing EVERFI Foundry.");
             }
@@ -124,9 +125,6 @@ namespace Foundry
 
             IRestResponse response = _client.Execute<UserData>(request);
             UserData userData = JsonConvert.DeserializeObject<UserData>(response.Content);
-
-            Console.WriteLine(response.Content);
-            Console.ReadLine();
 
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.UserId = userData.Data.UserId;
