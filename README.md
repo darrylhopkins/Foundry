@@ -48,7 +48,7 @@ There are other attributes you can add to a user: SSO Id, Student Id, Employee I
 ```c#
 user = foundry.AddUser(user);
 ```
-You need to assign your original user to the AddUser function so that the user is updated with the new UserId (which won't exist until you add it to Foundry).
+You need to assign your original user to the AddUser function so that the user is updated with the new UserId, which won't exist until you add it to Foundry. You cannot add a UserId to a user yourself.
 ### Getting a user by id
 ```c#
 string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
