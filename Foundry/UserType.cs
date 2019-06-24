@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace Foundry
 {
     // TODO: only certain roles available for certain types (Ex. Admin = Primary, FacStaffLearner = Supervisor or Nonsupervisor
-    public enum Types
+    internal enum Types
     {
         [Description("he_learner")]
-        HELearner,
+        HELearner = 1,
         [Description("he_admin")]
         HEAdmin,
         [Description("fac_staff_learner")]
@@ -30,12 +30,12 @@ namespace Foundry
         [Description("event_volunteer")]
         EventVolunteer,
         [Description("event_manager")]
-        EventManager
+        EventManager = 0
     };
-    public enum Roles
+    internal enum Roles
     {
         [Description("undergrad")]
-        Undergraduate,
+        Undergraduate = 1,
         [Description("graduate")]
         Graduate,
         [Description("non_traditional")]
@@ -51,15 +51,58 @@ namespace Foundry
         [Description("default")]
         Default
     };
+    public enum UserRole
+    {
+        [Description("Undergraduate Learner")]
+        UndergraduateHE = 11,
+        [Description("Graduate Learner")]
+        GraduateHE = 21,
+        [Description("Non-Traditional Learner")]
+        NonTraditionalHE = 31,
+        [Description("Greek Learner")]
+        GreekHE = 41,
+        [Description("Primary Admin")]
+        HEAdmin = 52,
+        [Description("Faculty/Staff Supervisor")]
+        FacStaffSupervisor = 63,
+        [Description("Faculty/Staff Nonsupervisor")]
+        FacStaffNonSupervisor = 73,
+        [Description("Faculty/Staff Admin")]
+        FacStaffAdmin = 54,
+        [Description("Employee Supervisor")]
+        CodeConductSupervisor = 65,
+        [Description("Employee Nonsupervisor")]
+        CodeConductNonSupervisor = 75,
+        [Description("Employee Admin")]
+        CodeConductAdmin = 55,
+        [Description("Financial Learner")]
+        AdultFinancialLearner = 87,
+        [Description("Financial Admin")]
+        AdultFinancialAdmin = 58,
+        [Description("Events Volunteer")]
+        EventVolunteer = 89,
+        [Description("Events Admin")]
+        EventManager = 50
+    }
+
     public class UserType
     {
-        public Types Type { get; set; }
-        public Roles Role { get; set; }
+        internal Types Type { get; set; }
+        internal Roles Role { get; set; }
+        public UserRole UserRole { get; set; }
 
-        public UserType(Types MyType, Roles MyRole)
+        internal UserType(Types MyType, Roles MyRole)
         {
             this.Type = MyType;
             this.Role = MyRole;
+            this.UserRole = (UserRole)int.Parse(((int)MyRole).ToString() + ((int)MyType).ToString());
+        }
+
+        public UserType(UserRole MyRole)
+        {
+            this.UserRole = MyRole;
+            this.Type = (Types)((int)MyRole % 10);
+            this.Role = (Roles)((int)MyRole / 10);
         }
 
         internal static string GetDescription(Enum value)
