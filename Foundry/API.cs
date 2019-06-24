@@ -107,6 +107,13 @@ namespace Foundry
 
         public string UpdateUser(User MyUser) // TODO: Add verification of update
         {
+            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
+            {
+                Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+
             RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
 
             request.Parameters.Clear();
