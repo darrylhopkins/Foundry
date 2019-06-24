@@ -68,6 +68,13 @@ namespace Foundry
 
         public User AddUser(User MyUser)
         {
+            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null)
+            {
+                Console.WriteLine("Illegal User: Missing First Name or Last Name or Email");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+
             Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
@@ -98,7 +105,7 @@ namespace Foundry
             return user;
         }
 
-        public string UpdateUser(User MyUser)
+        public string UpdateUser(User MyUser) // TODO: Add verification of update
         {
             RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
 
