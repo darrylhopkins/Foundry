@@ -46,8 +46,9 @@ user.UserTypes.Add(new UserType(Types.FacStaffLearner, Roles.NonSupervisor));
 There are other attributes you can add to a user: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
 ### Adding a user
 ```c#
-foundry.AddUser(user);
+user = foundry.AddUser(user);
 ```
+You need to assign your original user to the AddUser function so that the user is updated with the new UserId (which won't exist until you add it to Foundry).
 ### Getting a user by id
 ```c#
 string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
