@@ -102,11 +102,6 @@ namespace Foundry
             return retrievedUser;
         }
 
-        /*public List<User> GetUsers()
-        {
-
-        }*/
-
         public List<User> GetUsers()
         {
             Console.WriteLine("Getting all users...");
