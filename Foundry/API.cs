@@ -80,6 +80,21 @@ namespace Foundry
             return response.Content;
         }
 
+        public string UpdateUser(User MyUser)
+        {
+            RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
+
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", MyUser.UserId, ParameterType.UrlSegment);
+            request.AddParameter("application/json", MyUser.GetJson(), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            return response.Content;
+        }
+
         public User GetUserById(string UserId)
         {
             Console.WriteLine("Getting User " + UserId + "...");
