@@ -68,9 +68,9 @@ namespace Foundry
 
         public User AddUser(User MyUser)
         {
-            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null)
+            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
-                Console.WriteLine("Illegal User: Missing First Name or Last Name or Email");
+                Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
                 Console.ReadLine();
                 Environment.Exit(1);
             }
