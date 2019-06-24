@@ -4,6 +4,7 @@ using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,7 +65,7 @@ namespace Foundry
             return response.Data;
         }
 
-        public string AddUser(User MyUser)
+        public User AddUser(User MyUser)
         {
             Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");
 
@@ -75,9 +76,25 @@ namespace Foundry
             request.AddParameter("application/json", MyUser.GetJson(), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute(request);
+            IRestResponse response = _client.Execute<User>(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            return response.Content;
+            if (numericCode == 422)
+            {
+                Console.WriteLine(response.Content);
+                Console.ReadLine();
+                Environment.Exit(422);
+            }
+
+            UserData userData = JsonConvert.DeserializeObject<UserData>(response.Content);
+            Console.WriteLine("User successfully added.");
+
+            User user = userData.Data.UserAttributes;
+            user.UserId = userData.Data.UserId;
+            user.ConfigureUserData();
+
+            return user;
         }
 
         public string UpdateUser(User MyUser)
