@@ -97,6 +97,7 @@ namespace Foundry
             Console.ReadLine();
 
             User retrievedUser = userData.Data.UserAttributes;
+            retrievedUser.UserId = userData.Data.UserId;
             retrievedUser.ConfigureUserData();
 
             return retrievedUser;

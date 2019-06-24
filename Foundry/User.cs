@@ -82,6 +82,8 @@ namespace Foundry
 
         public DateTime LastDay { get; set; }
 
+        public string UserId { get; set; }
+
         public User()
         {
             this.UserTypes = new List<UserType>();
