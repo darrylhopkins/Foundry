@@ -66,7 +66,7 @@ namespace Foundry
 
         public string AddUser(User MyUser)
         {
-            Console.WriteLine("Adding User...");
+            Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
@@ -114,6 +114,8 @@ namespace Foundry
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.UserId = userData.Data.UserId;
             retrievedUser.ConfigureUserData();
+
+            Console.WriteLine("User Retrieved: " + retrievedUser.FirstName + " " + retrievedUser.LastName + "...");
 
             return retrievedUser;
         }
