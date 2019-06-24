@@ -39,11 +39,12 @@ User user = new User
     Email = "flast@everfi.com"
 };
 ```
-We have defined a UserType as it's own class, holding a user's role and type, in order to make it easier to interact with them throughout the API. There are 10 different user types and varying roles according to the type. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
+We have defined a UserType as it's own class, holding a user's UserRole, in order to make it easier to interact with them throughout the API. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
 ```c#
-user.UserTypes.Add(new UserType(Types.FacStaffLearner, Roles.NonSupervisor));
+user.UserTypes.Add(new UserType(UserRole.FacStaffNonSupervisor));
+// All possible UserRoles: UndergraduateHE, GraduateHE, NonTraditionalHE, GreekHE, HEAdmin, FacStaffSupervisor, FacStaffNonSupervisor, FacStaffAdmin, CodeConductSupervisor, CodeConductNonSupervisor, CodeConductAdmin, AdultFinancialLearner, AdultFinancialAdmin, EventVolunteer, and EventManager.
 ```
-There are other attributes you can add to a user: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
+There are other attributes you can add to a user, which are not required: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
 ### Adding a user
 ```c#
 user = foundry.AddUser(user);
