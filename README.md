@@ -50,6 +50,12 @@ There are other attributes you can add to a user, which are not required: SSO Id
 user = foundry.AddUser(user);
 ```
 You need to assign your original user to the AddUser function so that the user is updated with the new UserId, which won't exist until you add it to Foundry. You cannot add a UserId to a user yourself.
+### Updating a user
+```c#
+// Make some change to the user (ex. user.Email = lastfirst@everfi.com)
+foundry.UpdateUser(user);
+```
+When updating a user it's important to note that you cannot get rid of any of the required fields (i.e. there must be a name, email, and at least one UserRole
 ### Getting a user by id
 ```c#
 string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
