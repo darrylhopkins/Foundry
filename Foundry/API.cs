@@ -15,6 +15,8 @@ namespace Foundry
         const string BaseUrl = "https://api.fifoundry-staging.net/";
         const string _ver = "v1";
 
+        const int return_per_page = 100;
+
         readonly IRestClient _client;
         readonly AccessToken _token;
 
@@ -147,7 +149,7 @@ namespace Foundry
             return retrievedUser;
         }
 
-        public List<User> GetUsers()
+        /*public List<User> GetUsers()
         {
             Console.WriteLine("Getting all users...");
 
@@ -169,9 +171,9 @@ namespace Foundry
             }
 
             return users;
-        }
+        }*/
 
-        public List<User> GetUsers(int page, int per_page)
+        public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting all users...");
 
@@ -179,7 +181,7 @@ namespace Foundry
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("page_num", page, ParameterType.UrlSegment);
-            request.AddParameter("num_per", per_page, ParameterType.UrlSegment);
+            request.AddParameter("num_per", return_per_page, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
