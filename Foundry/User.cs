@@ -148,11 +148,13 @@ namespace Foundry
             return Json;
         }
 
-        internal void ConfigureUserData()
+        internal void ConfigureUserData(UserData data)
         {
             this.Position = this.ExternalAttributes.Position;
             this.FirstDay = this.ExternalAttributes.FirstDay;
             this.LastDay = this.ExternalAttributes.LastDay;
+
+            this.UserId = data.UserId;
             
             foreach (var type in this.TypesDictionary.Keys)
             {

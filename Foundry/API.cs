@@ -99,8 +99,7 @@ namespace Foundry
             Console.WriteLine("User successfully added.");
 
             User user = userData.Data.UserAttributes;
-            user.UserId = userData.Data.UserId;
-            user.ConfigureUserData();
+            user.ConfigureUserData(userData.Data);
 
             return user;
         }
@@ -141,8 +140,7 @@ namespace Foundry
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
             User retrievedUser = userData.Data.UserAttributes;
-            retrievedUser.UserId = userData.Data.UserId;
-            retrievedUser.ConfigureUserData();
+            retrievedUser.ConfigureUserData(userData.Data);
 
             Console.WriteLine("User Retrieved: " + retrievedUser.FirstName + " " + retrievedUser.LastName + "...");
 
@@ -166,7 +164,7 @@ namespace Foundry
             foreach (UserData data in userData.Data)
             {
                 User newUser = data.UserAttributes;
-                newUser.ConfigureUserData();
+                newUser.ConfigureUserData(data);
                 users.Add(newUser);
             }
 
