@@ -51,7 +51,7 @@ namespace Foundry
         [Description("default")]
         Default
     };
-    public enum UserRole
+    public enum UserRole // Concatenation of ROLE + TYPE
     {
         [Description("Undergraduate Learner")]
         UndergraduateHE = 11,
