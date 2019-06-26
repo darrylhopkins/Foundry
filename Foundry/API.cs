@@ -170,5 +170,31 @@ namespace Foundry
 
             return users;
         }
+
+        public List<User> GetUsers(int page, int per_page)
+        {
+            Console.WriteLine("Getting all users...");
+
+            RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("page_num", page, ParameterType.UrlSegment);
+            request.AddParameter("num_per", per_page, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+            List<User> users = new List<User>();
+
+            foreach (UserData data in userData.Data)
+            {
+                User newUser = data.UserAttributes;
+                newUser.ConfigureUserData(data);
+                users.Add(newUser);
+            }
+
+            return users;
+        }
     }
 }
