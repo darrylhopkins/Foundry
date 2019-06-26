@@ -95,7 +95,7 @@ namespace Foundry
                 Environment.Exit(422);
             }
 
-            UserData userData = JsonConvert.DeserializeObject<UserData>(response.Content);
+            UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 
             User user = userData.Data.UserAttributes;
@@ -137,8 +137,8 @@ namespace Foundry
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute<UserData>(request);
-            UserData userData = JsonConvert.DeserializeObject<UserData>(response.Content);
+            IRestResponse response = _client.Execute<UserDataJson>(request);
+            UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.UserId = userData.Data.UserId;
@@ -160,10 +160,10 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            UserDataList userData = JsonConvert.DeserializeObject<UserDataList>(response.Content);
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             List<User> users = new List<User>();
 
-            foreach (Data data in userData.Data)
+            foreach (UserData data in userData.Data)
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData();

@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
+    internal class UserDataJson
+    {
+        [JsonProperty("data")]
+        public UserData Data { get; set; }
+    }
+
+    internal class UserDataJsonList
+    {
+        [JsonProperty("data")]
+        public List<UserData> Data { get; set; }
+    }
+
     internal class UserData
-    {
-        [JsonProperty("data")]
-        public Data Data { get; set; }
-    }
-
-    internal class UserDataList
-    {
-        [JsonProperty("data")]
-        public List<Data> Data { get; set; }
-    }
-
-    internal class Data
     {
         [JsonProperty("id")]
         public string UserId { get; set; }
