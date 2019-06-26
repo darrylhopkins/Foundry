@@ -61,7 +61,14 @@ When updating a user it's important to note that you cannot get rid of any of th
 string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
 User retrievedUser = foundry.GetUserById(UserId);
 ```
-### Getting all users
+### Getting users
+The Foundry API is designed to return 100 users per page. Because of this, you can choose to access the users of your organization in different ways.
+To get a specific page of users, you can specific the page number in the method call (Getting the first hundred: page = 1)
 ```c#
-List<User> allUsers = foundry.GetUsers();
+List<User> allUsers = foundry.GetUsers(1);
 ```
+You can also loop through and get all the users of your organization
+```c#
+//Code here
+```
+
