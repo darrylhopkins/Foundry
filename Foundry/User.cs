@@ -10,6 +10,18 @@ using System.Threading.Tasks;
 
 namespace Foundry
 {
+    internal class MetaJson
+    {
+        [JsonProperty("meta")]
+        internal MetaData Meta { get; set; }
+    }
+
+    internal class MetaData
+    {
+        [JsonProperty("total_count")]
+        internal Int32 Count { get; set; }
+    }
+
     internal class UserDataJson
     {
         [JsonProperty("data")]
