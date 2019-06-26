@@ -175,7 +175,7 @@ namespace Foundry
 
         public List<User> GetUsers(int page)
         {
-            Console.WriteLine("Getting all users...");
+            Console.WriteLine("Getting " + return_per_page + "users on page " + page.ToString() + "...");
 
             RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
             request.Parameters.Clear();
