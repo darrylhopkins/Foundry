@@ -239,7 +239,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting all locations...");
 
-            RestRequest request = new RestRequest("/{version}/admin/locations");
+            RestRequest request = new RestRequest("/{version}/admin/locations", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
@@ -262,7 +262,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting location " + LocationId + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}");
+            RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
