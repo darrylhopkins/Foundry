@@ -63,12 +63,16 @@ User retrievedUser = foundry.GetUserById(UserId);
 ```
 ### Getting users
 The Foundry API is designed to return 100 users per page. Because of this, you can choose to access the users of your organization in different ways.
-To get a specific page of users, you can specific the page number in the method call (Getting the first hundred: page = 1)
+To get a specific page of users, you can specify the page number in the method call (Getting the first hundred: page = 1)
 ```c#
-List<User> allUsers = foundry.GetUsers(1);
+List<User> users = foundry.GetUsers(1);
+```
+To get a range of pages of users, you can specify the range of pages in the method call
+```c#
+List<User> someUsers = foundry.GetUsers(3, 5);
 ```
 You can also loop through and get all the users of your organization
 ```c#
-//Code here
+List<user> allUsers = foundry.GetUsers();
+// The paging will be done in the backend.
 ```
-
