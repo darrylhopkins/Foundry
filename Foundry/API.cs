@@ -196,5 +196,44 @@ namespace Foundry
 
             return users;
         }
+
+        public List<Location> GetLocations()
+        {
+            Console.WriteLine("Getting all locations...");
+
+            RestRequest request = new RestRequest("/{version}/admin/locations");
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
+            List<Location> locations = new List<Location>();
+
+            foreach (LocationData data in locationData.LocationsData)
+            {
+                Location newLocation = data.LocationAttributes;
+                newLocation.AddIdFromData(data);
+                locations.Add(newLocation);
+            }
+
+            return locations;
+        }
+
+        public Location GetLocationById(string LocationId)
+        {
+            Console.WriteLine("Getting location " + LocationId + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute<LocationDataJson>(request);
+            LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
+            Location location = locationData.LocationData.LocationAttributes;
+            location.AddIdFromData(locationData.LocationData);
+
+            return location;
+        }
     }
 }
