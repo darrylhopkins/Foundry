@@ -66,7 +66,7 @@ namespace Foundry
             return response.Data;
         }
 
-        public User AddUser(User MyUser)
+        public User AddUser(User MyUser) // Return given user if invalid add
         {
             if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
@@ -104,7 +104,7 @@ namespace Foundry
             return user;
         }
 
-        public string UpdateUser(User MyUser) // TODO: Add verification of update
+        public string UpdateUser(User MyUser) // Return exception if invalid update
         {
             if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
@@ -195,6 +195,44 @@ namespace Foundry
             }
 
             return users;
+        }
+
+        public Location AddLocation(Location MyLocation)
+        {
+            Console.WriteLine("Adding location " + MyLocation.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/locations", Method.POST);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute<Location>(request);
+
+            //verify if adding was okay with status code
+
+            LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
+            Console.WriteLine("Location successfully added.");
+
+            Location location = locationData.LocationData.LocationAttributes;
+            location.Id = locationData.LocationData.Id;
+
+            return location;
+        }
+
+        public string UpdateLocation(Location MyLocation)
+        {
+            Console.WriteLine("Updating location " + MyLocation.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/locations", Method.PATCH);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            // do things with location if necessary
+
+            return response.Content;
         }
 
         public List<Location> GetLocations()
