@@ -150,30 +150,6 @@ namespace Foundry
             return retrievedUser;
         }
 
-        /*public List<User> GetUsers()
-        {
-            Console.WriteLine("Getting all users...");
-
-            RestRequest request = new RestRequest("/{version}/admin/users/", Method.GET);
-            request.Parameters.Clear();
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
-            IRestResponse response = _client.Execute(request);
-            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-            List<User> users = new List<User>();
-
-            foreach (UserData data in userData.Data)
-            {
-                User newUser = data.UserAttributes;
-                newUser.ConfigureUserData(data);
-                users.Add(newUser);
-            }
-
-            return users;
-        }*/
-
         public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
