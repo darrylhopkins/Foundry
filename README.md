@@ -71,8 +71,15 @@ To get a range of pages of users, you can specify the range of pages in the meth
 ```c#
 List<User> someUsers = foundry.GetUsers(3, 5);
 ```
-You can also loop through and get all the users of your organization
+You can also loop through and get some or all of the users of your organization
 ```c#
-List<user> allUsers = foundry.GetUsers();
-// The paging will be done in the backend.
+// Getting all users
+List<User> allUsers = new List<User>();
+bool keepGoing = true;
+
+while (keepGoing) {
+    List<User> currentUsers = new List<User>();
+    (currentUsers, keepGoing) = foundry.GetUsers(); // Returns the next 100 users and whether or not there are more.
+    myUsers = myUsers.Concat(currentUsers).ToList();
+}
 ```
