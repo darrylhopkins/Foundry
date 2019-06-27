@@ -15,7 +15,8 @@ namespace Foundry
         const string BaseUrl = "https://api.fifoundry-staging.net/";
         const string _ver = "v1";
 
-        const int return_per_page = 100;
+        const int returnPerPage = 100;
+        int currPage = 1;
 
         readonly IRestClient _client;
         readonly AccessToken _token;
@@ -175,13 +176,13 @@ namespace Foundry
 
         public List<User> GetUsers(int page)
         {
-            Console.WriteLine("Getting " + return_per_page + "users on page " + page.ToString() + "...");
+            Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
 
             RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("page_num", page, ParameterType.UrlSegment);
-            request.AddParameter("num_per", return_per_page, ParameterType.UrlSegment);
+            request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
@@ -199,7 +200,65 @@ namespace Foundry
             return users;
         }
 
-        public List<User> GetUsers() // TODO: Test this!!
+        public (List<User>, bool) GetUsers()
+        {
+            bool returnValue = true;
+
+            RestRequest request = new RestRequest("/{version}/admin/users", Method.GET);
+            // "/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}",
+
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("page[page]", currPage, ParameterType.QueryString);
+            request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+            List<User> users = new List<User>();
+
+            foreach (UserData data in userData.Data)
+            {
+                User newUser = data.UserAttributes;
+                newUser.ConfigureUserData(data);
+                users.Add(newUser);
+            }
+
+            MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
+
+            Console.WriteLine("Returning " + users.Count + " users. Page " + currPage + " of " + Math.Ceiling((double)metaData.Meta.Count / returnPerPage));
+
+            if (currPage*returnPerPage >= metaData.Meta.Count)
+            {
+                returnValue = false;
+                currPage = 1;
+            }
+            else
+            {
+                currPage += 1;
+            }
+
+            return (users, returnValue);
+        }
+
+        public int GetUserCount()
+        {
+            RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("page_num", 1, ParameterType.UrlSegment);
+            request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
+
+            return metaData.Meta.Count;
+        }
+
+        /*public List<User> GetUsers() // TODO: Test this!!
         {
             Console.WriteLine("Getting all users...");
 
@@ -244,7 +303,7 @@ namespace Foundry
             Console.WriteLine("All users returned. Total Pages: " + curr_page.ToString());
 
             return users;
-        }
+        }*/
 
         public Location AddLocation(Location MyLocation)
         {
