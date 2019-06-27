@@ -154,11 +154,12 @@ namespace Foundry
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
+            RestRequest request = new RestRequest("/{version}/admin/users", Method.GET);
+
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("page_num", page, ParameterType.UrlSegment);
-            request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
+            request.AddParameter("page[page]", currPage, ParameterType.QueryString);
+            request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
