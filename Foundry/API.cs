@@ -181,7 +181,6 @@ namespace Foundry
             bool returnValue = true;
 
             RestRequest request = new RestRequest("/{version}/admin/users", Method.GET);
-            // "/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}",
 
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
@@ -233,53 +232,6 @@ namespace Foundry
 
             return metaData.Meta.Count;
         }
-
-        /*public List<User> GetUsers() // TODO: Test this!!
-        {
-            Console.WriteLine("Getting all users...");
-
-            List<User> users = new List<User>();
-            bool getNext = true;
-            int curr_page = 1;
-            int total_returned = 0;
-
-            while (getNext)
-            {
-                RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
-                request.Parameters.Clear();
-                request.AddParameter("version", _ver, ParameterType.UrlSegment);
-                request.AddParameter("page_num", curr_page, ParameterType.UrlSegment);
-                request.AddParameter("num_per", return_per_page, ParameterType.UrlSegment);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
-                IRestResponse response = _client.Execute(request);
-                UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-
-                foreach (UserData data in userData.Data)
-                {
-                    User newUser = data.UserAttributes;
-                    newUser.ConfigureUserData(data);
-                    users.Add(newUser);
-                }
-
-                total_returned += return_per_page;
-
-                MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
-                if (total_returned >= metaData.Meta.Count)
-                {
-                    getNext = false;
-                }
-                else
-                {
-                    curr_page += 1;
-                }
-            }
-
-            Console.WriteLine("All users returned. Total Pages: " + curr_page.ToString());
-
-            return users;
-        }*/
 
         public Location AddLocation(Location MyLocation)
         {
