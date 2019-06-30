@@ -89,11 +89,17 @@ When updating a user it's important to note that you cannot remove any of the re
 Location description goes here
 ### Getting your organization's location(s)
 ```c#
+List<Location> Locations = foundry.GetLocation();
 ```
 ### Creating a new location
 ```c#
+Location newLocation = new Location();
+// TODO: Add necessary fields
 ```
 ### Adding another location to your organization 
+Like adding a user to your organization, you need to assign the new location to return value of the AddLocation function in order to update the location with it's location id.
 ```c#
+newLocation = foundry.AddLocation(newLocation);
+
 ```
 ## Categories
