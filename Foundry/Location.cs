@@ -106,8 +106,13 @@ namespace Foundry
         public string ToJson() //Change to internal when done
         {
             string Json = "{\n" +
-                "\"data\": {\n" +
-                "\t\"type\": \"locations\",\n" +
+                "\"data\": {\n";
+            if (this.Id != null)
+            {
+                Json += "\t\"id\": \"" + this.Id + "\",\n";
+            }
+
+            Json += "\t\"type\": \"locations\",\n" +
                 "\t\"attributes\": {\n" +
                 "\t\t\"name\": \"" + this.Name + "\",\n" +
                 "\t\t\"external_id\": \"" + this.ExternalId + "\",\n" +
@@ -124,6 +129,8 @@ namespace Foundry
                 "\t\t\"address_country\": \"" + this.Country + "\",\n" +
                 "\t\t\"address_latitude\": \"" + this.Latitude + "\",\n" +
                 "\t\t\"address_longitude\": \"" + this.Longitude + "\"\n" +
+                "\t\t\"address_name\": \"" + this.AddressName + "\"\n" +
+                "\t\t\"address_room\": \"" + this.AddressRoom + "\"\n" +
                 "\t}\n}\n}\n";
 
             return Json;
