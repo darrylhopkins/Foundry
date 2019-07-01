@@ -63,11 +63,7 @@ To get a specific page of users, you can specify the page number in the method c
 ```c#
 List<User> users = foundry.GetUsers(1);
 ```
-To get a range of pages of users, you can specify the range of pages in the method call
-```c#
-List<User> someUsers = foundry.GetUsers(3, 5);
-```
-You can also loop through and get some or all of the users of your organization
+You can also loop through and get some or all of the users of your organization. The paging is done by the caller, as the API only returns 100 users.
 ```c#
 // Getting all users
 List<User> allUsers = new List<User>();
