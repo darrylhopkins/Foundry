@@ -266,14 +266,13 @@ namespace Foundry
         {
             Console.WriteLine("Updating location " + MyLocation.Name + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/locations", Method.PATCH);
+            RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.PATCH);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("location_id", MyLocation.Id, ParameterType.UrlSegment);
+            request.AddParameter("application/json", MyLocation.ToJson(), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-
-            // do things with location if necessary
 
             return response.Content;
         }
@@ -306,10 +305,12 @@ namespace Foundry
             Console.WriteLine("Getting location " + LocationId + "...");
 
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute<LocationDataJson>(request);
+            IRestResponse response = _client.Execute(request);
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             Location location = locationData.LocationData.LocationAttributes;
             location.AddIdFromData(locationData.LocationData);
