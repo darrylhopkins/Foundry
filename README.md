@@ -5,16 +5,16 @@ C# SDK for the [EVERFI](https://www.everfi.com) Foundry API
 The Foundry API allows EVERFI partners to manage their organization by adding users, tracking progress, and other features. This C# SDK makes it easy for .NET developers to use the Foundry API.
 ### Contents
 + [Create a Client](#Creating-a-client)
-+ [Organization Users](#Organization-Users)
-    + [Create a new user](#Creating-a-new-user)
-    + [Adding a user](#Adding-a-user-to-your-organization)
-    + [Retrieving users](#Retrieving-users)
-    + [Updating users](#Updating-an-existing-user)
 + [Organization Locations](#Organization-Locations)
     + [Getting your location](#Getting-your-organization's-location)
     + [Creating a new location](#Creating-a-new-location)
     + [Adding a location](#Adding-a-location-to-your-organization)
     + [Updating a location](#Updating-an-existing-location)
++ [Organization Users](#Organization-Users)
+    + [Create a new user](#Creating-a-new-user)
+    + [Adding a user](#Adding-a-user-to-your-organization)
+    + [Retrieving users](#Retrieving-users)
+    + [Updating users](#Updating-an-existing-user)
 + [Categories and Labels](#Categories)
 
 ## Setup
@@ -30,6 +30,7 @@ Build succeeded.
 Time Elapsed 00:00:02.43
 ```
 The associated .dll file will be located in `/Foundry/bin/Debug`. When creating a new project, include the .dll file by adding a reference.
+
 ## Usage
 You should get your client id and secret from the Admin Panel. More information can be found in the [public API documentation](https://api.fifoundry.net/v1).
 ### Creating a client
@@ -43,10 +44,57 @@ string client_secret = "";
 API foundry = new API(client_id, client_secret);
 ```
 You can now interact with the API and all of it's functionalities.
+
+## Organization Locations
+An organization always has at least one location, and it can have multiple. If you are adding or updating users, you must have the user's **LocationId** defined for the request.
+### Getting your organization's location
+The first thing you should do after creating your Foundry Client is save the Organization's Locations to a list or dictionary for later use.
+#### Getting all locations
+```c#
+List<Location> locationsList = foundry.GetLocations();
+```
+This is important because it also saves the valid Organization's Locations in the API.
+#### Getting a location by id
+If you already know the id of a particular location and want to retrieve more information about it, you can simply retrieve it by it's id.
+```c#
+string locationId = "15751";
+Location loc = foundry.GetLocationById(locationId);
+```
+### Creating a new location
+When creating a new location, it's important to note that you cannot add the Id property. A location's id is created when it is added to Foundry.
+```c#
+Location NewLocation = new Location
+{
+    Name = "Test Location 2",
+    ContactEmail = "ajaiman@everfi.com",
+    ContactName = "Aman Jaiman",
+    ContactPhone = "3019190324",
+    StreetNumber = "1111",
+    Route = "High Point Lane",
+    City = "Some City",
+    County = "Montgomery County",
+    State = "MD",
+    PostalCode = "20347",
+    Country = "United States",
+    CreatedAt = DateTime.Now
+};
+```
+### Adding a location to your organization 
+Like adding a user to your organization, you need to assign the new location to return value of the AddLocation function in order to update the location with it's location id.
+```c#
+newLocation = foundry.AddLocation(newLocation);
+```
+Once you add the location, the list of available locations in the API will also be updated.
+### Updating an existing location
+```c#
+// Make some change(s) to the user (ex. location.Name = "Test Location (UPDATED)")
+foundry.UpdateLocation(location)
+```
+
 ## Organization Users
 An organization will have users that are all assigned roles and types based on what they are doing in your organization. The API allows you to get information about a user, or add/update users.
 ### Creating a new user
-There are four required components of any user: First Name, Last Name, Email, and at least one UserType.
+There are five required components of any user: First Name, Last Name, Email, at least one UserType, and a Location.
 ```c#
 User user = new User
 {
@@ -55,12 +103,21 @@ User user = new User
     Email = "flast@everfi.com"
 };
 ```
+The location given to a User must be one that already exists in Foundry (retrieved from before, or created and then added to Foundry).
+```c#
+// Assigned to a particular location in your saved list:
+user.Location = locationsList.ElementAt(0);
+
+// Assigned to a known Location Id:
+user.Location = foundry.GetLocationById("15751");
+```
+
 We have defined a UserType as it's own class, holding a user's UserRole, in order to make it easier to interact with them throughout the API. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
 ```c#
 user.UserTypes.Add(new UserType(UserRole.FacStaffNonSupervisor));
+
 // All possible UserRoles: UndergraduateHE, GraduateHE, NonTraditionalHE, GreekHE, HEAdmin, FacStaffSupervisor, FacStaffNonSupervisor, FacStaffAdmin, CodeConductSupervisor, CodeConductNonSupervisor, CodeConductAdmin, AdultFinancialLearner, AdultFinancialAdmin, EventVolunteer, and EventManager.
 ```
-Additionally, you should add the user's [LocationId](#Organization-Locations) when adding or updating a user.
 There are other attributes you can add to a user, which are not required: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
 ### Adding a user to your organization
 ```c#
@@ -112,53 +169,5 @@ Once you have gotten the users you want, you can choose to reset the position of
 foundry.UpdateUser(user);
 ```
 When updating a user it's important to note that you cannot remove any of the required fields (i.e. there must be a name, email, and at least one UserRole), but you can still update them.
-## Organization Locations
-An organization always has at least one location, and it can have multiple. If you are adding or updating users, you must have the user's **LocationId** defined for the request.
-### Getting your organization's location
-The locations for an organization rarely change, so rather than retrieving the locations multiple times, we recommend sending a request once and storing the values in a list or dictionary for later use.
-#### Getting all locations
-```c#
-List<Location> locationsList = foundry.GetLocations();
-// Saving locationIds for later use:
-List<string> locationId = new List<string>();
-foreach (Location loc in locationsList)
-{
-    locationId.Add(loc.Id);
-}
-```
-#### Getting a location by id
-If you already know the id of your location and want to retrieve more information about it, you can simply retrieve it by it's id.
-```c#
-string locationId = "15751";
-Location loc = foundry.GetLocationById(locationId);
-```
-### Creating a new location
-When creating a new location, it's important to note that you cannot add the Id property. A location's id is created when it is added to Foundry.
-```c#
-Location NewLocation = new Location
-{
-    Name = "Test Location 2",
-    ContactEmail = "ajaiman@everfi.com",
-    ContactName = "Aman Jaiman",
-    ContactPhone = "3019190324",
-    StreetNumber = "1111",
-    Route = "High Point Lane",
-    City = "Some City",
-    County = "Montgomery County",
-    State = "MD",
-    PostalCode = "20347",
-    Country = "United States",
-    CreatedAt = DateTime.Now
-};
-```
-### Adding a location to your organization 
-Like adding a user to your organization, you need to assign the new location to return value of the AddLocation function in order to update the location with it's location id.
-```c#
-newLocation = foundry.AddLocation(newLocation);
-```
-### Updating an existing location
-```c#
-// Make some change(s) to the user (ex. location.Name = "Test Location (UPDATED)")
-foundry.UpdateLocation(location)
-```
+
 ## Categories
