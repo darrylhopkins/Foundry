@@ -87,7 +87,7 @@ bool keepGoing = true;
 while (keepGoing)
 {
     List<User> currentUsers = new List<User>();
-    (currentUsers, keepGoing) = foundry.GetUsers(); // Returns the next 100 users and whether or not there are more.
+    (currentUsers, keepGoing) = foundry.GetUsers(); // Returns the next 100 users and if there are more.
     myUsers = myUsers.Concat(currentUsers).ToList();
 }
 ```
