@@ -23,7 +23,9 @@ namespace Foundry
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        // public string type { get; set; } // this is always "locations" so is it necessary?
+
+        public string Type = "locations";
+
         [JsonProperty("attributes")]
         public Location LocationAttributes { get; set; }
     }
@@ -64,13 +66,13 @@ namespace Foundry
         public string Neighborhood { get; set; }
 
         [JsonProperty("address_locality")]
-        public string Locality { get; set; }
+        public string City { get; set; }
 
         [JsonProperty("address_administrative_area_level_2")]
-        public string AreaLevel2 { get; set; }
+        public string County { get; set; }
 
         [JsonProperty("address_administrative_area_level_1")]
-        public string AreaLevel1 { get; set; }
+        public string State { get; set; }
 
         [JsonProperty("address_postal_code")]
         public string PostalCode { get; set; }
