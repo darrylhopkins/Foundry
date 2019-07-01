@@ -16,7 +16,7 @@ namespace Foundry
         const string _ver = "v1";
 
         const int returnPerPage = 100;
-        int currPage = 1;
+        int currPage;
 
         readonly IRestClient _client;
         readonly AccessToken _token;
@@ -53,6 +53,7 @@ namespace Foundry
             }
 
             _accountSid = accountSid;
+            currPage = 1;
         }
 
         public T Execute<T>(RestRequest request) where T : new() // might make this private
@@ -216,6 +217,11 @@ namespace Foundry
             }
 
             return (users, returnValue);
+        }
+
+        public void ResetGetUsers()
+        {
+            currPage = 1;
         }
 
         public int GetUserCount()
