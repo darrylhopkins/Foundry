@@ -101,7 +101,7 @@ namespace Foundry
             this.UserTypes = new List<UserType>();
         }
 
-        public string GetJson()
+        public string ToJson() //Change to internal when done
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
