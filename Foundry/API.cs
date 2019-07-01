@@ -21,6 +21,8 @@ namespace Foundry
         readonly IRestClient _client;
         readonly AccessToken _token;
 
+        List<Location> FoundryLocations;
+
         string _accountSid;
 
         // TODO: Add try catch to make sure id and key are valid
@@ -54,6 +56,7 @@ namespace Foundry
 
             _accountSid = accountSid;
             currPage = 1;
+            FoundryLocations = new List<Location>();
         }
 
         public T Execute<T>(RestRequest request) where T : new() // might make this private
@@ -80,6 +83,16 @@ namespace Foundry
             }
 
             Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");
+
+            if (!FoundryLocations.Contains(MyUser.Location)) {
+                Console.WriteLine("Illegal Location: Location does not match any entry in FoundryLocations");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+            else
+            {
+                MyUser.LocationId = MyUser.Location.Id;
+            }
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
@@ -117,6 +130,17 @@ namespace Foundry
                 Environment.Exit(1);
             }
 
+            if (!FoundryLocations.Contains(MyUser.Location))
+            {
+                Console.WriteLine("Illegal Location: Location does not match any entry in FoundryLocations");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+            else
+            {
+                MyUser.LocationId = MyUser.Location.Id;
+            }
+
             RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
 
             request.Parameters.Clear();
@@ -145,6 +169,7 @@ namespace Foundry
 
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.ConfigureUserData(userData.Data);
+            retrievedUser.Location = GetLocationById(retrievedUser.LocationId);
 
             Console.WriteLine("User Retrieved: " + retrievedUser.FirstName + " " + retrievedUser.LastName + "...");
 
@@ -172,6 +197,7 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
+                newUser.Location = GetLocationById(newUser.LocationId);
                 users.Add(newUser);
             }
 
@@ -199,6 +225,7 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
+                newUser.Location = GetLocationById(newUser.LocationId);
                 users.Add(newUser);
             }
 
@@ -259,6 +286,7 @@ namespace Foundry
             Location location = locationData.LocationData.LocationAttributes;
             location.Id = locationData.LocationData.Id;
 
+            FoundryLocations.Add(location);
             return location;
         }
 
@@ -273,6 +301,15 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+
+            // if succeeded:
+
+            LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
+            Location location = locationData.LocationData.LocationAttributes;
+            location.AddIdFromData(locationData.LocationData);
+
+            FoundryLocations.Remove(MyLocation);
+            FoundryLocations.Add(location);
 
             return response.Content;
         }
@@ -297,6 +334,7 @@ namespace Foundry
                 locations.Add(newLocation);
             }
 
+            FoundryLocations = locations;
             return locations;
         }
 

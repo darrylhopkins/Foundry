@@ -82,8 +82,10 @@ namespace Foundry
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
 
+        public Location Location { get; set; }
+
         [JsonProperty("location_id")]
-        public string LocationId { get; set; }
+        public string LocationId { get; internal set; }
 
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
