@@ -35,8 +35,10 @@ You should get your client id and secret from the Admin Panel. More information 
 ### Creating a client
 Once you have obtained your client id and secret, you can simply create a new instance of the API. The OAuth is taken care of in the backend!
 ```c#
-string client_id = "ydWpq0jt4k8tsgAovEUQf8c4FOYHVyr1uMkkZHaMTp4";
-string client_secret = "7RkwoL2IAMcOAgeMdItlBMg7dch7ZdQ7rzyaXRSAwm8";
+// Your client id and secret below
+// Rather than storing them in plaintext, you can store them with .NET's Secret Manager
+string client_id = "";
+string client_secret = "";
 
 API foundry = new API(client_id, client_secret);
 ```
