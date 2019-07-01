@@ -29,6 +29,8 @@ string client_secret = "7RkwoL2IAMcOAgeMdItlBMg7dch7ZdQ7rzyaXRSAwm8";
 API foundry = new API(client_id, client_secret);
 ```
 You can now interact with API with the all of it's functionalities.
+## Organization Users
+User description goes here
 ### Creating a new user
 There are four required components of any user: First Name, Last Name, Email, and at least one UserType.
 ```c#
@@ -45,17 +47,11 @@ user.UserTypes.Add(new UserType(UserRole.FacStaffNonSupervisor));
 // All possible UserRoles: UndergraduateHE, GraduateHE, NonTraditionalHE, GreekHE, HEAdmin, FacStaffSupervisor, FacStaffNonSupervisor, FacStaffAdmin, CodeConductSupervisor, CodeConductNonSupervisor, CodeConductAdmin, AdultFinancialLearner, AdultFinancialAdmin, EventVolunteer, and EventManager.
 ```
 There are other attributes you can add to a user, which are not required: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
-### Adding a user
+### Adding a user to your organization
 ```c#
 user = foundry.AddUser(user);
 ```
 You need to assign your original user to the AddUser function so that the user is updated with the new UserId, which won't exist until you add it to Foundry. You cannot add a UserId to a user yourself.
-### Updating a user
-```c#
-// Make some change to the user (ex. user.Email = lastfirst@everfi.com)
-foundry.UpdateUser(user);
-```
-When updating a user it's important to note that you cannot get rid of any of the required fields (i.e. there must be a name, email, and at least one UserRole
 ### Getting a user by id
 ```c#
 string UserId = "58c836fd-ebe3-4533-aee4-7a6f1a064de9";
@@ -67,11 +63,7 @@ To get a specific page of users, you can specify the page number in the method c
 ```c#
 List<User> users = foundry.GetUsers(1);
 ```
-To get a range of pages of users, you can specify the range of pages in the method call
-```c#
-List<User> someUsers = foundry.GetUsers(3, 5);
-```
-You can also loop through and get some or all of the users of your organization
+You can also loop through and get some or all of the users of your organization. The paging is done by the caller, as the API only returns 100 users.
 ```c#
 // Getting all users
 List<User> allUsers = new List<User>();
@@ -83,3 +75,27 @@ while (keepGoing) {
     myUsers = myUsers.Concat(currentUsers).ToList();
 }
 ```
+### Updating an existing user
+```c#
+// Make some change to the user (ex. user.Email = lastfirst@everfi.com)
+foundry.UpdateUser(user);
+```
+When updating a user it's important to note that you cannot remove any of the required fields (i.e. there must be a name, email, and at least one UserRole), but you can still update them.
+## Organization Locations
+Location description goes here
+### Getting your organization's location(s)
+```c#
+List<Location> Locations = foundry.GetLocation();
+```
+### Creating a new location
+```c#
+Location newLocation = new Location();
+// TODO: Add necessary fields
+```
+### Adding another location to your organization 
+Like adding a user to your organization, you need to assign the new location to return value of the AddLocation function in order to update the location with it's location id.
+```c#
+newLocation = foundry.AddLocation(newLocation);
+
+```
+## Categories
