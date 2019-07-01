@@ -2,7 +2,12 @@
 C# SDK for the [EVERFI](https://www.everfi.com) Foundry API
 
 ## General Info
-The Foundry API allows EVERFI partners to manage their organization by adding users, tracking progress, and other features. This C# SDK makes it easy for .NET developers to use the Foundry API. 
+The Foundry API allows EVERFI partners to manage their organization by adding users, tracking progress, and other features. This C# SDK makes it easy for .NET developers to use the Foundry API.
+### Contents
++ [Create a Client](#Creating-a-client)
++ [Dealing with Users](#Organization-Users)
++ [Organization Locations](#Organization-Locations)
++ [Categories and Labels](#Categories)
 
 ## Setup
 To build the solution, you need a .NET developer environment.
