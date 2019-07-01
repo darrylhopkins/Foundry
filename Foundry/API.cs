@@ -246,7 +246,7 @@ namespace Foundry
 
             RestRequest request = new RestRequest("/{version}/admin/locations", Method.POST);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("application/json", MyLocation.ToJson(), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute<Location>(request);
