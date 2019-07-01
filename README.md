@@ -129,7 +129,8 @@ foreach (Location loc in locationsList)
 #### Getting a location by id
 If you already know the id of your location and want to retrieve more information about it, you can simply retrieve it by it's id.
 ```c#
-Location loc = foundry.GetLocationById("15751");
+string locationId = "15751";
+Location loc = foundry.GetLocationById(locationId);
 ```
 ### Creating a new location
 When creating a new location, it's important to note that you cannot add the Id property. A location's id is created when it is added to Foundry.
