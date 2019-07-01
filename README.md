@@ -107,9 +107,6 @@ The location given to a User must be one that already exists in Foundry (retriev
 ```c#
 // Assigned to a particular location in your saved list:
 user.Location = locationsList.ElementAt(0);
-
-// Assigned to a known Location Id:
-user.Location = foundry.GetLocationById("15751");
 ```
 
 We have defined a UserType as it's own class, holding a user's UserRole, in order to make it easier to interact with them throughout the API. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
