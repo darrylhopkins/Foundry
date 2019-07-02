@@ -176,6 +176,33 @@ namespace Foundry
             return retrievedUser;
         }
 
+        public (List<User>, int) GetUserByEmail(string UserEmail)
+        {
+            Console.WriteLine("Getting User(s) with email: " + UserEmail + "...");
+
+            RestRequest request = new RestRequest("{version}/admin/users/", Method.GET);
+
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+            List<User> users = new List<User>();
+
+            foreach (UserData data in userData.Data)
+            {
+                User newUser = data.UserAttributes;
+                newUser.ConfigureUserData(data);
+                newUser.Location = GetLocationById(newUser.LocationId);
+                users.Add(newUser);
+                Console.WriteLine("User Retrieved: " + newUser.FirstName + " " + newUser.LastName + "...");
+            }
+
+            return (users, users.Count);
+        }
         public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
