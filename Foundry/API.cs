@@ -218,7 +218,7 @@ namespace Foundry
             return retrievedUser;
         }
 
-        public (List<User>, int) GetUserByEmail(string UserEmail)
+        public List<User> GetUserByEmail(string UserEmail)
         {
             Console.WriteLine("Getting User(s) with email: " + UserEmail + "...");
 
@@ -243,10 +243,11 @@ namespace Foundry
                 Console.WriteLine("User Retrieved: " + newUser.FirstName + " " + newUser.LastName + "...");
             }
 
-            return (users, users.Count);
+            return users;
         }
 
-        public (List<User>, int) GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
+        // TODO: Implement paging in this
+        public List<User> GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
         {
             RestRequest request = new RestRequest("{version}/admin/users/", Method.GET);
 
@@ -271,7 +272,7 @@ namespace Foundry
                 users.Add(newUser);
             }
 
-            return (users, users.Count);
+            return users;
         }
 
         public List<User> GetUsers(int page)
