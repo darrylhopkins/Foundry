@@ -3,13 +3,55 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Foundry
 {
+    public enum SearchTerms
+    {
+        [Description("email")]
+        Email,
+        [Description("first_name")]
+        FirstName,
+        [Description("last_name")]
+        LastName,
+        [Description("full_name")]
+        FullName,
+        [Description("groups")]
+        Groups,
+        [Description("legacy_import_id")]
+        LegacyImportId,
+        [Description("location_id")]
+        LocationId,
+        [Description("organization_id")]
+        OrganizationId,
+        [Description("roster_ids")]
+        RosterIds,
+        [Description("rule_set_names")]
+        RuleSetNames,
+        [Description("rule_set_roles")]
+        RuleSetRoles,
+        [Description("is_learner")]
+        IsLearner,
+        [Description("is_manager")]
+        IsManager,
+        [Description("active")]
+        Active,
+        [Description("student_id")]
+        StudentId,
+        [Description("business_lines")]
+        BusinessLines,
+        [Description("custom_grouping_values")]
+        CustomGroupingValues,
+        [Description("created_at")]
+        CreatedAt
+    }
+
     public class API
     {
         const string BaseUrl = "https://api.fifoundry-staging.net/";
@@ -203,6 +245,35 @@ namespace Foundry
 
             return (users, users.Count);
         }
+
+        public (List<User>, int) GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
+        {
+            RestRequest request = new RestRequest("{version}/admin/users/", Method.GET);
+
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            foreach (SearchTerms term in searchTerms.Keys)
+            {
+                request.AddParameter("filter[" + GetDescription(term) + "]", searchTerms[term], ParameterType.QueryString);
+            }
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+            List<User> users = new List<User>();
+
+            foreach (UserData data in userData.Data)
+            {
+                User newUser = data.UserAttributes;
+                newUser.ConfigureUserData(data);
+                newUser.Location = GetLocationById(newUser.LocationId);
+                users.Add(newUser);
+            }
+
+            return (users, users.Count);
+        }
+
         public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
@@ -381,6 +452,18 @@ namespace Foundry
             location.AddIdFromData(locationData.LocationData);
 
             return location;
+        }
+
+        internal static string GetDescription(Enum value)
+        {
+            return
+                value
+                    .GetType()
+                    .GetMember(value.ToString())
+                    .FirstOrDefault()
+                    ?.GetCustomAttribute<DescriptionAttribute>()
+                    ?.Description
+                ?? value.ToString();
         }
     }
 }
