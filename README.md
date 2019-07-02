@@ -160,6 +160,16 @@ while (i < 3 && keepGoing)
 }
 ```
 Once you have gotten the users you want, you can choose to reset the position of the paging by calling `foundry.ResetGetUsers()`. This allows you to reset the position so paging will begin at the beginning if `foundry.GetUsers()` is called again. Otherwise, you can simply continue paging. (Note, after reaching the end of the user list, the API will automatically reset the page.)
+#### Searching for users
+You can also use different terms to search for a user, or multiple users. To search with Foundry, you need to create a dictionary holding pairs of SearchTerms and the term (SearchTerms are an Enum that hold values such as FirstName, Email, StudentId, etc.).
+```c#
+List<User> myUsers = new List<User>();
+
+Dictionary<SearchTerms, string> search = new Dictionary<SearchTerms, string>();
+search.Add(SearchTerms.FirstName, "Aman");
+
+myUsers = foundry.GetUsersBySearch(search);
+```
 ### Updating an existing user
 ```c#
 // Make some change(s) to the user (ex. user.Email = lastfirst@everfi.com)
