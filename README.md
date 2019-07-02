@@ -6,7 +6,7 @@ The Foundry API allows EVERFI partners to manage their organization by adding us
 ### Contents
 + [Create a Client](#Creating-a-client)
 + [Organization Locations](#Organization-Locations)
-    + [Getting your location](#Getting-your-organization's-location)
+    + [Getting your location](#Getting-your-organizations-location)
     + [Creating a new location](#Creating-a-new-location)
     + [Adding a location](#Adding-a-location-to-your-organization)
     + [Updating a location](#Updating-an-existing-location)
