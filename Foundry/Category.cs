@@ -1,0 +1,60 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Foundry
+{
+    internal class CategoryData
+    {
+        [JsonProperty("data")]
+        internal Category Data { get; set; }
+    }
+
+    internal class CategoryListData
+    {
+        [JsonProperty("data")]
+        internal List<Category> Data { get; set; }
+    }
+
+    internal class CategoryAttributes
+    {
+        [JsonProperty("name")]
+        internal string Name { get; set; }
+
+        [JsonProperty("users_count")]
+        internal int UserCount { get; set; }
+    }
+
+    /*internal class Relationships
+    {
+        [JsonProperty("category_labels")]
+        internal CategoryLabels labels { get; set; }
+    }*/
+
+    public class Category
+    {
+        [JsonProperty("id")]
+        public string Id { get; internal set; }
+
+        public string Name { get; set; }
+
+        public int UserCount { get; internal set; }
+
+        [JsonProperty("attributes")]
+        internal CategoryAttributes Attributes { get; set; }
+
+        //[JsonProperty("relationships")]
+        //internal Relationships Relationships { get; set; }
+
+        //public List<Label> Labels { get; set; }
+
+        internal void ConfigureCategory()
+        {
+            this.Name = Attributes.Name;
+            this.UserCount = Attributes.UserCount;
+        }
+    }
+}
