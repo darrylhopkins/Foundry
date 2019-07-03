@@ -25,34 +25,34 @@ namespace Foundry
     internal class UserDataJson
     {
         [JsonProperty("data")]
-        public UserData Data { get; set; }
+        internal UserData Data { get; set; }
     }
 
     internal class UserDataJsonList
     {
         [JsonProperty("data")]
-        public List<UserData> Data { get; set; }
+        internal List<UserData> Data { get; set; }
     }
 
     internal class UserData
     {
         [JsonProperty("id")]
-        public string UserId { get; set; }
+        internal string UserId { get; set; }
 
         [JsonProperty("attributes")]
-        public User UserAttributes { get; set; }
+        internal User UserAttributes { get; set; }
     }
 
     internal class ExternalAttributes
     {
         [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
-        public string Position { get; set; }
+        internal string Position { get; set; }
 
         [JsonProperty("first_day_of_work", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime FirstDay { get; set; }
+        internal DateTime FirstDay { get; set; }
 
         [JsonProperty("last_day_of_work", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LastDay { get; set; }
+        internal DateTime LastDay { get; set; }
     }
 
     public class User
