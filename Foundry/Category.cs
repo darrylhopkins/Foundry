@@ -28,11 +28,17 @@ namespace Foundry
         internal int UserCount { get; set; }
     }
 
-    /*internal class Relationships
+    internal class Relationships
     {
         [JsonProperty("category_labels")]
-        internal CategoryLabels labels { get; set; }
-    }*/
+        internal CategoryLabels CategoryLabels { get; set; }
+    }
+
+    internal class CategoryLabels
+    {
+        [JsonProperty("data")]
+        internal List<Label> Labels { get; set; }
+    }
 
     public class Category
     {
@@ -46,15 +52,18 @@ namespace Foundry
         [JsonProperty("attributes")]
         internal CategoryAttributes Attributes { get; set; }
 
-        //[JsonProperty("relationships")]
-        //internal Relationships Relationships { get; set; }
+        [JsonProperty("relationships")]
+        internal Relationships Relationships { get; set; }
 
-        //public List<Label> Labels { get; set; }
+        public List<Label> Labels { get; set; }
 
         internal void ConfigureCategory()
         {
             this.Name = Attributes.Name;
             this.UserCount = Attributes.UserCount;
+
+            // This only holds the ids of the Labels
+            this.Labels = Relationships.CategoryLabels.Labels;
         }
     }
 }

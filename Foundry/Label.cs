@@ -9,7 +9,8 @@ namespace Foundry
 {
     internal class LabelData
     {
-
+        [JsonProperty("data")]
+        internal Label Data { get; set; }
     }
 
     internal class LabelAttributes
