@@ -140,7 +140,7 @@ namespace Foundry
 
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("application/json", MyUser.ToJson(), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute<User>(request);
@@ -189,7 +189,7 @@ namespace Foundry
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", MyUser.UserId, ParameterType.UrlSegment);
-            request.AddParameter("application/json", MyUser.ToJson(), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
@@ -380,7 +380,7 @@ namespace Foundry
 
             RestRequest request = new RestRequest("/{version}/admin/locations", Method.POST);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("application/json", MyLocation.ToJson(), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.LocationJson(MyLocation), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute<Location>(request);
@@ -404,7 +404,7 @@ namespace Foundry
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.PATCH);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", MyLocation.Id, ParameterType.UrlSegment);
-            request.AddParameter("application/json", MyLocation.ToJson(), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.LocationJson(MyLocation), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
@@ -454,6 +454,98 @@ namespace Foundry
                     ?.GetCustomAttribute<DescriptionAttribute>()
                     ?.Description
                 ?? value.ToString();
+        }
+
+        internal static string UserJson(User user) //Change to internal when done
+        {
+            string Json = "{\n" +
+                "\"data\": {\n" +
+                "\"type\": \"registration_sets\",\n" +
+                "\"attributes\": {\n" +
+                "\"registrations\": [\n" +
+                "{\n" +
+                "\"rule_set\": \"user_rule_set\",\n" +
+                "\"first_name\": \"" + user.FirstName + "\",\n" +
+                "\"last_name\": \"" + user.LastName + "\",\n" +
+                "\"email\": \"" + user.Email + "\"";
+
+            if (user.SingleSignOnId != null)
+            {
+                Json += "\"sso_id\": \"" + user.SingleSignOnId + "\"";
+            }
+            if (user.EmployeeId != null)
+            {
+                Json += ",\n\"employee_id\": \"" + user.EmployeeId + "\"";
+            }
+            if (user.StudentId != null)
+            {
+                Json += ",\n\"student_id\": \"" + user.StudentId + "\"";
+            }
+            Json += ",\n\"location_id\": \"" + user.LocationId + "\"" +
+                "\n}";
+
+            for (var i = 0; i < user.UserTypes.Count; i++)
+            {
+                Json += ",\n{\n" +
+                "\"rule_set\": \"" + Foundry.UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
+                "\"role\": \"" + Foundry.UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
+                if (i == 0)
+                {
+                    if (user.Position != null)
+                    {
+                        Json += ",\n\"position\": \"" + user.Position + "\"";
+                    }
+                    if (!user.FirstDay.Equals(DateTime.MinValue))
+                    {
+                        Json += ",\n\"first_day_of_work\": \"" + user.FirstDay + "\"";
+                    }
+                    if (!user.LastDay.Equals(DateTime.MinValue))
+                    {
+                        Json += ",\n\"last_day_of_work\": \"" + user.LastDay + "\"";
+                    }
+                }
+
+                Json += "\n}";
+            }
+
+            Json += "\n";
+
+            Json += "]\n}\n}\n}";
+
+            return Json;
+        }
+
+        internal static string LocationJson(Location location) //Change to internal when done
+        {
+            string Json = "{\n" +
+                "\"data\": {\n";
+            if (location.Id != null)
+            {
+                Json += "\t\"id\": \"" + location.Id + "\",\n";
+            }
+
+            Json += "\t\"type\": \"locations\",\n" +
+                "\t\"attributes\": {\n" +
+                "\t\t\"name\": \"" + location.Name + "\",\n" +
+                "\t\t\"external_id\": \"" + location.ExternalId + "\",\n" +
+                "\t\t\"contact_email\": \"" + location.ContactEmail + "\",\n" +
+                "\t\t\"contact_name\": \"" + location.ContactName + "\",\n" +
+                "\t\t\"contact_phone\": \"" + location.ContactPhone + "\",\n" +
+                "\t\t\"address_street_number\": \"" + location.StreetNumber + "\",\n" +
+                "\t\t\"address_route\": \"" + location.Route + "\",\n" +
+                "\t\t\"address_neighborhood\": \"" + location.Neighborhood + "\",\n" +
+                "\t\t\"address_locality\": \"" + location.City + "\",\n" +
+                "\t\t\"address_administrative_area_level_1\": \"" + location.State + "\",\n" +
+                "\t\t\"address_administrative_area_level_2\": \"" + location.County + "\",\n" +
+                "\t\t\"address_postal_code\": \"" + location.PostalCode + "\",\n" +
+                "\t\t\"address_country\": \"" + location.Country + "\",\n" +
+                "\t\t\"address_latitude\": \"" + location.Latitude + "\",\n" +
+                "\t\t\"address_longitude\": \"" + location.Longitude + "\"\n" +
+                "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
+                "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
+                "\t}\n}\n}\n";
+
+            return Json;
         }
     }
 }

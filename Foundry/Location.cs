@@ -98,42 +98,9 @@ namespace Foundry
         [JsonProperty("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
-        public void AddIdFromData(LocationData data)
+        internal void AddIdFromData(LocationData data)
         {
             this.Id = data.Id;
-        }
-
-        public string ToJson() //Change to internal when done
-        {
-            string Json = "{\n" +
-                "\"data\": {\n";
-            if (this.Id != null)
-            {
-                Json += "\t\"id\": \"" + this.Id + "\",\n";
-            }
-
-            Json += "\t\"type\": \"locations\",\n" +
-                "\t\"attributes\": {\n" +
-                "\t\t\"name\": \"" + this.Name + "\",\n" +
-                "\t\t\"external_id\": \"" + this.ExternalId + "\",\n" +
-                "\t\t\"contact_email\": \"" + this.ContactEmail + "\",\n" +
-                "\t\t\"contact_name\": \"" + this.ContactName + "\",\n" +
-                "\t\t\"contact_phone\": \"" + this.ContactPhone + "\",\n" +
-                "\t\t\"address_street_number\": \"" + this.StreetNumber + "\",\n" +
-                "\t\t\"address_route\": \"" + this.Route + "\",\n" +
-                "\t\t\"address_neighborhood\": \"" + this.Neighborhood + "\",\n" +
-                "\t\t\"address_locality\": \"" + this.City + "\",\n" +
-                "\t\t\"address_administrative_area_level_1\": \"" + this.State + "\",\n" +
-                "\t\t\"address_administrative_area_level_2\": \"" + this.County + "\",\n" +
-                "\t\t\"address_postal_code\": \"" + this.PostalCode + "\",\n" +
-                "\t\t\"address_country\": \"" + this.Country + "\",\n" +
-                "\t\t\"address_latitude\": \"" + this.Latitude + "\",\n" +
-                "\t\t\"address_longitude\": \"" + this.Longitude + "\"\n" +
-                "\t\t\"address_name\": \"" + this.AddressName + "\"\n" +
-                "\t\t\"address_room\": \"" + this.AddressRoom + "\"\n" +
-                "\t}\n}\n}\n";
-
-            return Json;
         }
     }
 }
