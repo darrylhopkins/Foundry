@@ -115,6 +115,7 @@ namespace Foundry
             return response.Data;
         }
 
+        // Users:
         public User AddUser(User MyUser) // Return given user if invalid add
         {
             if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
@@ -214,7 +215,7 @@ namespace Foundry
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute<UserDataJson>(request);
+            IRestResponse response = _client.Execute(request);
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
             User retrievedUser = userData.Data.UserAttributes;
@@ -374,6 +375,7 @@ namespace Foundry
             return metaData.Meta.Count;
         }
 
+        // Locations:
         public Location AddLocation(Location MyLocation)
         {
             Console.WriteLine("Adding location " + MyLocation.Name + "...");
@@ -383,7 +385,7 @@ namespace Foundry
             request.AddParameter("application/json", API.LocationJson(MyLocation), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            IRestResponse response = _client.Execute<Location>(request);
+            IRestResponse response = _client.Execute(request);
 
             //verify if adding was okay with status code
 
@@ -444,6 +446,76 @@ namespace Foundry
             return location;
         }
 
+        // Categories: Need Testing
+        public Category AddCategory(Category MyCategory)
+        {
+            Console.WriteLine("Adding category " + MyCategory.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories", Method.POST); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.CategoryJson(MyCategory), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            //verify if adding was okay with status code
+
+            CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
+            Console.WriteLine("Category successfully added.");
+
+            return categoryData.Data;
+        }
+
+        public Category GetCategoryById(string CategoryId, bool WithLabels) // Should we always return with List<Label>?
+        {
+            Console.WriteLine("Getting category " + CategoryId + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.POST); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", CategoryId, ParameterType.UrlSegment);
+            if (WithLabels)
+            {
+                request.AddParameter("include", "category_labels", ParameterType.QueryString);
+            }
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            //verify if adding was okay with status code
+
+            CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
+
+            return categoryData.Data;
+        }
+
+        public List<Category> GetCategories(bool WithLabels)
+        {
+            Console.WriteLine("Getting categories...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories", Method.POST); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            if (WithLabels)
+            {
+                request.AddParameter("include", "category_labels", ParameterType.QueryString);
+            }
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            //verify if adding was okay with status code
+
+            CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
+            List<Category> categories = new List<Category>();
+
+            foreach (Category category in categoryData.Data)
+            {
+                category.ConfigureCategory();
+                categories.Add(category);
+            }
+            return categories;
+        }
         internal static string GetDescription(Enum value)
         {
             return
@@ -544,6 +616,19 @@ namespace Foundry
                 "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
                 "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
                 "\t}\n}\n}\n";
+
+            return Json;
+        }
+
+        internal static string CategoryJson(Category category)
+        {
+            string Json = "{\n" +
+                "'data': {\n" +
+                "\t'type': 'categories',\n" +
+                "\t'attributes': {\n" +
+                "\t\t'name': '" + category.Name + "'\n" +
+                "\t}\n" +
+                "}";
 
             return Json;
         }

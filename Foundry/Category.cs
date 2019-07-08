@@ -55,7 +55,7 @@ namespace Foundry
         [JsonProperty("relationships")]
         internal Relationships Relationships { get; set; }
 
-        public List<Label> Labels { get; set; }
+        public List<Label> Labels { get; internal set; }
 
         internal void ConfigureCategory()
         {
