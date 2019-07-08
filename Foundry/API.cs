@@ -63,7 +63,7 @@ namespace Foundry
         readonly IRestClient _client;
         readonly AccessToken _token;
 
-        List<Location> FoundryLocations;
+        internal List<Location> FoundryLocations;
 
         string _accountSid;
 
@@ -98,7 +98,7 @@ namespace Foundry
 
             _accountSid = accountSid;
             currPage = 1;
-            FoundryLocations = new List<Location>();
+            FoundryLocations = GetLocations();
         }
 
         public T Execute<T>(RestRequest request) where T : new() // might make this private
@@ -158,12 +158,13 @@ namespace Foundry
             Console.WriteLine("User successfully added.");
 
             User user = userData.Data.UserAttributes;
+            user.Location = GetLocationById(user.LocationId);
             user.ConfigureUserData(userData.Data);
 
             return user;
         }
 
-        public string UpdateUser(User MyUser) // Return exception if invalid update
+        public User UpdateUser(User MyUser) // Return exception if invalid update
         {
             if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
@@ -193,7 +194,14 @@ namespace Foundry
 
             IRestResponse response = _client.Execute(request);
 
-            return response.Content;
+            UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
+            Console.WriteLine("User successfully updated.");
+
+            User user = userData.Data.UserAttributes;
+            user.Location = GetLocationById(user.LocationId);
+            user.ConfigureUserData(userData.Data);
+
+            return user;
         }
 
         public User GetUserById(string UserId)
@@ -389,7 +397,7 @@ namespace Foundry
             return location;
         }
 
-        public string UpdateLocation(Location MyLocation)
+        public Location UpdateLocation(Location MyLocation)
         {
             Console.WriteLine("Updating location " + MyLocation.Name + "...");
 
@@ -410,31 +418,12 @@ namespace Foundry
             FoundryLocations.Remove(MyLocation);
             FoundryLocations.Add(location);
 
-            return response.Content;
+            return location;
         }
 
         public List<Location> GetLocations()
         {
-            Console.WriteLine("Getting all locations...");
-
-            RestRequest request = new RestRequest("/{version}/admin/locations", Method.GET);
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
-            IRestResponse response = _client.Execute(request);
-            LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
-            List<Location> locations = new List<Location>();
-
-            foreach (LocationData data in locationData.LocationsData)
-            {
-                Location newLocation = data.LocationAttributes;
-                newLocation.AddIdFromData(data);
-                locations.Add(newLocation);
-            }
-
-            FoundryLocations = locations;
-            return locations;
+            return this.FoundryLocations; // No need for REST request because Locations are updated in local List
         }
 
         public Location GetLocationById(string LocationId)
