@@ -46,7 +46,7 @@ API foundry = new API(client_id, client_secret);
 You can now interact with the API and all of it's functionalities.
 
 ## Organization Locations
-An organization always has at least one location, and it can have multiple. If you are adding or updating users, you must have the user's **LocationId** defined for the request.
+An organization always has at least one location, and it can have multiple. If you are adding or updating users, you should provide the user's **Location** defined for the request.
 ### Getting your organization's location
 The first thing you should do after creating your Foundry Client is save the Organization's Locations to a list or dictionary for later use.
 #### Getting all locations
@@ -94,7 +94,7 @@ foundry.UpdateLocation(location)
 ## Organization Users
 An organization will have users that are all assigned roles and types based on what they are doing in your organization. The API allows you to get information about a user, or add/update users.
 ### Creating a new user
-There are five required components of any user: First Name, Last Name, Email, at least one UserType, and a Location.
+There are four required components of any user: First Name, Last Name, Email, and at least one UserType.
 ```c#
 User user = new User
 {
@@ -103,17 +103,16 @@ User user = new User
     Email = "flast@everfi.com"
 };
 ```
-The location given to a User must be one that already exists in Foundry (retrieved from before, or created and then added to Foundry).
-```c#
-// Assigned to a particular location in your saved list:
-user.Location = locationsList.ElementAt(0);
-```
-
 We have defined a UserType as it's own class, holding a user's UserRole, in order to make it easier to interact with them throughout the API. Here is an example of a **Faculty/Staff Learner** who is a **Nonsupervisor**.
 ```c#
 user.UserTypes.Add(new UserType(UserRole.FacStaffNonSupervisor));
 
 // All possible UserRoles: UndergraduateHE, GraduateHE, NonTraditionalHE, GreekHE, HEAdmin, FacStaffSupervisor, FacStaffNonSupervisor, FacStaffAdmin, CodeConductSupervisor, CodeConductNonSupervisor, CodeConductAdmin, AdultFinancialLearner, AdultFinancialAdmin, EventVolunteer, and EventManager.
+```
+The Location attribute, while not required but is recommended, allows Users to be added to specific organization locations. The location given to a User must be one that already exists in Foundry (retrieved from before, or created and then added to Foundry).
+```c#
+// Assigned to a particular location in your saved list:
+user.Location = locationsList.ElementAt(0);
 ```
 There are other attributes you can add to a user, which are not required: SSO Id, Student Id, Employee Id, Position, First Day, Last Day.
 ### Adding a user to your organization
