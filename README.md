@@ -34,7 +34,7 @@ The associated .dll file will be located in `/Foundry/bin/Debug`. When creating 
 ## Usage
 You should get your client id and secret from the Admin Panel. More information can be found in the [public API documentation](https://api.fifoundry.net/v1).
 ### Creating a client
-Once you have obtained your client id and secret, you can simply create a new instance of the API. The OAuth is taken care of in the backend!
+Once you have obtained your client id and secret, you can simply create a new instance of the API. The OAuth is taken care of in the backend.
 ```c#
 // Your client id and secret below
 // Rather than storing them in plaintext, you can store them with .NET's Secret Manager
@@ -42,7 +42,10 @@ string client_id = "";
 string client_secret = "";
 
 API foundry = new API(client_id, client_secret);
+List<Locations> validLocations = foundry.GetLocations(); // To update valid locations
 ```
+We also retrieve the list of valid locations already in Foundry, which in turn updates the locations in the local API. These locations will be used later.
+
 You can now interact with the API and all of it's functionalities.
 
 ## Organization Locations
