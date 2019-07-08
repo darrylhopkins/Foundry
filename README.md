@@ -42,16 +42,13 @@ string client_id = "";
 string client_secret = "";
 
 API foundry = new API(client_id, client_secret);
-List<Locations> validLocations = foundry.GetLocations(); // To update valid locations
 ```
-We also retrieve the list of valid locations already in Foundry, which in turn updates the locations in the local API. These locations will be used later.
-
 You can now interact with the API and all of it's functionalities.
 
 ## Organization Locations
-An organization always has at least one location, and it can have multiple. If you are adding or updating users, you should provide the user's **Location** defined for the request.
+An organization always has at least one location, and it can have multiple. If you are adding or updating users, you should provide the user's **Location** defined for the request. *(Note: When you load an new instance of the API, a list of valid Locations will already be updated in the backend.)*
 ### Getting your organization's location
-The first thing you should do after creating your Foundry Client is save the Organization's Locations to a list or dictionary for later use.
+If you want to work with locations or add locations to your users, you should retrieve all locations so you have a valid list to work with.
 #### Getting all locations
 ```c#
 List<Location> locationsList = foundry.GetLocations();
