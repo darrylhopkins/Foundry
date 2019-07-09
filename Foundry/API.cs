@@ -486,7 +486,22 @@ namespace Foundry
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
 
-            return categoryData.Data;
+            Category category = categoryData.Data;
+
+            category.ConfigureCategory();
+            if (WithLabels)
+            {
+                for (int i = 0; i < category.Labels.Count; i++)
+                {
+                    category.Labels[i] = GetLabelById(category.Labels[1].Id);
+                }
+            }
+            else
+            {
+                category.Labels.Clear();
+            }
+
+            return category;
         }
 
         public List<Category> GetCategories(bool WithLabels)
@@ -512,6 +527,17 @@ namespace Foundry
             foreach (Category category in categoryData.Data)
             {
                 category.ConfigureCategory();
+                if (WithLabels)
+                {
+                    for (int i = 0; i < category.Labels.Count; i++)
+                    {
+                        category.Labels[i] = GetLabelById(category.Labels[1].Id);
+                    }
+                }
+                else
+                {
+                    category.Labels.Clear();
+                }
                 categories.Add(category);
             }
             return categories;
