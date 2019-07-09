@@ -28,7 +28,7 @@ namespace Foundry
         internal int UserCount { get; set; }
     }
 
-    internal class Relationships
+    internal class CategoryRelationships
     {
         [JsonProperty("category_labels")]
         internal CategoryLabels CategoryLabels { get; set; }
@@ -53,7 +53,7 @@ namespace Foundry
         internal CategoryAttributes Attributes { get; set; }
 
         [JsonProperty("relationships")]
-        internal Relationships Relationships { get; set; }
+        internal CategoryRelationships Relationships { get; set; }
 
         public List<Label> Labels { get; internal set; }
 

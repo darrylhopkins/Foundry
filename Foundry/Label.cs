@@ -22,6 +22,24 @@ namespace Foundry
         internal int UserCount { get; set; }
     }
 
+    internal class LabelRelationships
+    {
+        [JsonProperty("category_labels")]
+        internal LabelCategory LabelCategory { get; set; }
+    }
+
+    internal class LabelCategory
+    {
+        [JsonProperty("data")]
+        internal CategoryId Category { get; set; }
+    }
+
+    internal class CategoryId
+    {
+        [JsonProperty("id")]
+        internal string Id { get; set; }
+    }
+
     public class Label
     {
         [JsonProperty("id")]
@@ -31,12 +49,20 @@ namespace Foundry
 
         public int UserCount { get; internal set; }
 
+        public string CategoryId { get; internal set; }
+
+        [JsonProperty("attributes")]
         internal LabelAttributes Attributes { get; set; }
+
+        [JsonProperty("relationships")]
+        internal LabelRelationships Relationships { get; set; }
 
         internal void ConfigureLabel()
         {
             this.Name = Attributes.Name;
             this.UserCount = Attributes.UserCount;
+
+            this.CategoryId = Relationships.LabelCategory.Category.Id;
         }
     }
 }

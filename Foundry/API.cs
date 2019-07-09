@@ -470,7 +470,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting category " + CategoryId + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.POST); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.GET); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", CategoryId, ParameterType.UrlSegment);
             if (WithLabels)
@@ -508,7 +508,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting categories...");
 
-            RestRequest request = new RestRequest("/{version}/admin/categories", Method.POST); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/categories", Method.GET); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             if (WithLabels)
             {
@@ -542,6 +542,77 @@ namespace Foundry
             }
             return categories;
         }
+
+        // Labels: Need Testing
+        public Label AddLabel(Category MyCategory, Label MyLabel)
+        {
+            Console.WriteLine("Adding label " + MyLabel.Name + "to category " + MyCategory.Name);
+
+            RestRequest request = new RestRequest("/{version}/admin/category_labels", Method.POST); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.LabelJson(MyCategory, MyLabel), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            //verify if adding was okay with status code
+
+            LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+            Console.WriteLine("Label successfully added.");
+
+            return labelData.Data;
+        }
+
+        public Label UpdateLabel(Label MyLabel) // Can only update Name
+        {
+            Console.WriteLine("Updating label...");
+
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.PATCH); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", MyLabel.Id, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+
+            return labelData.Data;
+        }
+
+        public string DeleteLabel(Label MyLabel)
+        {
+            Console.WriteLine("Deleting label " + MyLabel.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.DELETE); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", MyLabel.Id, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            return response.Content;
+        }
+
+        public Label GetLabelById(string LabelId)
+        {
+            Console.WriteLine("Getting label " + LabelId + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.GET); //TODO
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", LabelId, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+
+            return labelData.Data;
+        }
+
+        // Internal Static Methods:
         internal static string GetDescription(Enum value)
         {
             return
@@ -649,10 +720,24 @@ namespace Foundry
         internal static string CategoryJson(Category category)
         {
             string Json = "{\n" +
-                "'data': {\n" +
-                "\t'type': 'categories',\n" +
-                "\t'attributes': {\n" +
-                "\t\t'name': '" + category.Name + "'\n" +
+                "\"data\": {\n" +
+                "\t\"type\": \"categories\",\n" +
+                "\t\"attributes\": {\n" +
+                "\t\t\"name\": \"" + category.Name + "\"\n" +
+                "\t}\n" +
+                "}";
+
+            return Json;
+        }
+
+        internal static string LabelJson(Category category, Label label)
+        {
+            string Json = "{\n" +
+                "\"data\": {\n" +
+                "\t\"type\": \"categories\",\n" +
+                "\t\"attributes\": {\n" +
+                "\t\t\"name\": \"" + label.Name + "\",\n" +
+                "\t\t\"category_id\": \"" + category.Id + "\"\n" +
                 "\t}\n" +
                 "}";
 
