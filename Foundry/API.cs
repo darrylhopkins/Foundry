@@ -493,13 +493,13 @@ namespace Foundry
             {
                 for (int i = 0; i < category.Labels.Count; i++)
                 {
-                    category.Labels[i] = GetLabelById(category.Labels[1].Id);
+                    category.Labels[i] = GetLabelById(category.Labels[i].Id);
                 }
             }
-            else
+            /*else
             {
                 category.Labels.Clear();
-            }
+            }*/
 
             return category;
         }
@@ -717,29 +717,39 @@ namespace Foundry
             return Json;
         }
 
-        internal static string CategoryJson(Category category)
+        public static string CategoryJson(Category category)
         {
             string Json = "{\n" +
-                "\"data\": {\n" +
-                "\t\"type\": \"categories\",\n" +
+                "\"data\": {\n";
+            if (category.Id != null)
+            {
+                Json += "\t\"id\": \"" + category.Id + "\",\n";
+            }
+
+            Json += "\t\"type\": \"categories\",\n" +
                 "\t\"attributes\": {\n" +
                 "\t\t\"name\": \"" + category.Name + "\"\n" +
                 "\t}\n" +
-                "}";
+                "}\n}";
 
             return Json;
         }
 
-        internal static string LabelJson(Category category, Label label)
+        public static string LabelJson(Category category, Label label)
         {
             string Json = "{\n" +
-                "\"data\": {\n" +
-                "\t\"type\": \"categories\",\n" +
+                "\"data\": {\n";
+            if (label.Id != null)
+            {
+                Json += "\t\"id\": \"" + label.Id + "\",\n";
+            }
+
+            Json += "\t\"type\": \"category_labels\",\n" +
                 "\t\"attributes\": {\n" +
                 "\t\t\"name\": \"" + label.Name + "\",\n" +
                 "\t\t\"category_id\": \"" + category.Id + "\"\n" +
                 "\t}\n" +
-                "}";
+                "}\n}";
 
             return Json;
         }
