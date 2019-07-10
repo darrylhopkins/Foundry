@@ -446,7 +446,7 @@ namespace Foundry
             return location;
         }
 
-        // Categories: Need Testing
+        // Categories:
         public Category AddCategory(Category MyCategory)
         {
             Console.WriteLine("Adding category " + MyCategory.Name + "...");
@@ -531,13 +531,13 @@ namespace Foundry
                 {
                     for (int i = 0; i < category.Labels.Count; i++)
                     {
-                        category.Labels[i] = GetLabelById(category.Labels[1].Id);
+                        category.Labels[i] = GetLabelById(category.Labels[i].Id);
                     }
                 }
-                else
+                /*else
                 {
                     category.Labels.Clear();
-                }
+                }*/
                 categories.Add(category);
             }
             return categories;
@@ -546,7 +546,7 @@ namespace Foundry
         // Labels: Need Testing
         public Label AddLabel(Category MyCategory, Label MyLabel)
         {
-            Console.WriteLine("Adding label " + MyLabel.Name + "to category " + MyCategory.Name);
+            Console.WriteLine("Adding label " + MyLabel.Name + " to category " + MyCategory.Name);
 
             RestRequest request = new RestRequest("/{version}/admin/category_labels", Method.POST); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
@@ -559,8 +559,11 @@ namespace Foundry
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully added.");
+            Label label = labelData.Data;
 
-            return labelData.Data;
+            label.ConfigureLabel();
+
+            return label;
         }
 
         public Label UpdateLabel(Label MyLabel) // Can only update Name
@@ -570,14 +573,18 @@ namespace Foundry
             RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.PATCH); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", MyLabel.Id, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("application/json", API.LabelJson(null, MyLabel), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+            Console.WriteLine("Label successfully updated.");
+            Label label = labelData.Data;
 
-            return labelData.Data;
+            label.ConfigureLabel();
+
+            return label;
         }
 
         public string DeleteLabel(Label MyLabel)
@@ -592,6 +599,8 @@ namespace Foundry
 
             IRestResponse response = _client.Execute(request);
 
+            Console.WriteLine("Label successfully deleted.");
+
             return response.Content;
         }
 
@@ -599,7 +608,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting label " + LabelId + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.GET); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.GET); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", LabelId, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
@@ -607,9 +616,14 @@ namespace Foundry
 
             IRestResponse response = _client.Execute(request);
 
-            LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+            // Need to check is response is okay (If Id not found throw exception)
 
-            return labelData.Data;
+            LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
+            Label label = labelData.Data;
+
+            label.ConfigureLabel();
+
+            return label;
         }
 
         // Internal Static Methods:
@@ -625,7 +639,7 @@ namespace Foundry
                 ?? value.ToString();
         }
 
-        internal static string UserJson(User user) //Change to internal when done
+        public static string UserJson(User user) //Change to internal when done
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
@@ -684,7 +698,7 @@ namespace Foundry
             return Json;
         }
 
-        internal static string LocationJson(Location location) //Change to internal when done
+        public static string LocationJson(Location location) //Change to internal when done
         {
             string Json = "{\n" +
                 "\"data\": {\n";
@@ -746,9 +760,12 @@ namespace Foundry
 
             Json += "\t\"type\": \"category_labels\",\n" +
                 "\t\"attributes\": {\n" +
-                "\t\t\"name\": \"" + label.Name + "\",\n" +
-                "\t\t\"category_id\": \"" + category.Id + "\"\n" +
-                "\t}\n" +
+                "\t\t\"name\": \"" + label.Name + "\"";
+            if (category != null)
+            {
+                Json += ",\n\t\t\"category_id\": \"" + category.Id + "\"\n";
+            }
+                Json += "\t}\n" +
                 "}\n}";
 
             return Json;

@@ -24,7 +24,7 @@ namespace Foundry
 
     internal class LabelRelationships
     {
-        [JsonProperty("category_labels")]
+        [JsonProperty("category")]
         internal LabelCategory LabelCategory { get; set; }
     }
 
