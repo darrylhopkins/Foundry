@@ -543,7 +543,45 @@ namespace Foundry
             return categories;
         }
 
-        // Labels: Need Testing
+        public Category UpdateCategory(Category MyCategory)
+        {
+            Console.WriteLine("Updating category...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.PATCH);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", MyCategory.Id, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.CategoryJson(MyCategory), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
+            Console.WriteLine("Category successfully updated.");
+            Category category = categoryData.Data;
+
+            category.ConfigureCategory();
+
+            return category;
+        }
+
+        public string DeleteCategory(Category MyCategory)
+        {
+            Console.WriteLine("Deleting category " + MyCategory.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.DELETE);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", MyCategory.Id, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            Console.WriteLine("Category successfully deleted.");
+
+            return response.Content;
+        }
+
+        // Labels:
         public Label AddLabel(Category MyCategory, Label MyLabel)
         {
             Console.WriteLine("Adding label " + MyLabel.Name + " to category " + MyCategory.Name);
@@ -566,11 +604,11 @@ namespace Foundry
             return label;
         }
 
-        public Label UpdateLabel(Label MyLabel) // Can only update Name
+        public Label UpdateLabel(Label MyLabel)
         {
             Console.WriteLine("Updating label...");
 
-            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.PATCH); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.PATCH);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", MyLabel.Id, ParameterType.UrlSegment);
             request.AddParameter("application/json", API.LabelJson(null, MyLabel), ParameterType.RequestBody);
@@ -591,7 +629,7 @@ namespace Foundry
         {
             Console.WriteLine("Deleting label " + MyLabel.Name + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.DELETE); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.DELETE);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", MyLabel.Id, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");

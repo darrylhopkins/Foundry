@@ -15,7 +15,8 @@ namespace Foundry
             Update,
             GetWithLabels,
             GetWithoutLabels,
-            GetById
+            GetById,
+            Delete
         }
 
         public enum LabelsTest
@@ -47,7 +48,7 @@ namespace Foundry
             //TestCategories(api: foundry, option: CategoriesTest.GetById);
             //TestLabels(api: foundry, option: LabelsTest.Delete);
 
-             Console.ReadLine();
+            Console.ReadLine();
         }
 
         public static void TestCategories(API api, CategoriesTest option)
@@ -62,7 +63,7 @@ namespace Foundry
                     newCategory = api.AddCategory(newCategory);
                     Console.WriteLine(API.CategoryJson(newCategory));
                     break;
- 
+
                 case CategoriesTest.GetWithLabels:
                     List<Category> categoriesWithLabels = api.GetCategories(WithLabels: true);
                     foreach (Category cat in categoriesWithLabels)
@@ -83,12 +84,24 @@ namespace Foundry
                     Category myCategory = api.GetCategoryById("1114", WithLabels: true);
                     Console.WriteLine(API.CategoryJson(myCategory));
                     break;
-            }     
+
+                case CategoriesTest.Update:
+                    Category category = api.GetCategoryById("1114", WithLabels: false);
+                    category.Name = "Updating using SDK";
+                    category = api.UpdateCategory(category);
+                    Console.WriteLine(API.CategoryJson(category));
+                    break;
+
+                case CategoriesTest.Delete:
+                    Category toDelete = api.GetCategoryById("1114", WithLabels: false);
+                    api.DeleteCategory(toDelete);
+                    break;
+            }
         }
 
         public static void TestLabels(API api, LabelsTest option)
         {
-            switch(option)
+            switch (option)
             {
                 case LabelsTest.Add:
                     // Create a new label
@@ -124,7 +137,7 @@ namespace Foundry
 
                     // Update the label
                     label = api.UpdateLabel(label);
-                    
+
                     break;
             }
         }
