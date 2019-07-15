@@ -586,7 +586,7 @@ namespace Foundry
         {
             Console.WriteLine("Adding label " + MyLabel.Name + " to category " + MyCategory.Name);
 
-            RestRequest request = new RestRequest("/{version}/admin/category_labels", Method.POST); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/category_labels", Method.POST);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("application/json", API.LabelJson(MyCategory, MyLabel), ParameterType.RequestBody);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
@@ -646,7 +646,7 @@ namespace Foundry
         {
             Console.WriteLine("Getting label " + LabelId + "...");
 
-            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.GET); //TODO
+            RestRequest request = new RestRequest("/{version}/admin/category_labels/{id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", LabelId, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
@@ -662,6 +662,26 @@ namespace Foundry
             label.ConfigureLabel();
 
             return label;
+        }
+
+        // Category Label Users:
+        // Should there be one for individual users
+        public string BulkAssignLabels(List<User> users, Label label)
+        {
+            Console.WriteLine("Assigning " + label.Name + " to users provided.");
+
+            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.POST);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.BulkUserLabelJson(users, label), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+
+            //verify
+
+            Console.WriteLine("Labels Added.");
+
+            return response.Content;
         }
 
         // Internal Static Methods:
@@ -805,6 +825,34 @@ namespace Foundry
             }
                 Json += "\t}\n" +
                 "}\n}";
+
+            return Json;
+        }
+
+        public static string BulkUserLabelJson(List<User> users, Label label)
+        {
+            string Json = "{\n" +
+                "\"data\": {\n" +
+                "\"type\": \"bulk_action_categories\",\n" +
+                "\"attributes\": {\n" +
+                "\"user_ids\": [\n";
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                Json += "\"" + users.ElementAt(i).UserId + "\"";
+                if (i != users.Count-1)
+                {
+                    Json += ",";
+                }
+                Json += "\n";
+            }
+
+            Json += "],\n" +
+                "\"category_label\": \"" + label.Name + "\",\n" +
+                "\"category_id\": \"" + label.CategoryId + "\"\n" +
+                "}\n" +
+                "}\n" +
+                "}";
 
             return Json;
         }
