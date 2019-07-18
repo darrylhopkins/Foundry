@@ -57,6 +57,7 @@ namespace Foundry
         const string BaseUrl = "https://api.fifoundry-staging.net/";
         const string _ver = "v1";
 
+        const int bulkActionCap = 500;
         const int returnPerPage = 100;
         int currPage;
 
@@ -666,22 +667,44 @@ namespace Foundry
 
         // Category Label Users:
         // Should there be one for individual users
-        public string BulkAssignLabels(List<User> users, Label label)
+        public List<string> BulkAssignLabels(List<User> usersList, Label label)
         {
             Console.WriteLine("Assigning " + label.Name + " to users provided.");
 
-            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.POST);
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("application/json", API.BulkUserLabelJson(users, label), ParameterType.RequestBody);
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+            List<string> responses = new List<string>();
 
-            IRestResponse response = _client.Execute(request);
+            int remaining = usersList.Count;
+            int currIndex = 0;
+            while (remaining != 0)
+            {
+                List<User> users;
+                if (remaining <= 500)
+                {
+                    users = usersList.GetRange(currIndex, currIndex + remaining);
+                    remaining = 0;
+                    currIndex += remaining;
+                }
+                else
+                {
+                    users = usersList.GetRange(currIndex, currIndex + bulkActionCap);
+                    currIndex += bulkActionCap;
+                    remaining -= bulkActionCap;
+                }
 
-            //verify
+                RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.POST);
+                request.AddParameter("version", _ver, ParameterType.UrlSegment);
+                request.AddParameter("application/json", API.BulkUserLabelJson(users, label), ParameterType.RequestBody);
+                request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-            Console.WriteLine("Labels Added.");
+                IRestResponse response = _client.Execute(request);
 
-            return response.Content;
+                //verify
+
+                Console.WriteLine("Labels added to " + currIndex % 500 + " users.");
+                responses.Add(response.Content);
+            }
+
+            return responses;
         }
 
         // Internal Static Methods:
