@@ -176,4 +176,86 @@ foundry.UpdateUser(user);
 ```
 When updating a user it's important to note that you cannot remove any of the required fields (i.e. there must be a name, email, and at least one UserRole), but you can still update them.
 
-## Categories
+## Categories and Labels
+Categories and Labels are ways you can group users of your organization. One organization can have multiple categories, and each category can have multiple labels. A single user can only have one label associated to them.
+
+### Working with categories
+Start by creating a new category you want to add to your organization. To create a category, all you need to do is assign a name.
+```c#
+Category newCategory = new Category
+{
+    Name = "New Category"
+};
+```
+Once you have the category, you can add it to your organization. Assign the original object to the return value of the add function to update it with it's CategoryId.
+```c#
+newCategory = foundry.AddCategory(newCategory);
+```
+Now, you can update (the name) or delete your category using Foundry.
+```c#
+// Updating Category Name
+newCategory.Name = "Updating using SDK";
+newCategory = foundry.UpdateCategory(newCategory);
+
+// Deleting Category
+foundry.DeleteCategory(newCategory);
+```
+If you want to access the other categories you have in your organization, you can get all of them or a certain one by it's CategoryId. When retrieving categories, you can choose to retrieve them with or without it's associated list of labels. Simply set the **WithLabels** parameter to true or false
+```c#
+// All categories with list of labels
+List<Category> categoriesWithLabels = foundry.GetCategories(WithLabels: true);
+// You can access a categories labels using the .Labels property of a Category
+
+// All categories without list of labels
+List<Category> categoriesWithoutLabels = foundry.GetCategories(WithLabels: false);
+
+// Single category by id
+Category myCategory = foundry.GetCategoryById("1114", WithLabels: true);
+```
+
+### Working with labels
+The process to working with labels is very similar to categories. Start by creating a label.
+```c#
+Label newLabel = new Label
+{
+    Name = "Label for New Category"
+};
+```
+When you add a label, you need to specify which category the label is going to. We'll do this by finding a category by id.
+```c#
+// Find the category you want to add the label to
+Category myCategory = foundry.GetCategoryById("1114", WithLabels: false);
+// If you don't know the ID, you can always use foundry.GetCategories() to get the entire list and find which one to add the label to
+
+// Add the label
+newLabel = foundry.AddLabel(myCategory, newLabel); // Assigns newLabel.Id
+```
+Like with categories, you can update, delete, and retrieve a single label by id.
+```c#
+// Get label by Id
+Label myLabel = foundry.GetLabelById("2910");
+
+// Update it's name
+myLabel.Name = "C# SDK Updated My Name!";
+myLabel = foundry.UpdateLabel(myLabel);
+
+// Delete the label
+foundry.DeleteLabel(myLabel);
+```
+
+### Adding labels to users
+Once you have a particular label, you can add groups of users to that label. Start by creating your group of users. We'll do this by [searching](#Searching-for-users) for users.
+```c#
+Dictionary<SearchTerms, string> search = new Dictionary<SearchTerms, string>();
+search.Add(SearchTerms.FirstName, "Aman");
+
+List<User> users = foundry.GetUsersBySearch(search);
+```
+Next, we find the label we want our users to be associated with.
+```c#
+Label label = foundry.GetLabelById("2837");
+```
+And finally, we can use the bulk add feature to add the label to all users at once.
+```c#
+foundry.BulkAssignLabels(users, label); // You can assign this to List<string> responses, and read out the responses of each batch that was added.
+```
