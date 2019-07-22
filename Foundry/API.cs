@@ -840,7 +840,7 @@ namespace Foundry
 
         // Category Label Users:
         // Should there be one for individual users
-        public string BulkAssignLabels(List<User> usersList, Label label)
+        public BulkAssignJob BulkAssignLabels(List<User> usersList, Label label)
         {
             if (usersList.Count > bulkActionCap)
             {
@@ -858,14 +858,17 @@ namespace Foundry
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
 
-            if (numericCode != 200)
+            if (numericCode != 201)
             {
                 throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
             }
 
+            JobJson jobJson = JsonConvert.DeserializeObject<JobJson>(response.Content);
+            BulkAssignJob job = jobJson.BulkAssignJob;
+
             Console.WriteLine("Labels added to " + usersList.Count + " users.");
 
-            return response.Content;
+            return job;
         }
 
         // Internal Static Methods:
