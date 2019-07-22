@@ -119,16 +119,16 @@ namespace Foundry
         // Users:
         public User AddUser(User MyUser) // Return given user if invalid add
         {
-            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
+            /*if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
                 Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
                 Console.ReadLine();
                 Environment.Exit(1);
             }
 
-            Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");
+            Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");*/
 
-            if (!FoundryLocations.Contains(MyUser.Location)) {
+            /*if (!FoundryLocations.Contains(MyUser.Location)) {
                 Console.WriteLine("Illegal Location: Location does not match any entry in FoundryLocations");
                 Console.ReadLine();
                 Environment.Exit(1);
@@ -136,7 +136,7 @@ namespace Foundry
             else
             {
                 MyUser.LocationId = MyUser.Location.Id;
-            }
+            }*/
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
@@ -148,19 +148,22 @@ namespace Foundry
             IRestResponse response = _client.Execute<User>(request);
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
-
-            if (numericCode == 422)
+            
+            if (numericCode != 201)
             {
-                Console.WriteLine(response.Content);
-                Console.ReadLine();
-                Environment.Exit(422);
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
             }
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 
             User user = userData.Data.UserAttributes;
-            user.Location = GetLocationById(user.LocationId);
+
+            if (user.Location != null)
+            {
+                user.Location = GetLocationById(user.LocationId);
+            }
+
             user.ConfigureUserData(userData.Data);
 
             return user;
@@ -168,7 +171,7 @@ namespace Foundry
 
         public User UpdateUser(User MyUser) // Return exception if invalid update
         {
-            if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
+            /*if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
             {
                 Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
                 Console.ReadLine();
@@ -184,7 +187,7 @@ namespace Foundry
             else
             {
                 MyUser.LocationId = MyUser.Location.Id;
-            }
+            }*/
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
 
@@ -195,12 +198,24 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully updated.");
 
             User user = userData.Data.UserAttributes;
-            user.Location = GetLocationById(user.LocationId);
+
+            if (user.Location != null)
+            {
+                user.Location = GetLocationById(user.LocationId);
+            }
+
             user.ConfigureUserData(userData.Data);
 
             return user;
@@ -217,11 +232,22 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.ConfigureUserData(userData.Data);
-            retrievedUser.Location = GetLocationById(retrievedUser.LocationId);
+            if (retrievedUser.Location != null)
+            {
+                retrievedUser.Location = GetLocationById(retrievedUser.LocationId);
+            }
 
             Console.WriteLine("User Retrieved: " + retrievedUser.FirstName + " " + retrievedUser.LastName + "...");
 
@@ -241,6 +267,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             List<User> users = new List<User>();
 
@@ -248,7 +282,10 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                newUser.Location = GetLocationById(newUser.LocationId);
+                if (newUser.Location != null)
+                {
+                    newUser.Location = GetLocationById(newUser.LocationId);
+                }
                 users.Add(newUser);
                 Console.WriteLine("User Retrieved: " + newUser.FirstName + " " + newUser.LastName + "...");
             }
@@ -271,6 +308,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             List<User> users = new List<User>();
 
@@ -278,7 +323,10 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                newUser.Location = GetLocationById(newUser.LocationId);
+                if (newUser.Location != null)
+                {
+                    newUser.Location = GetLocationById(newUser.LocationId);
+                }
                 users.Add(newUser);
             }
 
@@ -299,6 +347,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             List<User> users = new List<User>();
 
@@ -306,7 +362,10 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                newUser.Location = GetLocationById(newUser.LocationId);
+                if (newUser.Location != null)
+                {
+                    newUser.Location = GetLocationById(newUser.LocationId);
+                }
                 users.Add(newUser);
             }
 
@@ -327,6 +386,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             List<User> users = new List<User>();
 
@@ -334,7 +401,10 @@ namespace Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                newUser.Location = GetLocationById(newUser.LocationId);
+                if (newUser.Location != null)
+                {
+                    newUser.Location = GetLocationById(newUser.LocationId);
+                }
                 users.Add(newUser);
             }
 
@@ -371,6 +441,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
             return metaData.Meta.Count;
@@ -387,6 +465,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 201)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             //verify if adding was okay with status code
 
@@ -411,8 +496,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            // if succeeded:
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             Location location = locationData.LocationData.LocationAttributes;
@@ -426,13 +516,35 @@ namespace Foundry
 
         public List<Location> GetLocations()
         {
-            return this.FoundryLocations; // No need for REST request because Locations are updated in local List
+            RestRequest request = new RestRequest("/{version}/admin/locations");
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
+            LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
+            List<Location> locations = new List<Location>();
+
+            foreach (LocationData data in locationData.LocationsData)
+            {
+                Location newLocation = data.LocationAttributes;
+                newLocation.AddIdFromData(data);
+                locations.Add(newLocation);
+            }
+
+            return locations;
         }
 
         public Location GetLocationById(string LocationId)
         {
-            Console.WriteLine("Getting location " + LocationId + "...");
-
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
@@ -440,6 +552,14 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             Location location = locationData.LocationData.LocationAttributes;
             location.AddIdFromData(locationData.LocationData);
@@ -458,8 +578,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            //verify if adding was okay with status code
+            if (numericCode != 201)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully added.");
@@ -482,8 +607,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            //verify if adding was okay with status code
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
 
@@ -519,8 +649,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            //verify if adding was okay with status code
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
             List<Category> categories = new List<Category>();
@@ -555,6 +690,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully updated.");
@@ -576,6 +718,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 204)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             Console.WriteLine("Category successfully deleted.");
 
@@ -593,8 +742,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            //verify if adding was okay with status code
+            if (numericCode != 201)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully added.");
@@ -616,6 +770,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully updated.");
@@ -637,6 +798,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 204)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             Console.WriteLine("Label successfully deleted.");
 
@@ -654,8 +822,13 @@ namespace Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
 
-            // Need to check is response is okay (If Id not found throw exception)
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Label label = labelData.Data;
@@ -667,44 +840,30 @@ namespace Foundry
 
         // Category Label Users:
         // Should there be one for individual users
-        public List<string> BulkAssignLabels(List<User> usersList, Label label)
+        public string BulkAssignLabels(List<User> usersList, Label label)
         {
-            Console.WriteLine("Assigning " + label.Name + " to users provided.");
-
-            List<string> responses = new List<string>();
-
-            int remaining = usersList.Count;
-            int currIndex = 0;
-            while (remaining != 0)
+            if (usersList.Count > bulkActionCap)
             {
-                List<User> users;
-                if (remaining <= 500)
-                {
-                    users = usersList.GetRange(currIndex, currIndex + remaining);
-                    remaining = 0;
-                    currIndex += remaining;
-                }
-                else
-                {
-                    users = usersList.GetRange(currIndex, currIndex + bulkActionCap);
-                    currIndex += bulkActionCap;
-                    remaining -= bulkActionCap;
-                }
-
-                RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.POST);
-                request.AddParameter("version", _ver, ParameterType.UrlSegment);
-                request.AddParameter("application/json", API.BulkUserLabelJson(users, label), ParameterType.RequestBody);
-                request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
-                IRestResponse response = _client.Execute(request);
-
-                //verify
-
-                Console.WriteLine("Labels added to " + currIndex % 500 + " users.");
-                responses.Add(response.Content);
+                throw new FoundryException("The limit for the bulk add function is 500 users!");
             }
 
-            return responses;
+            Console.WriteLine("Assigning " + label.Name + " to users provided.");
+
+            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.POST);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.BulkUserLabelJson(usersList, label), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 200)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
+            Console.WriteLine("Labels added to " + usersList.Count + " users.");
         }
 
         // Internal Static Methods:

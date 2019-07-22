@@ -51,6 +51,7 @@
     <Compile Include="AccessToken.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Category.cs" />
+    <Compile Include="FoundryException.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="User.cs" />
