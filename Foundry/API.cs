@@ -864,6 +864,8 @@ namespace Foundry
             }
 
             Console.WriteLine("Labels added to " + usersList.Count + " users.");
+
+            return response.Content;
         }
 
         // Internal Static Methods:
