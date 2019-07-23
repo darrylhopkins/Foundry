@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AccessToken.cs" />
     <Compile Include="API.cs" />
+    <Compile Include="BulkAssignJob.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="FoundryException.cs" />
     <Compile Include="Label.cs" />
