@@ -30,4 +30,4 @@ string client_secret = "";
 
 API foundry = new API(client_id, client_secret);
 ```
-You can now interact with the API and all of it's functionalities. See the [Foundry Wiki]("../../wiki") for more information.
+You can now interact with the API and all of it's functionalities. See the [Foundry Wiki](../../wiki) for more information.
