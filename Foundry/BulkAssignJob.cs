@@ -27,7 +27,7 @@ namespace Foundry
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        public string Status { get; set; }
+        public string Status { get; internal set; }
 
         [JsonProperty("attributes")]
         internal JobAttributes Attributes { get; set; }
