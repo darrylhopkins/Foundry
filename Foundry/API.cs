@@ -54,7 +54,7 @@ namespace Foundry
 
     public class API
     {
-        const string BaseUrl = "https://api.fifoundry-staging.net/";
+        private string BaseUrl;
         const string _ver = "v1";
 
         const int bulkActionCap = 500;
@@ -69,10 +69,11 @@ namespace Foundry
         string _accountSid;
 
         // TODO: Add try catch to make sure id and key are valid
-        public API(string accountSid, string secretKey)
+        public API(string accountSid, string secretKey, string BaseUrl)
         {
             _client = new RestClient(BaseUrl);
             _client.Authenticator = new HttpBasicAuthenticator(accountSid, secretKey);
+            this.BaseUrl = BaseUrl;
 
             RestRequest request = new RestRequest("/oauth/token", Method.POST);
 
