@@ -887,7 +887,7 @@ namespace Foundry
 
             if (user.SingleSignOnId != null)
             {
-                Json += "\"sso_id\": \"" + user.SingleSignOnId + "\"";
+                Json += ",\n\"sso_id\": \"" + user.SingleSignOnId + "\"";
             }
             if (user.EmployeeId != null)
             {
@@ -897,8 +897,21 @@ namespace Foundry
             {
                 Json += ",\n\"student_id\": \"" + user.StudentId + "\"";
             }
-            Json += ",\n\"location_id\": \"" + user.LocationId + "\"" +
+
+            if (user.Location != null)
+            {
+                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"" +
                 "\n}";
+            }
+            else if (user.LocationId != null)
+            {
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" +
+                "\n}";
+            }
+            else
+            {
+                Json += "\n}";
+            }
 
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
