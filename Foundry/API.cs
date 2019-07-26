@@ -944,7 +944,7 @@ namespace Foundry
             return Json;
         }
 
-        public static string LocationJson(Location location) //Change to internal when done
+        internal static string LocationJson(Location location) //Change to internal when done
         {
             string Json = "{\n" +
                 "\"data\": {\n";
@@ -977,7 +977,7 @@ namespace Foundry
             return Json;
         }
 
-        public static string CategoryJson(Category category)
+        internal static string CategoryJson(Category category)
         {
             string Json = "{\n" +
                 "\"data\": {\n";
@@ -995,7 +995,7 @@ namespace Foundry
             return Json;
         }
 
-        public static string LabelJson(Category category, Label label)
+        internal static string LabelJson(Category category, Label label)
         {
             string Json = "{\n" +
                 "\"data\": {\n";
@@ -1017,7 +1017,7 @@ namespace Foundry
             return Json;
         }
 
-        public static string BulkUserLabelJson(List<User> users, Label label)
+        internal static string BulkUserLabelJson(List<User> users, Label label)
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
