@@ -837,6 +837,28 @@ namespace Foundry
             return job;
         }
 
+        public BulkAssignJob GetJobById(string JobId)
+        {
+            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.GET);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            //request.AddParameter("application/json", ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 201)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+
+            JobJson jobJson = JsonConvert.DeserializeObject<JobJson>(response.Content);
+            BulkAssignJob job = jobJson.BulkAssignJob;
+
+            return job;
+        }
+
         // Internal Static Methods:
         internal static string GetDescription(Enum value)
         {
