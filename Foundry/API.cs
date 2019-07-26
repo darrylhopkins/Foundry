@@ -68,7 +68,6 @@ namespace Foundry
 
         string _accountSid;
 
-        // TODO: Add try catch to make sure id and key are valid
         public API(string accountSid, string secretKey, string BaseUrl)
         {
             _client = new RestClient(BaseUrl);
@@ -89,9 +88,7 @@ namespace Foundry
             _token = JsonConvert.DeserializeObject<AccessToken>(response.Content);
             if (_token.token_type == null)
             {
-                Console.WriteLine(response.Content);
-                Console.ReadLine();
-                Environment.Exit(1);
+                throw new FoundryException(response.ErrorMessage, (int)response.StatusCode, response.Content);
             }
             else
             {
