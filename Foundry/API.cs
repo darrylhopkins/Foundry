@@ -839,16 +839,16 @@ namespace Foundry
 
         public BulkAssignJob GetJobById(string JobId)
         {
-            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category", Method.GET);
+            RestRequest request = new RestRequest("/{version}/admin/bulk_actions/category/{id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            //request.AddParameter("application/json", ParameterType.RequestBody);
+            request.AddParameter("id", JobId, ParameterType.UrlSegment);
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
 
-            if (numericCode != 201)
+            if (numericCode != 200)
             {
                 throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
             }
