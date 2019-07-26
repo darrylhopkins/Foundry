@@ -27,7 +27,8 @@ Once you have obtained your client id and secret, you can simply create a new in
 // Rather than storing them in plaintext, you can store them with .NET's Secret Manager
 string client_id = "";
 string client_secret = "";
+string endpoint = "";
 
-API foundry = new API(client_id, client_secret);
+API foundry = new API(accountSid: client_id, secretKey: client_secret, BaseUrl: endpoint);
 ```
 You can now interact with the API and all of it's functionalities. See the [Foundry Wiki](../../wiki) for more information.
