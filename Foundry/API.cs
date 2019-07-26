@@ -120,24 +120,6 @@ namespace Foundry
         // Users:
         public User AddUser(User MyUser) // Return given user if invalid add
         {
-            /*if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
-            {
-                Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
-                Console.ReadLine();
-                Environment.Exit(1);
-            }
-
-            Console.WriteLine("Adding User: " + MyUser.FirstName + " " + MyUser.LastName + "...");*/
-
-            /*if (!FoundryLocations.Contains(MyUser.Location)) {
-                Console.WriteLine("Illegal Location: Location does not match any entry in FoundryLocations");
-                Console.ReadLine();
-                Environment.Exit(1);
-            }
-            else
-            {
-                MyUser.LocationId = MyUser.Location.Id;
-            }*/
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
@@ -172,23 +154,6 @@ namespace Foundry
 
         public User UpdateUser(User MyUser) // Return exception if invalid update
         {
-            /*if (MyUser.FirstName == null || MyUser.LastName == null || MyUser.Email == null || MyUser.UserTypes.Count < 1)
-            {
-                Console.WriteLine("Illegal User: Missing First Name, Last Name, Email, or UserType");
-                Console.ReadLine();
-                Environment.Exit(1);
-            }
-
-            if (!FoundryLocations.Contains(MyUser.Location))
-            {
-                Console.WriteLine("Illegal Location: Location does not match any entry in FoundryLocations");
-                Console.ReadLine();
-                Environment.Exit(1);
-            }
-            else
-            {
-                MyUser.LocationId = MyUser.Location.Id;
-            }*/
 
             RestRequest request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
 
