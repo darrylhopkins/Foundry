@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry
+namespace EVERFI.Foundry.Objects
 {
     // TODO: only certain roles available for certain types (Ex. Admin = Primary, FacStaffLearner = Supervisor or Nonsupervisor
     internal enum Types

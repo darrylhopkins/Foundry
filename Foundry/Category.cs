@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry
+namespace EVERFI.Foundry.Objects
 {
     internal class CategoryData
     {

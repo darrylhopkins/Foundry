@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry
+namespace EVERFI.Foundry.Objects
 {
     internal class MetaJson
     {

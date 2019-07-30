@@ -9,8 +9,9 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EVERFI.Foundry.Objects;
 
-namespace Foundry
+namespace EVERFI.Foundry
 {
     public enum SearchTerms
     {
@@ -913,8 +914,8 @@ namespace Foundry
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +
-                "\"rule_set\": \"" + Foundry.UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
-                "\"role\": \"" + Foundry.UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
+                "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
+                "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
                 if (i == 0)
                 {
                     if (user.Position != null)
