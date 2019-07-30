@@ -7,8 +7,8 @@
     <ProjectGuid>{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Foundry</RootNamespace>
-    <AssemblyName>Foundry</AssemblyName>
+    <RootNamespace>EVERFI</RootNamespace>
+    <AssemblyName>EVERFI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -48,18 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessToken.cs" />
-    <Compile Include="API.cs" />
-    <Compile Include="BulkAssignJob.cs" />
-    <Compile Include="Category.cs" />
-    <Compile Include="FoundryException.cs" />
-    <Compile Include="Label.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Foundry.Objects\AccessToken.cs" />
+    <Compile Include="Foundry\API.cs" />
+    <Compile Include="Foundry.Objects\BulkAssignJob.cs" />
+    <Compile Include="Foundry.Objects\Category.cs" />
+    <Compile Include="Foundry.Objects\FoundryException.cs" />
+    <Compile Include="Foundry.Objects\Label.cs" />
+    <Compile Include="Foundry.Objects\Location.cs" />
+    <Compile Include="Foundry.Objects\User.cs" />
+    <Compile Include="Foundry\API.Locations.cs" />
+    <Compile Include="Foundry\API.Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserType.cs" />
+    <Compile Include="Foundry.Objects\UserType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Foundry\API.Categories.cs" />
+    <Compile Include="Foundry\API.Labels.cs" />
+    <Compile Include="Foundry\API.CategoryLabels.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

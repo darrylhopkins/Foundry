@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foundry", "Foundry\Foundry.csproj", "{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVERFI", "EVERFI\EVERFI.csproj", "{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoundryTest", "..\FoundryTest\FoundryTest\FoundryTest.csproj", "{1D417365-B12B-46E3-9A4C-1C010DD7AE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLLTest", "..\DLLTest\DLLTest\DLLTest.csproj", "{BD86D6BF-0BC2-40D6-954D-3E0DB52280C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D3A0DA0-07A7-4EEA-B54B-8965FC77A101}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D417365-B12B-46E3-9A4C-1C010DD7AE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D417365-B12B-46E3-9A4C-1C010DD7AE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D417365-B12B-46E3-9A4C-1C010DD7AE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D417365-B12B-46E3-9A4C-1C010DD7AE78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD86D6BF-0BC2-40D6-954D-3E0DB52280C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD86D6BF-0BC2-40D6-954D-3E0DB52280C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD86D6BF-0BC2-40D6-954D-3E0DB52280C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD86D6BF-0BC2-40D6-954D-3E0DB52280C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

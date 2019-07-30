@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Foundry")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("EVERFI")]
 [assembly: AssemblyProduct("Foundry")]
 [assembly: AssemblyCopyright("Copyright © 2019 by Aman Jaiman")]
 [assembly: AssemblyTrademark("")]
