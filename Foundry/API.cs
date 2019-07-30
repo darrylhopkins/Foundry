@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json;  
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
@@ -869,7 +869,7 @@ namespace Foundry
                 ?? value.ToString();
         }
 
-        public static string UserJson(User user) //Change to internal when done
+        internal static string UserJson(User user) //Change to internal when done
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
@@ -1041,5 +1041,8 @@ namespace Foundry
 
             return Json;
         }
+
+        // Adding and getting labels for users
+        // Add and update user now has category_labels
     }
 }
