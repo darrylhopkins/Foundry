@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace EVERFI.Foundry.Objects
+namespace EVERFI.Foundry.Classes
 {
     internal class AccessToken
     {

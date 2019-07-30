@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using EVERFI.Foundry.Objects;
+using EVERFI.Foundry.Classes;
 
 namespace EVERFI.Foundry
 {

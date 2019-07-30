@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EVERFI.Foundry.Objects
+namespace EVERFI.Foundry.Classes
 {
     internal class LabelData
     {

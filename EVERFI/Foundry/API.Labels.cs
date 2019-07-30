@@ -3,7 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using EVERFI.Foundry.Objects;
+using EVERFI.Foundry.Classes;
 
 namespace EVERFI.Foundry
 {
