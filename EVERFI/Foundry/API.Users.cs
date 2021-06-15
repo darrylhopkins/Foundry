@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using EVERFI.Foundry.Classes;
+using RestSharp.Authenticators;
 
 namespace EVERFI.Foundry
 {
@@ -52,7 +53,7 @@ namespace EVERFI.Foundry
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", MyUser.UserId, ParameterType.UrlSegment);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+            _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
             HttpStatusCode statusCode = response.StatusCode;
