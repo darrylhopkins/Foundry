@@ -130,7 +130,15 @@ namespace EVERFI.Foundry
         {
             string Json = "{\n" +
                 "\"data\": {\n" +
-                "\"type\": \"registration_sets\",\n" +
+                "\"type\": \"registration_sets\",\n";
+
+            // add "id" for updates
+            if(!string.IsNullOrEmpty(user.UserId))
+            {
+                Json += "\"id\": \"" + user.UserId + "\",\n";
+            }
+
+            Json+=
                 "\"attributes\": {\n" +
                 "\"registrations\": [\n" +
                 "{\n" +
@@ -138,7 +146,6 @@ namespace EVERFI.Foundry
                 "\"first_name\": \"" + user.FirstName + "\",\n" +
                 "\"last_name\": \"" + user.LastName + "\",\n" +
                 "\"email\": \"" + user.Email + "\"";
-
             if (user.SingleSignOnId != null)
             {
                 Json += ",\n\"sso_id\": \"" + user.SingleSignOnId + "\"";
