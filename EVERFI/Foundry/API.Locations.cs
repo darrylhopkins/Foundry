@@ -72,10 +72,8 @@ namespace EVERFI.Foundry
         public List<Location> GetLocations()
         {
             RestRequest request = new RestRequest("/{version}/admin/locations");
-            request.Method = Method.GET;
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Accept", "application/json");
             _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
