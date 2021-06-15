@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using EVERFI.Foundry.Classes;
+using RestSharp.Authenticators;
 
 namespace EVERFI.Foundry
 {
@@ -71,9 +72,11 @@ namespace EVERFI.Foundry
         public List<Location> GetLocations()
         {
             RestRequest request = new RestRequest("/{version}/admin/locations");
+            request.Method = Method.GET;
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+            request.AddHeader("Accept", "application/json");
+            _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
             HttpStatusCode statusCode = response.StatusCode;
