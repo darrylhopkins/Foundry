@@ -47,6 +47,8 @@ namespace EVERFI.Foundry
         BusinessLines,
         [Description("custom_grouping_values")]
         CustomGroupingValues,
+        [Description("label_id")]
+        LabelId,
         [Description("created_at")]
         CreatedAt
     }
@@ -145,7 +147,7 @@ namespace EVERFI.Foundry
                 "\"rule_set\": \"user_rule_set\",\n" +
                 "\"first_name\": \"" + user.FirstName + "\",\n" +
                 "\"last_name\": \"" + user.LastName + "\",\n" +
-                "\"email\": \"" + user.Email + "\"";
+                "\"email\": \"" + user.Email;
             if (user.SingleSignOnId != null)
             {
                 Json += ",\n\"sso_id\": \"" + user.SingleSignOnId + "\"";
@@ -198,7 +200,18 @@ namespace EVERFI.Foundry
                 Json += "\n}";
             }
 
-            Json += "\n";
+            Json+= ",\n{\n" + "\"category_labels\": \"" + "[";
+            
+            for (var i = 0; i < user.Labels.Count; i++)
+            {
+                Json += user.Labels.ElementAt(i).CategoryId;
+                if ((i+1) != user.Labels.Count)
+                {
+                    Json += ",";
+                }
+            }
+            
+            Json += ",]" + "\"" + "\n";
 
             Json += "]\n}\n}\n}";
 
@@ -306,4 +319,6 @@ namespace EVERFI.Foundry
             return Json;
         }
     }
+
+
 }

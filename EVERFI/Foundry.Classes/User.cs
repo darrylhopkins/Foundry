@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EVERFI.Foundry.Classes;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace EVERFI.Foundry.Classes
 {
@@ -27,11 +29,87 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("data")]
         internal UserData Data { get; set; }
     }
+    internal class UserDataIncludedList
+    {
+
+        [JsonProperty("included")]
+        internal List<UserDataIncluded> IncludedList { get; set; }
+    }
+    internal class UserDataIncludedJson
+    {
+        [JsonProperty("included")]
+        internal UserDataIncluded DataIncluded { get; set; }
+    }
+
+    internal class UserDataIncluded
+    {
+        [JsonProperty("id")]
+        internal string LabelId { get; set; }
+
+        [JsonProperty("attributes")]
+        internal LabelsAttributes LabelsAttributes { get; set; }
+
+        
+
+    }
+    /*
+    internal class MultRelationshipsList
+    {
+        [JsonProperty("relationships")]
+        internal List<MultRelationships> multRelationshipsList { get; set; }
+    }
+    */
+    internal class MultRelationships
+    {
+        [JsonProperty("category_labels")]
+        internal RelationshipCategoryData categoryLabels { get; set; }
+    }
+    internal class RelationshipCategoryData
+    {
+        [JsonProperty("data")]
+        List<RelationshipData> RelationshipArray { get; set; }
+    }
+
+
+
+    internal class LabelsAttributes
+    {
+        [JsonProperty("category_id")]
+        internal string CategoryID { get; set; }
+
+        [JsonProperty("category_name")]
+        internal string CategoryLabelName { get; set; }
+
+        [JsonProperty("name")]
+        internal string LabelName { get; set; }
+    }
+
+    internal class Relationships
+    {
+        [JsonProperty("category")]
+        internal IncludedCategoryData CategoryData { get; set; }
+    }
+
+    internal class IncludedCategoryData
+    {
+        [JsonProperty("data")]
+        internal RelationshipData RelationshipData { get; set; }
+    }
+
+
+    internal class RelationshipData
+    {
+        [JsonProperty("id")]
+        internal string LabelId { get; set; }
+    }
+
 
     internal class UserDataJsonList
     {
+
         [JsonProperty("data")]
         internal List<UserData> Data { get; set; }
+
     }
 
     internal class UserData
@@ -39,8 +117,13 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("id")]
         internal string UserId { get; set; }
 
+
         [JsonProperty("attributes")]
         internal User UserAttributes { get; set; }
+
+        [JsonProperty("relationships")]
+        internal MultRelationships multipleRelationships { get; set; }
+
     }
 
     internal class ExternalAttributes
@@ -86,10 +169,8 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("location_id")]
         public string LocationId { get; internal set; }
-
-        /* second registration array */
+       
         public List<UserType> UserTypes { get; set; }
-
         public List<Label> Labels { get; set; }
 
         public string Position { get; set; }
@@ -103,6 +184,7 @@ namespace EVERFI.Foundry.Classes
         public User()
         {
             this.UserTypes = new List<UserType>();
+            this.Labels = new List<Label>();
         }
 
         internal void ConfigureUserData(UserData data)
@@ -111,12 +193,17 @@ namespace EVERFI.Foundry.Classes
             this.FirstDay = this.ExternalAttributes.FirstDay;
             this.LastDay = this.ExternalAttributes.LastDay;
 
+
             this.UserId = data.UserId;
-            
+
+
             foreach (var type in this.TypesDictionary.Keys)
             {
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
+
+
         }
     }
 }
+

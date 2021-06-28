@@ -18,6 +18,9 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("name")]
         internal string Name { get; set; }
 
+        [JsonProperty("category_name")]
+        internal string CategoryName { get; set; }
+
         [JsonProperty("users_count")]
         internal int UserCount { get; set; }
     }
@@ -47,7 +50,9 @@ namespace EVERFI.Foundry.Classes
 
         public string Name { get; set; }
 
-        public int UserCount { get; internal set; }
+        public string CategoryName { get; set; }
+
+        //public int UserCount { get; internal set; }
 
         public string CategoryId { get; internal set; }
 
@@ -60,8 +65,8 @@ namespace EVERFI.Foundry.Classes
         internal void ConfigureLabel()
         {
             this.Name = Attributes.Name;
-            this.UserCount = Attributes.UserCount;
-
+            this.CategoryName = Attributes.CategoryName;
+            //this.UserCount = Attributes.UserCount;
             this.CategoryId = Relationships.LabelCategory.Category.Id;
         }
     }
