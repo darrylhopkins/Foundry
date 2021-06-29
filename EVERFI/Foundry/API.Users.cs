@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using EVERFI.Foundry.Classes;
 using RestSharp.Authenticators;
@@ -10,23 +11,23 @@ namespace EVERFI.Foundry
 {
     public partial class API
     {
-        public RestRequest ConfigureRequest()
+        public RestRequest ConfigureRequest(int val)
         {
-            Console.WriteLine("Choose one:\n 1. Get user by email \n 2. Get user by ID \n 3. Add a user \n 4. Update user \n 5. Get all users");
-            string input = Console.ReadLine();
-            int val = Convert.ToInt32(input);
-            Console.WriteLine(val);
-           RestRequest request = new RestRequest();
+          
+            RestRequest request = new RestRequest();
             switch (val)
             {
                 case 1: //by email
-                    request.Resource ="{version}/admin/users/";
+                    Console.WriteLine("Getting user by email...");
+                    request.Resource = "{version}/admin/users/";
                     request.Method = Method.GET;
                     request.AddParameter("version", _ver, ParameterType.UrlSegment);
                     request.AddHeader("Content-Type", "application/json");
+                    request.AddParameter("include", "category_labels", ParameterType.QueryString);
                     request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
                     break;
                 case 2: //by ID
+                    Console.WriteLine("Getting user by ID...");
                     request.Resource = "{version}/admin/users/{id}";
                     request.Method = Method.GET;
                     request.AddParameter("version", _ver, ParameterType.UrlSegment);
@@ -36,16 +37,19 @@ namespace EVERFI.Foundry
 
                     break;
                 case 3: //add user
+                    Console.WriteLine("Adding...");
                     request = new RestRequest("{version}/admin/registration_sets", Method.POST);
                     request.AddParameter("version", _ver, ParameterType.UrlSegment);
                     request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
                     break;
                 case 4: //update user
+                    Console.WriteLine("Updating user...");
                     request = new RestRequest("{version}/admin/registration_sets/{id}", Method.PATCH);
                     request.AddParameter("version", _ver, ParameterType.UrlSegment);
                     break;
                 case 5: //all users
-                    request = new RestRequest("/{version}/admin/users", Method.GET);
+                    Console.WriteLine("Getting all users...");
+                    request = new RestRequest("/{version}/admin/users/", Method.GET);
                     request.AddParameter("version", _ver, ParameterType.UrlSegment);
                     request.AddParameter("page[page]", currPage, ParameterType.QueryString);
                     request.AddParameter("include", "category_labels", ParameterType.QueryString);
@@ -53,14 +57,25 @@ namespace EVERFI.Foundry
                     request.AddHeader("Content-Type", "application/json");
                     request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
                     break;
+                case 6: //user count
+                    Console.WriteLine("Getting user count...");
+                    request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
+                    request.Parameters.Clear();
+                    request.AddParameter("version", _ver, ParameterType.UrlSegment);
+                    request.AddParameter("page_num", 1, ParameterType.UrlSegment);
+                    request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
+                    request.AddHeader("Content-Type", "application/json");
+                    request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+                    break;
+
             }
             Console.WriteLine(request.Body);
-            return request; 
-          
+            return request;
+
         }
         public void responseModifer(IRestResponse response, int type)
         {
-        
+
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
             if (type == 1)
@@ -70,19 +85,87 @@ namespace EVERFI.Foundry
                     throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
                 }
             }
-           else if(type == 2)
+            else if (type == 2)
             {
                 if (numericCode != 200)
                 {
                     throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
                 }
             }
-           
+
         }
-       
+        public User helperFunction(IRestResponse response)
+        {
+
+            UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
+            UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
+            User user = userData.Data.UserAttributes;
+
+            user.ConfigureUserData(userData.Data);
+            if (user.Location != null)
+            {
+                user.Location = GetLocationById(user.LocationId);
+            }
+
+            foreach (var labelAttribute in userDataIncluded.IncludedList)
+            {
+                Label newLabel = new Label();
+                newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
+                newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
+                newLabel.Id = labelAttribute.LabelId;
+                newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
+                user.Labels.Add(newLabel);
+            }
+            return user;
+
+
+        }
+        public List<User> helperFunction2(IRestResponse response)
+        {
+            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+            UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
+            List<Label> allLabels = new List<Label>();
+            foreach (var labelAttribute in userDataIncluded.IncludedList)
+            {
+                Label newLabel = new Label();
+                newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
+                newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
+                newLabel.Id = labelAttribute.LabelId;
+                newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
+                allLabels.Add(newLabel);
+
+            }
+
+            List<User> users = new List<User>();
+
+            foreach (UserData data in userData.Data)
+            {
+                User newUser = data.UserAttributes;
+                newUser.ConfigureUserData(data);
+                foreach (Label lab in allLabels)
+                {
+                    List<RelationshipData> relationship = data.multipleRelationships.categoryLabels.RelationshipsData;
+                    if (relationship != null && relationship.Any())
+                    {
+                        if (relationship[0].LabelId == lab.Id)
+                        {
+                            newUser.Labels.Add(lab);
+                        }
+
+                    }
+                }
+
+                if (newUser.Location != null)
+                {
+                    newUser.Location = GetLocationById(newUser.LocationId);
+                }
+                users.Add(newUser);
+            }
+            return users;
+        }
         public User AddUser(User MyUser)
         {
-            RestRequest request = ConfigureRequest();
+            RestRequest request = ConfigureRequest(3);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
 
@@ -91,6 +174,7 @@ namespace EVERFI.Foundry
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
+
 
             User user = userData.Data.UserAttributes;
 
@@ -107,7 +191,7 @@ namespace EVERFI.Foundry
 
         public User UpdateUser(User MyUser)
         {
-            RestRequest request = ConfigureRequest();
+            RestRequest request = ConfigureRequest(4);
 
             request.AddParameter("id", MyUser.UserId, ParameterType.UrlSegment);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
@@ -134,68 +218,18 @@ namespace EVERFI.Foundry
 
         public User GetUserById(string UserId)
         {
-            RestRequest request = ConfigureRequest();
-           
+            RestRequest request = ConfigureRequest(2);
+
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
-            
+
             IRestResponse response = _client.Execute(request);
             responseModifer(response, 1);
 
-            UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
-            UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
-
-
-            User retrievedUser = userData.Data.UserAttributes;
-
-            retrievedUser.ConfigureUserData(userData.Data);
-            if (retrievedUser.Location != null)
-            {
-                retrievedUser.Location = GetLocationById(retrievedUser.LocationId);
-            }
-
-            foreach (var labelAttribute in userDataIncluded.IncludedList)
-            {
-                Label newLabel = new Label();
-                newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
-                newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
-                newLabel.Id = labelAttribute.LabelId;
-                newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
-                retrievedUser.Labels.Add(newLabel);
-            }
-
-            Console.WriteLine("User Retrieved: " + retrievedUser.FirstName + " " + retrievedUser.LastName + "...");
-
-            return retrievedUser;
+            User user = helperFunction(response);
+            return user;
         }
 
-        public List<User> GetUserByEmail(string UserEmail)
-        {
-            Console.WriteLine("Getting User(s) with email: " + UserEmail + "...");
-
-
-            RestRequest request = ConfigureRequest();
-            request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
-            
-            IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
-
-            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-            List<User> users = new List<User>();
-
-            foreach (UserData data in userData.Data)
-            {
-                User newUser = data.UserAttributes;
-                newUser.ConfigureUserData(data);
-                if (newUser.Location != null)
-                {
-                    newUser.Location = GetLocationById(newUser.LocationId);
-                }
-                users.Add(newUser);
-                Console.WriteLine("User Retrieved: " + newUser.FirstName + " " + newUser.LastName + "...");
-            }
-
-            return users;
-        }
+       
 
         // TODO: Implement paging in this
         public List<User> GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
@@ -214,71 +248,38 @@ namespace EVERFI.Foundry
             IRestResponse response = _client.Execute(request);
             responseModifer(response, 1);
 
-            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-            List<User> users = new List<User>();
-
-            foreach (UserData data in userData.Data)
-            {
-                User newUser = data.UserAttributes;
-                newUser.ConfigureUserData(data);
-                if (newUser.Location != null)
-                {
-                    newUser.Location = GetLocationById(newUser.LocationId);
-                }
-                users.Add(newUser);
-            }
+            List<User> users = helperFunction2(response);
 
             return users;
         }
+        public List<User> GetUserByEmail(string UserEmail)
+        {
+            Console.WriteLine("Getting User(s) with email: " + UserEmail + "...");
 
+
+            RestRequest request = ConfigureRequest(1);
+            request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
+
+            IRestResponse response = _client.Execute(request);
+            responseModifer(response, 1);
+
+            List<User> users = helperFunction2(response);
+
+            return users;
+        }
         public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
 
-            RestRequest request = ConfigureRequest();
-           
+            RestRequest request = ConfigureRequest(5);
+
             IRestResponse response = _client.Execute(request);
-            responseModifer(response,1);
+            responseModifer(response, 1);
 
-            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-            UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
-            List<Label> allLabels = new List<Label>();
-            foreach (var labelAttribute in userDataIncluded.IncludedList)
-            {
-                Label newLabel = new Label();
-                newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
-                newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
-                newLabel.Id = labelAttribute.LabelId;
-                newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
-                allLabels.Add(newLabel);
-             
-            }
-
-            List<User> users = new List<User>();
-
-            foreach (UserData data in userData.Data)
-            {
-                User newUser = data.UserAttributes;
-
-                newUser.ConfigureUserData(data);
-                
-                foreach (Label lab in allLabels)
-                {
-                    if (data.multipleRelationships.categoryLabels.RelationshipArray[0].LabelId == lab.Id)
-                    {
-                        newUser.Labels.Add(lab);
-                    }
-                }
-               
-              
-                if (newUser.Location != null)
-                {
-                    newUser.Location = GetLocationById(newUser.LocationId);
-                }
-                users.Add(newUser);
-            }
+            List<User> users = helperFunction2(response);
 
             return users;
+
         }
 
         public (List<User>, bool) GetUsers()
@@ -341,31 +342,15 @@ namespace EVERFI.Foundry
 
         public int GetUserCount()
         {
-            RestRequest request = new RestRequest("/{version}/admin/users/?page[page]={page_num}&page[per_page]={num_per}", Method.GET);
-            request.Parameters.Clear();
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("page_num", 1, ParameterType.UrlSegment);
-            request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
+            RestRequest request = ConfigureRequest(6);
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
-            }
+            responseModifer(response, 1);
 
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
             return metaData.Meta.Count;
         }
-
-
-
-
+        /*
         public List<Label> getLabels()
         {
 
@@ -405,7 +390,7 @@ namespace EVERFI.Foundry
 
         }
 
-
+        */
 
 
 

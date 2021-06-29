@@ -23,6 +23,27 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("total_count")]
         internal Int32 Count { get; set; }
     }
+    internal class UserDataJsonList
+    {
+
+        [JsonProperty("data")]
+        internal List<UserData> Data { get; set; }
+
+    }
+
+    internal class UserData
+    {
+        [JsonProperty("id")]
+        internal string UserId { get; set; }
+
+        [JsonProperty("relationships")]
+        internal MultRelationships multipleRelationships { get; set; }
+
+        [JsonProperty("attributes")]
+        internal User UserAttributes { get; set; }
+
+
+    }
 
     internal class UserDataJson
     {
@@ -49,28 +70,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("attributes")]
         internal LabelsAttributes LabelsAttributes { get; set; }
 
-        
-
     }
-    /*
-    internal class MultRelationshipsList
-    {
-        [JsonProperty("relationships")]
-        internal List<MultRelationships> multRelationshipsList { get; set; }
-    }
-    */
-    internal class MultRelationships
-    {
-        [JsonProperty("category_labels")]
-        internal RelationshipCategoryData categoryLabels { get; set; }
-    }
-    internal class RelationshipCategoryData
-    {
-        [JsonProperty("data")]
-        List<RelationshipData> RelationshipArray { get; set; }
-    }
-
-
 
     internal class LabelsAttributes
     {
@@ -84,6 +84,21 @@ namespace EVERFI.Foundry.Classes
         internal string LabelName { get; set; }
     }
 
+    internal class MultRelationships
+    {
+        [JsonProperty("category_labels")]
+        internal IncludedCategoryDataList categoryLabels { get; set; }
+    }
+ 
+  
+    internal class IncludedCategoryDataList
+    {
+        [JsonProperty("data")]
+        internal List<RelationshipData> RelationshipsData { get; set; }
+    }
+
+    
+
     internal class Relationships
     {
         [JsonProperty("category")]
@@ -96,7 +111,6 @@ namespace EVERFI.Foundry.Classes
         internal RelationshipData RelationshipData { get; set; }
     }
 
-
     internal class RelationshipData
     {
         [JsonProperty("id")]
@@ -104,28 +118,7 @@ namespace EVERFI.Foundry.Classes
     }
 
 
-    internal class UserDataJsonList
-    {
-
-        [JsonProperty("data")]
-        internal List<UserData> Data { get; set; }
-
-    }
-
-    internal class UserData
-    {
-        [JsonProperty("id")]
-        internal string UserId { get; set; }
-
-
-        [JsonProperty("attributes")]
-        internal User UserAttributes { get; set; }
-
-        [JsonProperty("relationships")]
-        internal MultRelationships multipleRelationships { get; set; }
-
-    }
-
+   
     internal class ExternalAttributes
     {
         [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]

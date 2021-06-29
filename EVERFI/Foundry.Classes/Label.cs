@@ -69,5 +69,16 @@ namespace EVERFI.Foundry.Classes
             //this.UserCount = Attributes.UserCount;
             this.CategoryId = Relationships.LabelCategory.Category.Id;
         }
+
+        internal Label createLabel(String id, string name, string categoryName, string categoryID)
+        {
+            Label newL = new Label();
+            newL.Id = id;
+            newL.Name = name;
+            newL.CategoryName = categoryName;
+            newL.CategoryId = categoryID;
+
+            return newL;
+        }
     }
 }
