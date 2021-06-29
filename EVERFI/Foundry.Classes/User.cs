@@ -140,6 +140,9 @@ namespace EVERFI.Foundry.Classes
         private Dictionary<string, string> TypesDictionary { get; set; }
 
         /* user_rule_set */
+        [JsonProperty("active")]
+        public Boolean active { get; set; }
+
         [JsonProperty("first_name", Required = Required.Always)]
         public string FirstName { get; set; }
 
@@ -148,6 +151,12 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("email", Required = Required.Always)]
         public string Email { get; set; }
+
+        [JsonProperty("created_at",  Required = Required.Always)]
+        public DateTime created { get; internal set; }
+
+        [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+        public string username { get; set; }
 
         [JsonProperty("sso_id")]
         public string SingleSignOnId { get; set; }
@@ -171,6 +180,13 @@ namespace EVERFI.Foundry.Classes
         public DateTime FirstDay { get; set; }
 
         public DateTime LastDay { get; set; }
+
+       
+        [JsonProperty("under_13",  NullValueHandling = NullValueHandling.Ignore)]
+        public bool IsUnderThirteen { get; set; }
+
+        [JsonProperty("last_sign_in_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime lastSignIn { get; set; }
 
         public string UserId { get; internal set; }
 

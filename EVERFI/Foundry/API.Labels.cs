@@ -114,7 +114,49 @@ namespace EVERFI.Foundry
 
             return label;
         }
-        
+
+        /*
+       public List<Label> getLabels()
+       {
+
+           Console.WriteLine("Getting labels...");
+
+           RestRequest request = new RestRequest("/{version}/admin/categories", Method.GET); //TODO
+           request.AddParameter("version", _ver, ParameterType.UrlSegment);
+           request.AddParameter("include", "category_labels", ParameterType.QueryString);
+           request.AddHeader("Content-Type", "application/json");
+           request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+           IRestResponse response = _client.Execute(request);
+           HttpStatusCode statusCode = response.StatusCode;
+           int numericCode = (int)statusCode;
+
+           if (numericCode != 200)
+           {
+               throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+           }
+
+           CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
+           List<Label> allLabels = new List<Label>();
+
+           foreach (Category category in categoryData.Data)
+           {
+               category.ConfigureCategory();
+
+               for (int i = 0; i < category.Labels.Count; i++)
+               {
+                   category.Labels[i] = GetLabelById(category.Labels[i].Id);
+                   allLabels.Add(category.Labels[i]);
+               }
+           }
+
+           return allLabels;
+
+
+       }
+
+       */
+
     }
 }
     

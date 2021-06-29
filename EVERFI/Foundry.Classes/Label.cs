@@ -70,7 +70,7 @@ namespace EVERFI.Foundry.Classes
             this.CategoryId = Relationships.LabelCategory.Category.Id;
         }
 
-        internal Label createLabel(String id, string name, string categoryName, string categoryID)
+     public static Label createLabel(String id, string name, string categoryName, string categoryID)
         {
             Label newL = new Label();
             newL.Id = id;
