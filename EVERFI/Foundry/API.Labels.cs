@@ -115,7 +115,7 @@ namespace EVERFI.Foundry
             return label;
         }
 
-        /*
+        
        public List<Label> getLabels()
        {
 
@@ -155,7 +155,7 @@ namespace EVERFI.Foundry
 
        }
 
-       */
+       
 
     }
 }

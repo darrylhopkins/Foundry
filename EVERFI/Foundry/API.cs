@@ -135,19 +135,19 @@ namespace EVERFI.Foundry
                 "\"type\": \"registration_sets\",\n";
 
             // add "id" for updates
-            if(!string.IsNullOrEmpty(user.UserId))
+            if (!string.IsNullOrEmpty(user.UserId))
             {
                 Json += "\"id\": \"" + user.UserId + "\",\n";
             }
 
-            Json+=
+            Json +=
                 "\"attributes\": {\n" +
                 "\"registrations\": [\n" +
                 "{\n" +
                 "\"rule_set\": \"user_rule_set\",\n" +
                 "\"first_name\": \"" + user.FirstName + "\",\n" +
                 "\"last_name\": \"" + user.LastName + "\",\n" +
-                "\"email\": \"" + user.Email;
+                "\"email\": \"" + user.Email + "\"";
             if (user.SingleSignOnId != null)
             {
                 Json += ",\n\"sso_id\": \"" + user.SingleSignOnId + "\"";
@@ -168,26 +168,23 @@ namespace EVERFI.Foundry
             }
             else if (user.LocationId != null)
             {
-                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" +
-                "\n}";
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
             }
-            else
+            if (user.Labels != null)
             {
-                Json += "\n}";
-            }
-            /*
-            Json += ",\n{\n" + "\"category_labels\": \"" + "[";
-
-            for (var i = 0; i < user.Labels.Count; i++)
-            {
-                Json += user.Labels.ElementAt(i).CategoryId;
-                if ((i + 1) != user.Labels.Count)
+                Json += ",\n\"category_labels\": \"" + "[\n";
+                for (var i = 0; i < user.Labels.Count; i++)
                 {
-                    Json += ",";
+                    Json += user.Labels.ElementAt(i).CategoryId;
+                    if ((i + 1) != user.Labels.Count)
+                    {
+                        Json += ",";
+                    }
+
                 }
+                Json += "\n]";
+
             }
-            Json += "]";
-            */
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +
@@ -212,12 +209,12 @@ namespace EVERFI.Foundry
                 Json += "\n}";
             }
 
-
             Json += "\n";
 
             Json += "]\n}\n}\n}";
 
             return Json;
+    
         }
 
         internal static string LocationJson(Location location) //Change to internal when done

@@ -38,6 +38,7 @@ namespace EVERFI.Foundry
                     Console.WriteLine("Adding...");
                     request.Resource = "{version}/admin/registration_sets";
                     request.Method = Method.POST;
+                    request.Parameters.Clear();
                     break;
                 case 4: //update user
                     Console.WriteLine("Updating user...");
@@ -195,46 +196,26 @@ namespace EVERFI.Foundry
         }
         public User AddUser(User MyUser)
         {
-            RestRequest request = ConfigureRequest(3);
+            IRestRequest request = ConfigureRequest(3);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
-
-
+           
             IRestResponse response = _client.Execute<User>(request);
             responseModifer(response, 2);
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
-            //UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
-            /*
-            Console.WriteLine("Label id: ");
-            string Label_Id = Console.ReadLine();
-            Console.WriteLine("Name: ");
-            string name = Console.ReadLine();
-            Console.WriteLine("Category Name: ");
-            string categoryName = Console.ReadLine();
-            Console.WriteLine("Category ID: ");
-            string categoryID = Console.ReadLine();
-
-            Label newLabel = new Label();
-            newLabel.Name = name;
-            newLabel.Id = Label_Id;
-            newLabel.CategoryName = categoryName;
-            newLabel.CategoryId = categoryID;
-            user.Labels.Add(newLabel);
-            */
             Console.WriteLine("User successfully added.");
-            User user = userData.Data.UserAttributes;
 
-            
+            User user = userData.Data.UserAttributes;
 
             if (user.Location != null)
             {
                 user.Location = GetLocationById(user.LocationId);
             }
 
-
             user.ConfigureUserData(userData.Data);
 
             return user;
+           
         }
 
         public User UpdateUser(User MyUser)
