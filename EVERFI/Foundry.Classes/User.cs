@@ -50,6 +50,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("data")]
         internal UserData Data { get; set; }
     }
+
     internal class UserDataIncludedList
     {
 
@@ -166,6 +167,9 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
+
+        [JsonProperty("category_labels")]
+        public List<string> categoryLabels { get; set; }
 
         public Location Location { get; set; }
 
