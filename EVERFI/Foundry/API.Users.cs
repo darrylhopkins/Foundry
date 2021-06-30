@@ -15,6 +15,7 @@ namespace EVERFI.Foundry
         {
 
             RestRequest request = new RestRequest();
+            request.Parameters.Clear();
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             switch (val)
@@ -32,13 +33,12 @@ namespace EVERFI.Foundry
                     request.Method = Method.GET;
                     request.AddParameter("include", "category_labels", ParameterType.QueryString);
                     request.AddHeader("Content-Type", "application/json");
-                   
+
                     break;
                 case 3: //add user
                     Console.WriteLine("Adding...");
                     request.Resource = "{version}/admin/registration_sets";
                     request.Method = Method.POST;
-                    request.Parameters.Clear();
                     break;
                 case 4: //update user
                     Console.WriteLine("Updating user...");
@@ -102,8 +102,8 @@ namespace EVERFI.Foundry
         }
         public User helperFunction(IRestResponse response, bool noList)
         {
-            UserDataJsonList userDataList; 
-            UserDataJson userData; 
+            UserDataJsonList userDataList;
+            UserDataJson userData;
             UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
             User user = new User();
             if (noList)
@@ -121,7 +121,7 @@ namespace EVERFI.Foundry
             }
             else
             {
-                userDataList =  JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
+                userDataList = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
                 foreach (UserData data in userDataList.Data)
                 {
                     user = data.UserAttributes;
@@ -135,8 +135,8 @@ namespace EVERFI.Foundry
                 }
             }
 
-           
-          
+
+
             foreach (var labelAttribute in userDataIncluded.IncludedList)
             {
                 Label newLabel = new Label();
@@ -196,27 +196,13 @@ namespace EVERFI.Foundry
         }
         public User AddUser(User MyUser)
         {
-            RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
 
-            request.Parameters.Clear();
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-            IRestResponse response = _client.Execute<User>(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 201)
-            {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
-            }
-            /*
             IRestRequest request = ConfigureRequest(3);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
-           
-          
+
+            IRestResponse response = _client.Execute<User>(request);
             responseModifer(response, 2);
-            */
+
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 
@@ -230,7 +216,7 @@ namespace EVERFI.Foundry
             user.ConfigureUserData(userData.Data);
 
             return user;
-           
+
         }
 
         public User UpdateUser(User MyUser)
@@ -307,7 +293,7 @@ namespace EVERFI.Foundry
 
             return users;
         }
-      
+
         public List<User> GetUsers(int page)
         {
             Console.WriteLine("Getting " + returnPerPage + "users on page " + page.ToString() + "...");
