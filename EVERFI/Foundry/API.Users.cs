@@ -196,12 +196,27 @@ namespace EVERFI.Foundry
         }
         public User AddUser(User MyUser)
         {
+            RestRequest request = new RestRequest("{version}/admin/registration_sets", Method.POST);
+
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+            IRestResponse response = _client.Execute<User>(request);
+            HttpStatusCode statusCode = response.StatusCode;
+            int numericCode = (int)statusCode;
+
+            if (numericCode != 201)
+            {
+                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+            }
+            /*
             IRestRequest request = ConfigureRequest(3);
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
            
-            IRestResponse response = _client.Execute<User>(request);
+          
             responseModifer(response, 2);
-
+            */
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 

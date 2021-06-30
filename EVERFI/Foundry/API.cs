@@ -170,6 +170,11 @@ namespace EVERFI.Foundry
             {
                 Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
             }
+            else
+            {
+                Json += "\n}";
+            }
+            /*
             if (user.Labels != null)
             {
                 Json += ",\n\"category_labels\": \"" + "[\n";
@@ -180,11 +185,13 @@ namespace EVERFI.Foundry
                     {
                         Json += ",";
                     }
-
                 }
                 Json += "\n]";
-
             }
+            Json += "\n}";
+*/
+
+
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +
@@ -214,7 +221,7 @@ namespace EVERFI.Foundry
             Json += "]\n}\n}\n}";
 
             return Json;
-    
+
         }
 
         internal static string LocationJson(Location location) //Change to internal when done
