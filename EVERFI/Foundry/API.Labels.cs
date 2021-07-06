@@ -155,7 +155,21 @@ namespace EVERFI.Foundry
 
        }
 
-       
+        public Label AddLabelToUser(String id, string name, string categoryName)
+        {
+            Label found = new Label();
+            List<Label> labels = getLabels();
+            foreach(Label label in labels)
+            {
+                if (id.Equals(label.Id) && name.Equals(label.Name) && categoryName.Equals(label.CategoryName)) 
+                {
+                    found = label;
+                }
+
+            }
+            return found;
+        }
+
 
     }
 }

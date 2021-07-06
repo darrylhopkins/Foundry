@@ -73,7 +73,15 @@ namespace EVERFI.Foundry
                     request.AddParameter("include", "category_labels", ParameterType.QueryString);
                     request.AddHeader("Content-Type", "application/json");
                     break;
-
+                case 8: //boolean get users
+                    Console.WriteLine("Getting users...");
+                    request.Resource = "{version}/admin/users/";
+                    request.Method = Method.GET;
+                    request.Parameters.Clear();
+                    request.AddParameter("page[page]", currPage, ParameterType.QueryString);
+                    request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
+                    request.AddHeader("Content-Type", "application/json");
+                    break;
             }
             Console.WriteLine(request.Body);
             return request;
@@ -135,8 +143,6 @@ namespace EVERFI.Foundry
                 }
             }
 
-
-
             foreach (var labelAttribute in userDataIncluded.IncludedList)
             {
                 Label newLabel = new Label();
@@ -148,8 +154,6 @@ namespace EVERFI.Foundry
             }
 
             return user;
-
-
         }
         public List<User> helperFunction2(IRestResponse response)
         {
@@ -201,9 +205,9 @@ namespace EVERFI.Foundry
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
             IRestResponse response = _client.Execute<User>(request);
-            //return response;
-           responseModifer(response, 2);
-           
+
+            responseModifer(response, 2);
+
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 
@@ -217,7 +221,7 @@ namespace EVERFI.Foundry
             user.ConfigureUserData(userData.Data);
 
             return user;
-            
+
 
         }
 
@@ -276,9 +280,6 @@ namespace EVERFI.Foundry
             return user;
         }
 
-
-
-
         // TODO: Implement paging in this
         public List<User> GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
         {
@@ -315,37 +316,11 @@ namespace EVERFI.Foundry
         {
             bool returnValue = true;
 
-            RestRequest request = new RestRequest("/{version}/admin/users", Method.GET);
-
-            request.Parameters.Clear();
-            request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            request.AddParameter("page[page]", currPage, ParameterType.QueryString);
-            request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-
+            RestRequest request = ConfigureRequest(8);
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
+            responseModifer(response, 1);
 
-            if (numericCode != 200)
-            {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
-            }
-
-            UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
-            List<User> users = new List<User>();
-
-            foreach (UserData data in userData.Data)
-            {
-                User newUser = data.UserAttributes;
-                newUser.ConfigureUserData(data);
-                if (newUser.Location != null)
-                {
-                    newUser.Location = GetLocationById(newUser.LocationId);
-                }
-                users.Add(newUser);
-            }
+            List<User> users = helperFunction2(response);
 
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
