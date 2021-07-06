@@ -161,37 +161,30 @@ namespace EVERFI.Foundry
                 Json += ",\n\"student_id\": \"" + user.StudentId + "\"";
             }
 
-            if (user.Location != null)
+            if (user.Location != null || user.LocationId != null)
             {
-                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"" +
-                "\n}";
+                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"";
             }
-            else if (user.LocationId != null)
-            {
-                Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
-            }
+           
             /*
             else
             {
                 Json += "\n}";
             }
             */
-            /*
-            if (user.Labels != null)
+            Json += ",\n\"category_labels\":" + "[\n";
+            for (var i = 0; i < user.Labels.Count; i++)
             {
-                Json += ",\n\"category_labels\": \"" + "[\n";
-                for (var i = 0; i < user.Labels.Count; i++)
+                Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
+                if ((i + 1) != user.Labels.Count)
                 {
-                    Json += user.Labels.ElementAt(i).CategoryId;
-                    if ((i + 1) != user.Labels.Count)
-                    {
-                        Json += ",";
-                    }
+                    Json += ",";
                 }
-                Json += "\n]";
             }
+            Json += "\n]";
+
             Json += "\n}";
-            */
+
 
 
             for (var i = 0; i < user.UserTypes.Count; i++)
@@ -229,32 +222,32 @@ namespace EVERFI.Foundry
         internal static string LocationJson(Location location) //Change to internal when done
         {
             string Json = "{\n" +
-                "\"data\": {\n";
+               "\"data\": {\n";
             if (location.Id != null)
             {
                 Json += "\t\"id\": \"" + location.Id + "\",\n";
             }
 
             Json += "\t\"type\": \"locations\",\n" +
-                "\t\"attributes\": {\n" +
-                "\t\t\"name\": \"" + location.Name + "\",\n" +
-                "\t\t\"external_id\": \"" + location.ExternalId + "\",\n" +
-                "\t\t\"contact_email\": \"" + location.ContactEmail + "\",\n" +
-                "\t\t\"contact_name\": \"" + location.ContactName + "\",\n" +
-                "\t\t\"contact_phone\": \"" + location.ContactPhone + "\",\n" +
-                "\t\t\"address_street_number\": \"" + location.StreetNumber + "\",\n" +
-                "\t\t\"address_route\": \"" + location.Route + "\",\n" +
-                "\t\t\"address_neighborhood\": \"" + location.Neighborhood + "\",\n" +
-                "\t\t\"address_locality\": \"" + location.City + "\",\n" +
-                "\t\t\"address_administrative_area_level_1\": \"" + location.State + "\",\n" +
-                "\t\t\"address_administrative_area_level_2\": \"" + location.County + "\",\n" +
-                "\t\t\"address_postal_code\": \"" + location.PostalCode + "\",\n" +
-                "\t\t\"address_country\": \"" + location.Country + "\",\n" +
-                "\t\t\"address_latitude\": \"" + location.Latitude + "\",\n" +
-                "\t\t\"address_longitude\": \"" + location.Longitude + "\"\n" +
-                "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
-                "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
-                "\t}\n}\n}\n";
+               "\t\"attributes\": {\n" +
+               "\t\t\"name\": \"" + location.Name + "\",\n" +
+               "\t\t\"external_id\": \"" + location.ExternalId + "\",\n" +
+               "\t\t\"contact_email\": \"" + location.ContactEmail + "\",\n" +
+               "\t\t\"contact_name\": \"" + location.ContactName + "\",\n" +
+               "\t\t\"contact_phone\": \"" + location.ContactPhone + "\",\n" +
+               "\t\t\"address_street_number\": \"" + location.StreetNumber + "\",\n" +
+               "\t\t\"address_route\": \"" + location.Route + "\",\n" +
+               "\t\t\"address_neighborhood\": \"" + location.Neighborhood + "\",\n" +
+               "\t\t\"address_locality\": \"" + location.City + "\",\n" +
+               "\t\t\"address_administrative_area_level_1\": \"" + location.State + "\",\n" +
+               "\t\t\"address_administrative_area_level_2\": \"" + location.County + "\",\n" +
+               "\t\t\"address_postal_code\": \"" + location.PostalCode + "\",\n" +
+               "\t\t\"address_country\": \"" + location.Country + "\",\n" +
+               "\t\t\"address_latitude\": \"" + location.Latitude + "\",\n" +
+               "\t\t\"address_longitude\": \"" + location.Longitude + "\"\n" +
+               "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
+               "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
+               "\t}\n}\n}\n";
 
             return Json;
         }
@@ -262,17 +255,17 @@ namespace EVERFI.Foundry
         internal static string CategoryJson(Category category)
         {
             string Json = "{\n" +
-                "\"data\": {\n";
+               "\"data\": {\n";
             if (category.Id != null)
             {
                 Json += "\t\"id\": \"" + category.Id + "\",\n";
             }
 
             Json += "\t\"type\": \"categories\",\n" +
-                "\t\"attributes\": {\n" +
-                "\t\t\"name\": \"" + category.Name + "\"\n" +
-                "\t}\n" +
-                "}\n}";
+               "\t\"attributes\": {\n" +
+               "\t\t\"name\": \"" + category.Name + "\"\n" +
+               "\t}\n" +
+               "}\n}";
 
             return Json;
         }
@@ -280,15 +273,15 @@ namespace EVERFI.Foundry
         internal static string LabelJson(Category category, Label label)
         {
             string Json = "{\n" +
-                "\"data\": {\n";
+               "\"data\": {\n";
             if (label.Id != null)
             {
                 Json += "\t\"id\": \"" + label.Id + "\",\n";
             }
 
             Json += "\t\"type\": \"category_labels\",\n" +
-                "\t\"attributes\": {\n" +
-                "\t\t\"name\": \"" + label.Name + "\"";
+               "\t\"attributes\": {\n" +
+               "\t\t\"name\": \"" + label.Name + "\"";
             if (category != null)
             {
                 Json += ",\n\t\t\"category_id\": \"" + category.Id + "\"\n";
@@ -302,10 +295,10 @@ namespace EVERFI.Foundry
         internal static string BulkUserLabelJson(List<User> users, Label label)
         {
             string Json = "{\n" +
-                "\"data\": {\n" +
-                "\"type\": \"bulk_action_categories\",\n" +
-                "\"attributes\": {\n" +
-                "\"user_ids\": [\n";
+               "\"data\": {\n" +
+               "\"type\": \"bulk_action_categories\",\n" +
+               "\"attributes\": {\n" +
+               "\"user_ids\": [\n";
 
             for (int i = 0; i < users.Count; i++)
             {
@@ -318,11 +311,11 @@ namespace EVERFI.Foundry
             }
 
             Json += "],\n" +
-                "\"category_label\": \"" + label.Name + "\",\n" +
-                "\"category_id\": \"" + label.CategoryId + "\"\n" +
-                "}\n" +
-                "}\n" +
-                "}";
+               "\"category_label\": \"" + label.Name + "\",\n" +
+               "\"category_id\": \"" + label.CategoryId + "\"\n" +
+               "}\n" +
+               "}\n" +
+               "}";
 
             return Json;
         }

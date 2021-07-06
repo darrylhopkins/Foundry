@@ -169,7 +169,7 @@ namespace EVERFI.Foundry.Classes
         public string StudentId { get; set; }
 
         [JsonProperty("category_labels")]
-        public List<string> categoryLabels { get; set; }
+        public List<string> categoryLabels { get; internal set; }
 
         public Location Location { get; set; }
 
@@ -198,8 +198,11 @@ namespace EVERFI.Foundry.Classes
         {
             this.UserTypes = new List<UserType>();
             this.Labels = new List<Label>();
-        }
+            this.categoryLabels = new List<string>();
 
+            
+        }
+       
         internal void ConfigureUserData(UserData data)
         {
             this.Position = this.ExternalAttributes.Position;
@@ -215,6 +218,10 @@ namespace EVERFI.Foundry.Classes
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
 
+            for (var i = 0; i < this.Labels.Count; i++)
+            {
+                this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
+            }
 
         }
     }

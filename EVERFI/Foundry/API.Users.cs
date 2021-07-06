@@ -201,8 +201,9 @@ namespace EVERFI.Foundry
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
             IRestResponse response = _client.Execute<User>(request);
-            responseModifer(response, 2);
-
+            //return response;
+           responseModifer(response, 2);
+           
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
 
@@ -216,6 +217,7 @@ namespace EVERFI.Foundry
             user.ConfigureUserData(userData.Data);
 
             return user;
+            
 
         }
 
