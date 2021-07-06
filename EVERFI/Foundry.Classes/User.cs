@@ -218,11 +218,15 @@ namespace EVERFI.Foundry.Classes
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
 
+            
+
+        }
+        internal void createCategoryLabels()
+        {
             for (var i = 0; i < this.Labels.Count; i++)
             {
                 this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
             }
-
         }
         
     }

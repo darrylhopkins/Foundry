@@ -151,8 +151,9 @@ namespace EVERFI.Foundry
                 newLabel.Id = labelAttribute.LabelId;
                 newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
                 user.Labels.Add(newLabel);
+               
             }
-
+            user.createCategoryLabels();
             return user;
         }
         public List<User> helperFunction2(IRestResponse response)
