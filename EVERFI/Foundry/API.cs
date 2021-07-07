@@ -161,12 +161,16 @@ namespace EVERFI.Foundry
                 Json += ",\n\"student_id\": \"" + user.StudentId + "\"";
             }
 
-            if (user.Location != null || user.LocationId != null)
+            if (user.Location != null)
             {
                 Json += ",\n\"location_id\": \"" + user.Location.Id + "\"";
             }
-           
-          
+            else if (user.LocationId != null)
+            {
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
+            }
+
+
             Json += ",\n\"category_labels\":" + "[\n";
             for (var i = 0; i < user.Labels.Count; i++)
             {
@@ -180,12 +184,12 @@ namespace EVERFI.Foundry
 
             Json += "\n}";
 
-
-            for (var i = 0; i < user.UserTypes.Count; i++)
+            
+            for (var i = 0; i < user.UserRuleSet.Count; i++)
             {
                 Json += ",\n{\n" +
-                "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
-                "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
+                "\"rule_set\": \"" + user.UserRuleSet.ElementAt(i).RuleSet + "\",\n" +
+                "\"role\": \"" + user.UserRuleSet.ElementAt(i).Role + "\"";
                 if (i == 0)
                 {
                     if (user.Position != null)
@@ -204,7 +208,7 @@ namespace EVERFI.Foundry
 
                 Json += "\n}";
             }
-
+            
             Json += "\n";
 
             Json += "]\n}\n}\n}";

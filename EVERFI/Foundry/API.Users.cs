@@ -220,6 +220,8 @@ namespace EVERFI.Foundry
             }
 
             user.ConfigureUserData(userData.Data);
+            user.createCategoryLabels();
+            user.addUserType();
 
             return user;
 
@@ -249,6 +251,7 @@ namespace EVERFI.Foundry
             }
 
             user.ConfigureUserData(userData.Data);
+            user.createCategoryLabels();
 
             return user;
         }

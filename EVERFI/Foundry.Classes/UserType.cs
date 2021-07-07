@@ -44,6 +44,8 @@ namespace EVERFI.Foundry.Classes
         Greek,
         [Description("primary")]
         Primary,
+        [Description("secondary")]
+        Secondary,
         [Description("supervisor")]
         Supervisor,
         [Description("non_supervisor")]
@@ -116,7 +118,7 @@ namespace EVERFI.Foundry.Classes
                     ?.Description
                 ?? value.ToString();
         }
-
+        /*
         internal static Types StringToType(string value)
         {
             switch (value)
@@ -142,7 +144,7 @@ namespace EVERFI.Foundry.Classes
                     return Types.HELearner; // TODO: return something for default
             }
         }
-
+        
         internal static Roles StringToRole(string value)
         {
             switch (value)
@@ -167,5 +169,6 @@ namespace EVERFI.Foundry.Classes
                     return Roles.Default; // TODO: return something for default
             }
         }
+        */
     }
 }

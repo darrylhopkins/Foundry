@@ -118,6 +118,16 @@ namespace EVERFI.Foundry.Classes
         internal string LabelId { get; set; }
     }
 
+ 
+    public class UserRuleSetData
+    {
+        [JsonProperty("rule_set")]
+        public string RuleSet { get; set; }
+
+        [JsonProperty("role")]
+        public string Role { get; set; }
+    }
+
 
    
     internal class ExternalAttributes
@@ -168,6 +178,15 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
 
+        [JsonProperty("sign_in_count")]
+        public int SignInCount { get; internal set; }
+
+        [JsonProperty("suppress_invites", NullValueHandling = NullValueHandling.Ignore)]
+        public Boolean DoesSupreessInvites { get; set; }
+
+        [JsonProperty("suppress_reminders", NullValueHandling = NullValueHandling.Ignore)]
+        public Boolean DoesSupreessReminders{ get; set; }
+
         [JsonProperty("category_labels")]
         public List<string> categoryLabels { get; internal set; }
 
@@ -175,9 +194,13 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("location_id")]
         public string LocationId { get; internal set; }
-       
-        public List<UserType> UserTypes { get; set; }
+
+        [JsonProperty("user_rule_set_roles")]
+        public List<UserRuleSetData> UserRuleSet { get; set; }
+
+        public List<string> UserTypes { get; set; }
         public List<Label> Labels { get; set; }
+
 
         public string Position { get; set; }
 
@@ -196,9 +219,10 @@ namespace EVERFI.Foundry.Classes
 
         public User()
         {
-            this.UserTypes = new List<UserType>();
+            this.UserTypes = new List<string>();
             this.Labels = new List<Label>();
             this.categoryLabels = new List<string>();
+            this.UserRuleSet = new List<UserRuleSetData>();
 
             
         }
@@ -211,15 +235,6 @@ namespace EVERFI.Foundry.Classes
 
 
             this.UserId = data.UserId;
-
-
-            foreach (var type in this.TypesDictionary.Keys)
-            {
-                this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
-            }
-
-            
-
         }
         internal void createCategoryLabels()
         {
@@ -228,7 +243,17 @@ namespace EVERFI.Foundry.Classes
                 this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
             }
         }
-        
+        internal void addUserType()
+        {
+            for (var i = 0; i < this.UserRuleSet.Count; i++)
+            {
+
+                this.UserTypes.Add(this.UserRuleSet.ElementAt(i).Role + " " + this.UserRuleSet.ElementAt(i).RuleSet);
+
+            }
+
+        }
+
     }
 }
 
