@@ -178,6 +178,7 @@ namespace EVERFI.Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
+                newUser.addUserType();
                 foreach (Label lab in allLabels)
                 {
                     List<RelationshipData> relationship = data.multipleRelationships.categoryLabels.RelationshipsData;
@@ -186,6 +187,7 @@ namespace EVERFI.Foundry
                         if (relationship[0].LabelId == lab.Id)
                         {
                             newUser.Labels.Add(lab);
+                            newUser.createCategoryLabels();
                         }
                     }
                 }
@@ -252,6 +254,7 @@ namespace EVERFI.Foundry
 
             user.ConfigureUserData(userData.Data);
             user.createCategoryLabels();
+            user.addUserType();
 
             return user;
         }
@@ -266,6 +269,7 @@ namespace EVERFI.Foundry
             responseModifer(response, 1);
 
             User user = helperFunction(response, true);
+            user.addUserType();
             return user;
         }
 
@@ -280,6 +284,7 @@ namespace EVERFI.Foundry
             responseModifer(response, 1);
 
             User user = helperFunction(response, false);
+            user.addUserType();
 
             return user;
         }
@@ -297,6 +302,7 @@ namespace EVERFI.Foundry
             responseModifer(response, 1);
 
             List<User> users = helperFunction2(response);
+            
 
             return users;
         }
