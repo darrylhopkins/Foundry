@@ -195,6 +195,9 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("location_id")]
         public string LocationId { get; internal set; }
 
+        [JsonProperty("parent_email", NullValueHandling = NullValueHandling.Ignore)]
+        public string ParentEmail { get; set; }
+
         [JsonProperty("user_rule_set_roles")]
         public List<UserRuleSetData> UserRuleSet { get; set; }
 
