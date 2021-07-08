@@ -118,7 +118,7 @@ namespace EVERFI.Foundry.Classes
                     ?.Description
                 ?? value.ToString();
         }
-        /*
+      
         internal static Types StringToType(string value)
         {
             switch (value)
@@ -169,6 +169,6 @@ namespace EVERFI.Foundry.Classes
                     return Roles.Default; // TODO: return something for default
             }
         }
-        */
+      
     }
 }

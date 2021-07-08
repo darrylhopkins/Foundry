@@ -118,7 +118,8 @@ namespace EVERFI.Foundry.Classes
         internal string LabelId { get; set; }
     }
 
- 
+
+    /*
     public class UserRuleSetData
     {
         [JsonProperty("rule_set")]
@@ -127,7 +128,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("role")]
         public string Role { get; set; }
     }
-
+    */
 
    
     internal class ExternalAttributes
@@ -197,11 +198,11 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("parent_email", NullValueHandling = NullValueHandling.Ignore)]
         public string ParentEmail { get; set; }
-
+        /*
         [JsonProperty("user_rule_set_roles")]
-        public List<UserRuleSetData> UserRuleSet { get; set; }
-
-        public List<string> UserTypes { get; set; }
+        public List<UserRuleSetData> TypeUser { get; set; }
+        */
+        public List<UserType> UserTypes { get; set; }
         public List<Label> Labels { get; set; }
 
 
@@ -222,10 +223,10 @@ namespace EVERFI.Foundry.Classes
 
         public User()
         {
-            this.UserTypes = new List<string>();
+            this.UserTypes = new List<UserType>();
             this.Labels = new List<Label>();
             this.categoryLabels = new List<string>();
-            this.UserRuleSet = new List<UserRuleSetData>();
+            //this.TypeUser = new List<UserRuleSetData>();
 
             
         }
@@ -238,6 +239,10 @@ namespace EVERFI.Foundry.Classes
 
 
             this.UserId = data.UserId;
+            foreach (var type in this.TypesDictionary.Keys)
+            {
+                this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
+            }
         }
         internal void createCategoryLabels()
         {
@@ -246,6 +251,7 @@ namespace EVERFI.Foundry.Classes
                 this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
             }
         }
+        /*
         internal void addUserType()
         {
             for (var i = 0; i < this.UserRuleSet.Count; i++)
@@ -256,6 +262,7 @@ namespace EVERFI.Foundry.Classes
             }
 
         }
+        */
 
     }
 }

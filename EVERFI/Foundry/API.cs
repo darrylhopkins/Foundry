@@ -184,12 +184,12 @@ namespace EVERFI.Foundry
 
             Json += "\n}";
 
-            
-            for (var i = 0; i < user.UserRuleSet.Count; i++)
+
+            for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +
-                "\"rule_set\": \"" + user.UserRuleSet.ElementAt(i).RuleSet + "\",\n" +
-                "\"role\": \"" + user.UserRuleSet.ElementAt(i).Role + "\"";
+                "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
+                "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
                 if (i == 0)
                 {
                     if (user.Position != null)
@@ -208,7 +208,7 @@ namespace EVERFI.Foundry
 
                 Json += "\n}";
             }
-            
+
             Json += "\n";
 
             Json += "]\n}\n}\n}";
