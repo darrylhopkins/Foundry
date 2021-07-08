@@ -102,7 +102,7 @@ namespace EVERFI.Foundry
 
             User retrievedUser = userData.Data.UserAttributes;
             retrievedUser.ConfigureUserData(userData.Data);
-            if (retrievedUser.Location != null)
+            if (retrievedUser.Location == null && !string.IsNullOrEmpty(retrievedUser.LocationId))
             {
                 retrievedUser.Location = GetLocationById(retrievedUser.LocationId);
             }
@@ -140,7 +140,7 @@ namespace EVERFI.Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                if (newUser.Location != null)
+                if (newUser.Location == null && !string.IsNullOrEmpty(newUser.LocationId))
                 {
                     newUser.Location = GetLocationById(newUser.LocationId);
                 }
@@ -220,7 +220,7 @@ namespace EVERFI.Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                if (newUser.Location != null)
+                if (newUser.Location == null && !string.IsNullOrEmpty(newUser.LocationId))
                 {
                     newUser.Location = GetLocationById(newUser.LocationId);
                 }

@@ -74,7 +74,9 @@ namespace EVERFI.Foundry
             RestRequest request = new RestRequest("/{version}/admin/locations");
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("SDK_Method", "GetLocations");
             _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
+
 
             IRestResponse response = _client.Execute(request);
             HttpStatusCode statusCode = response.StatusCode;
@@ -100,6 +102,17 @@ namespace EVERFI.Foundry
 
         public Location GetLocationById(string LocationId)
         {
+            var location = new Location();
+            try
+            {
+                location = GetLocationFromCache(LocationId);
+            }
+            catch (Exception ex)
+            { }
+
+            if (!string.IsNullOrEmpty(location.Id))
+                return location;
+
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
@@ -116,10 +129,15 @@ namespace EVERFI.Foundry
             }
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
-            Location location = locationData.LocationData.LocationAttributes;
+            location = locationData.LocationData.LocationAttributes;
             location.AddIdFromData(locationData.LocationData);
 
             return location;
+        }
+
+        private Location GetLocationFromCache(string LocationId)
+        {
+            return FoundryLocations.Find(x => x.Id == LocationId);
         }
     }
 }

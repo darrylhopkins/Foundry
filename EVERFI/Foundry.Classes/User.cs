@@ -26,6 +26,9 @@ namespace EVERFI.Foundry.Classes
     {
         [JsonProperty("data")]
         internal UserData Data { get; set; }
+        [JsonProperty("included")]
+        internal UserIncludedData Included { get; set; }
+
     }
 
     internal class UserDataJsonList
@@ -90,6 +93,8 @@ namespace EVERFI.Foundry.Classes
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
 
+        public List<Label> Labels { get; set; }
+
         public string Position { get; set; }
 
         public DateTime FirstDay { get; set; }
@@ -115,6 +120,14 @@ namespace EVERFI.Foundry.Classes
             {
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
+
+            var l = new Label();
+            l.Id = "33";
+            l.Name = "xxxzzz";
+            l.CategoryId = "44";
+            l.UserCount = 32;
+            this.Labels.Add(l);
+
         }
     }
 }

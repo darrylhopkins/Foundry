@@ -73,6 +73,20 @@ namespace EVERFI.Foundry
             _client.Authenticator = new HttpBasicAuthenticator(accountSid, secretKey);
             this.BaseUrl = BaseUrl;
 
+            // set "source" header with various information
+            Assembly thisAssem = typeof(Foundry.API).Assembly;
+            Type myType = typeof(Foundry.API);
+            AssemblyName thisAssemName = thisAssem.GetName();
+            Version ver = thisAssemName.Version;
+
+            var header_source = "client_id:" + accountSid + ";" +
+                "Assembly:" + thisAssemName.Name + ";" +
+                "Namespace:" + myType.Namespace + ";" +
+                "Source:Foundry API SDK;" +
+                "Version:" + ver;
+
+            _client.AddDefaultHeader("Source", header_source);
+
             RestRequest request = new RestRequest("/oauth/token", Method.POST);
 
             request.Parameters.Clear();
