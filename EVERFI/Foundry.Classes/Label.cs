@@ -18,6 +18,9 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("name")]
         internal string Name { get; set; }
 
+        [JsonProperty("category_name")]
+        internal string CategoryName { get; set; }
+
         [JsonProperty("users_count")]
         internal int UserCount { get; set; }
     }
@@ -46,6 +49,8 @@ namespace EVERFI.Foundry.Classes
         public string Id { get; internal set; }
 
         public string Name { get; set; }
+
+        public string CategoryName { get; set; }
 
         public int UserCount { get; internal set; }
 

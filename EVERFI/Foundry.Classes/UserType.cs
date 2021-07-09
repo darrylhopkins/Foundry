@@ -44,6 +44,8 @@ namespace EVERFI.Foundry.Classes
         Greek,
         [Description("primary")]
         Primary,
+        [Description("secondary")]
+        Secondary,
         [Description("supervisor")]
         Supervisor,
         [Description("non_supervisor")]
