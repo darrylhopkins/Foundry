@@ -21,20 +21,12 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("total_count")]
         internal Int32 Count { get; set; }
     }
-
-    internal class UserDataJson
-    {
-        [JsonProperty("data")]
-        internal UserData Data { get; set; }
-        [JsonProperty("included")]
-        internal UserIncludedData Included { get; set; }
-
-    }
-
     internal class UserDataJsonList
     {
+
         [JsonProperty("data")]
         internal List<UserData> Data { get; set; }
+
     }
 
     internal class UserData
@@ -42,9 +34,89 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("id")]
         internal string UserId { get; set; }
 
+        [JsonProperty("relationships")]
+        internal MultRelationships multipleRelationships { get; set; }
+
         [JsonProperty("attributes")]
         internal User UserAttributes { get; set; }
+
+
     }
+
+    internal class UserDataJson
+    {
+        [JsonProperty("data")]
+        internal UserData Data { get; set; }
+    }
+
+    internal class UserDataIncludedList
+    {
+
+        [JsonProperty("included")]
+        internal List<UserDataIncluded> IncludedList { get; set; }
+    }
+    internal class UserDataIncludedJson
+    {
+        [JsonProperty("included")]
+        internal UserDataIncluded DataIncluded { get; set; }
+    }
+
+    internal class UserDataIncluded
+    {
+        [JsonProperty("id")]
+        internal string LabelId { get; set; }
+
+        [JsonProperty("attributes")]
+        internal LabelsAttributes LabelsAttributes { get; set; }
+
+    }
+
+    internal class LabelsAttributes
+    {
+        [JsonProperty("category_id")]
+        internal string CategoryID { get; set; }
+
+        [JsonProperty("category_name")]
+        internal string CategoryLabelName { get; set; }
+
+        [JsonProperty("name")]
+        internal string LabelName { get; set; }
+    }
+
+    internal class MultRelationships
+    {
+        [JsonProperty("category_labels")]
+        internal IncludedCategoryDataList categoryLabels { get; set; }
+    }
+
+
+    internal class IncludedCategoryDataList
+    {
+        [JsonProperty("data")]
+        internal List<RelationshipData> RelationshipsData { get; set; }
+    }
+
+
+
+    internal class Relationships
+    {
+        [JsonProperty("category")]
+        internal IncludedCategoryData CategoryData { get; set; }
+    }
+
+    internal class IncludedCategoryData
+    {
+        [JsonProperty("data")]
+        internal RelationshipData RelationshipData { get; set; }
+    }
+
+    internal class RelationshipData
+    {
+        [JsonProperty("id")]
+        internal string LabelId { get; set; }
+    }
+
+
 
     internal class ExternalAttributes
     {
@@ -67,6 +139,9 @@ namespace EVERFI.Foundry.Classes
         private Dictionary<string, string> TypesDictionary { get; set; }
 
         /* user_rule_set */
+        [JsonProperty("active")]
+        public Boolean active { get; set; }
+
         [JsonProperty("first_name", Required = Required.Always)]
         public string FirstName { get; set; }
 
@@ -75,6 +150,12 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("email", Required = Required.Always)]
         public string Email { get; set; }
+
+        [JsonProperty("created_at", Required = Required.Always)]
+        public DateTime created { get; internal set; }
+
+        [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
+        public string username { get; set; }
 
         [JsonProperty("sso_id")]
         public string SingleSignOnId { get; set; }
@@ -85,15 +166,29 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
 
+        [JsonProperty("sign_in_count")]
+        public int SignInCount { get; internal set; }
+
+        [JsonProperty("suppress_invites", NullValueHandling = NullValueHandling.Ignore)]
+        public Boolean DoesSupreessInvites { get; set; }
+
+        [JsonProperty("suppress_reminders", NullValueHandling = NullValueHandling.Ignore)]
+        public Boolean DoesSupreessReminders { get; set; }
+
+        [JsonProperty("category_labels")]
+        public List<string> categoryLabels { get; internal set; }
+
         public Location Location { get; set; }
 
         [JsonProperty("location_id")]
         public string LocationId { get; internal set; }
 
-        /* second registration array */
+        [JsonProperty("parent_email", NullValueHandling = NullValueHandling.Ignore)]
+        public string ParentEmail { get; set; }
+       
         public List<UserType> UserTypes { get; set; }
-
         public List<Label> Labels { get; set; }
+
 
         public string Position { get; set; }
 
@@ -101,11 +196,24 @@ namespace EVERFI.Foundry.Classes
 
         public DateTime LastDay { get; set; }
 
+
+        [JsonProperty("under_13", NullValueHandling = NullValueHandling.Ignore)]
+        public bool IsUnderThirteen { get; set; }
+
+        [JsonProperty("last_sign_in_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime lastSignIn { get; set; }
+
         public string UserId { get; internal set; }
+
 
         public User()
         {
             this.UserTypes = new List<UserType>();
+            this.Labels = new List<Label>();
+            this.categoryLabels = new List<string>();
+            //this.TypeUser = new List<UserRuleSetData>();
+
+
         }
 
         internal void ConfigureUserData(UserData data)
@@ -119,15 +227,15 @@ namespace EVERFI.Foundry.Classes
             foreach (var type in this.TypesDictionary.Keys)
             {
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
+            }     
+
+        }
+        internal void createCategoryLabels()
+        {
+            for (var i = 0; i < this.Labels.Count; i++)
+            {
+                this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
             }
-
-            var l = new Label();
-            l.Id = "33";
-            l.Name = "xxxzzz";
-            l.CategoryId = "44";
-            l.UserCount = 32;
-            this.Labels.Add(l);
-
         }
     }
 }
