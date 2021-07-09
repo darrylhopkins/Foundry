@@ -184,19 +184,10 @@ namespace EVERFI.Foundry
                 "\n}";
             }
 
-            Json += ",\n\"category_labels\":" + "[\n";
-            for (var i = 0; i < user.Labels.Count; i++)
+            else
             {
-                Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
-                if ((i + 1) != user.Labels.Count)
-                {
-                    Json += ",";
-                }
+                Json += "\n}";
             }
-            Json += "\n]";
-
-            Json += "\n}";
-
 
             for (var i = 0; i < user.UserTypes.Count; i++)
             {

@@ -25,8 +25,7 @@ namespace EVERFI.Foundry.Classes
     internal class UserDataJson
     {
         [JsonProperty("data")]
-        internal UserData Data { get; set; }
-        
+        internal UserData Data { get; set; }    
 
     }
 
@@ -81,6 +80,10 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("name")]
         internal string LabelName { get; set; }
+
+        [JsonProperty("users_count")]
+        internal int UserCount { get; set; }
+
     }
 
     internal class MultRelationships
@@ -137,6 +140,9 @@ namespace EVERFI.Foundry.Classes
         private Dictionary<string, string> TypesDictionary { get; set; }
 
         /* user_rule_set */
+        [JsonProperty("active")]
+        public Boolean Active { get; set; }
+
         [JsonProperty("first_name", Required = Required.Always)]
         public string FirstName { get; set; }
 
@@ -147,10 +153,10 @@ namespace EVERFI.Foundry.Classes
         public string Email { get; set; }
 
         [JsonProperty("created_at", Required = Required.Always)]
-        public DateTime created { get; internal set; }
+        public DateTime Created { get; internal set; }
 
         [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
-        public string username { get; set; }
+        public string UserName { get; set; }
 
         [JsonProperty("sso_id")]
         public string SingleSignOnId { get; set; }
@@ -161,18 +167,14 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
 
-
         [JsonProperty("sign_in_count")]
         public int SignInCount { get; internal set; }
 
         [JsonProperty("suppress_invites", NullValueHandling = NullValueHandling.Ignore)]
-        public Boolean DoesSupreessInvites { get; set; }
+        public Boolean SupressInvites { get; set; }
 
         [JsonProperty("suppress_reminders", NullValueHandling = NullValueHandling.Ignore)]
-        public Boolean DoesSupreessReminders { get; set; }
-
-        [JsonProperty("category_labels")]
-        public List<string> categoryLabels { get; internal set; }
+        public Boolean SupressReminders { get; set; }
 
         public Location Location { get; set; }
 
@@ -187,6 +189,9 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("last_sign_in_at", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime lastSignIn { get; set; }
+
+        [JsonProperty("updated_at", Required = Required.Always)]
+        public DateTime Updated { get; }
 
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
@@ -205,7 +210,7 @@ namespace EVERFI.Foundry.Classes
         {
             this.UserTypes = new List<UserType>();
             this.Labels = new List<Label>();
-            this.categoryLabels = new List<string>();
+            
         }
 
         internal void ConfigureUserData(UserData data)
@@ -221,12 +226,6 @@ namespace EVERFI.Foundry.Classes
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
         }
-        internal void createCategoryLabels()
-        {
-            for (var i = 0; i < this.Labels.Count; i++)
-            {
-                this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
-            }
-        }
+        
     }
 }

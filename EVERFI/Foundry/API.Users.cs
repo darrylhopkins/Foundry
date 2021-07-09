@@ -87,7 +87,7 @@ namespace EVERFI.Foundry
             return request;
 
         }
-        public void responseModifer(IRestResponse response, int type)
+        public void checkResponseSuccess(IRestResponse response, int type)
         {
 
             HttpStatusCode statusCode = response.StatusCode;
@@ -108,7 +108,8 @@ namespace EVERFI.Foundry
             }
 
         }
-        public User helperFunction(IRestResponse response, bool noList)
+        //deserializes and returns the user with the correct data
+        public User getUserInformation(IRestResponse response, bool noList)
         {
             UserDataJsonList userDataList;
             UserDataJson userData;
@@ -149,14 +150,16 @@ namespace EVERFI.Foundry
                 newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
                 newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
                 newLabel.Id = labelAttribute.LabelId;
+                newLabel.UserCount = labelAttribute.LabelsAttributes.UserCount;
                 newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
                 user.Labels.Add(newLabel);
 
             }
-            user.createCategoryLabels();
+           
             return user;
         }
-        public List<User> helperFunction2(IRestResponse response)
+        //deserializes the data of each user in a list of users, returns list of users
+        public List<User> getMultUserInformation(IRestResponse response)
         {
             UserDataJsonList userData = JsonConvert.DeserializeObject<UserDataJsonList>(response.Content);
             UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
@@ -165,6 +168,7 @@ namespace EVERFI.Foundry
             {
                 Label newLabel = new Label();
                 newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
+                newLabel.UserCount = labelAttribute.LabelsAttributes.UserCount;
                 newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
                 newLabel.Id = labelAttribute.LabelId;
                 newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
@@ -178,7 +182,7 @@ namespace EVERFI.Foundry
             {
                 User newUser = data.UserAttributes;
                 newUser.ConfigureUserData(data);
-                //newUser.addUserType();
+               
                 foreach (Label lab in allLabels)
                 {
                     List<RelationshipData> relationship = data.multipleRelationships.categoryLabels.RelationshipsData;
@@ -187,7 +191,7 @@ namespace EVERFI.Foundry
                         if (relationship[0].LabelId == lab.Id)
                         {
                             newUser.Labels.Add(lab);
-                            newUser.createCategoryLabels();
+                           
                         }
                     }
                 }
@@ -209,7 +213,7 @@ namespace EVERFI.Foundry
 
             IRestResponse response = _client.Execute<User>(request);
 
-            responseModifer(response, 2);
+            checkResponseSuccess(response, 2);
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
@@ -222,8 +226,8 @@ namespace EVERFI.Foundry
             }
 
             user.ConfigureUserData(userData.Data);
-            user.createCategoryLabels();
-            //user.addUserType();
+         
+            
 
             return user;
 
@@ -239,7 +243,7 @@ namespace EVERFI.Foundry
             _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
@@ -253,8 +257,8 @@ namespace EVERFI.Foundry
             }
 
             user.ConfigureUserData(userData.Data);
-            user.createCategoryLabels();
-            //user.addUserType();
+            
+            
 
             return user;
         }
@@ -266,10 +270,10 @@ namespace EVERFI.Foundry
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
 
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
-            User user = helperFunction(response, true);
-            //user.addUserType();
+            User user = getUserInformation(response, true);
+            
             return user;
         }
 
@@ -281,10 +285,10 @@ namespace EVERFI.Foundry
             request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
 
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
-            User user = helperFunction(response, false);
-            //user.addUserType();
+            User user = getUserInformation(response, false);
+          
 
             return user;
         }
@@ -299,9 +303,9 @@ namespace EVERFI.Foundry
             }
 
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
-            List<User> users = helperFunction2(response);
+            List<User> users = getMultUserInformation(response);
 
 
             return users;
@@ -314,9 +318,9 @@ namespace EVERFI.Foundry
             RestRequest request = ConfigureRequest(5);
 
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
-            List<User> users = helperFunction2(response);
+            List<User> users = getMultUserInformation(response);
 
             return users;
 
@@ -328,9 +332,9 @@ namespace EVERFI.Foundry
 
             RestRequest request = ConfigureRequest(8);
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
-            List<User> users = helperFunction2(response);
+            List<User> users = getMultUserInformation(response);
 
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
@@ -358,7 +362,7 @@ namespace EVERFI.Foundry
         {
             RestRequest request = ConfigureRequest(6);
             IRestResponse response = _client.Execute(request);
-            responseModifer(response, 1);
+            checkResponseSuccess(response, 1);
 
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
