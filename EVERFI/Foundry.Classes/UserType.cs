@@ -153,6 +153,8 @@ namespace EVERFI.Foundry.Classes
                     return Roles.Undergraduate;
                 case "Primary":
                     return Roles.Primary;
+                case "Secondary":
+                    return Roles.Secondary;
                 case "Graduate":
                     return Roles.Graduate;
                 case "Greek":
