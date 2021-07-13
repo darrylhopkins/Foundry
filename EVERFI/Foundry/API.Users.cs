@@ -13,7 +13,6 @@ namespace EVERFI.Foundry
     {
         public RestRequest ConfigureRequest()
         {
-
             RestRequest request = new RestRequest();
             request.Parameters.Clear();
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
@@ -135,16 +134,15 @@ namespace EVERFI.Foundry
             Console.WriteLine("User successfully added.");
 
             User user = userData.Data.UserAttributes;
+            
 
             if (user.Location != null)
             {
                 user.Location = GetLocationById(user.LocationId);
             }
-
+            
             user.ConfigureUserData(userData.Data);
-
-
-
+            user.createCategoryLabels();
             return user;
 
 
@@ -175,6 +173,7 @@ namespace EVERFI.Foundry
             }
 
             user.ConfigureUserData(userData.Data);
+            user.createCategoryLabels();
 
 
 
