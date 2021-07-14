@@ -189,7 +189,7 @@ namespace EVERFI.Foundry
             return user;
         }
 
-        public List<User> GetUserById(string UserId)
+        public User GetUserById(string UserId)
         {
             Console.WriteLine("Getting user by ID...");
             RestRequest request = ConfigureRequest();
@@ -202,12 +202,13 @@ namespace EVERFI.Foundry
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response, RequestType.GetRequest);
 
-            List<User> user = getUsersInformation(response, true);
+            List<User> users = getUsersInformation(response, true);
+            User user = users[0];
 
             return user;
         }
 
-        public List<User> GetUserByEmail(string UserEmail)
+        public User GetUserByEmail(string UserEmail)
         {
             Console.WriteLine("Getting User(s) with email: " + UserEmail + "...");
 
@@ -221,10 +222,12 @@ namespace EVERFI.Foundry
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response, RequestType.GetRequest);
 
-            List<User> user = getUsersInformation(response, false);
+            List<User> users = getUsersInformation(response, false);
 
+            User user = users[0];
 
             return user;
+            
         }
 
         // TODO: Implement paging in this
