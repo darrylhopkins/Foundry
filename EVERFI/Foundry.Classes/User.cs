@@ -196,9 +196,11 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("updated_at", Required = Required.Always)]
         public DateTime Updated { get; }
+
         
         [JsonProperty("category_labels")]
-        private List<string> categoryLabels { get; set; }
+        [JsonIgnore]
+        internal List<string> categoryLabels { get; set; }
        
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
