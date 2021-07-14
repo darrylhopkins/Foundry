@@ -196,10 +196,10 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("updated_at", Required = Required.Always)]
         public DateTime Updated { get; }
-
+        
         [JsonProperty("category_labels")]
-        public List<string> categoryLabels { get; set; }
-
+        private List<string> categoryLabels { get; set; }
+       
         /* second registration array */
         public List<UserType> UserTypes { get; set; }
 
@@ -234,6 +234,7 @@ namespace EVERFI.Foundry.Classes
                 this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
             }
         }
+        
         internal void createCategoryLabels()
         {
             for (var i = 0; i < this.Labels.Count; i++)
@@ -241,7 +242,7 @@ namespace EVERFI.Foundry.Classes
                 this.categoryLabels.Add(this.Labels.ElementAt(i).Id);
             }
         }
-
+        
 
     }
 }

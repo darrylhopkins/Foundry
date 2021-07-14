@@ -175,32 +175,34 @@ namespace EVERFI.Foundry
 
             if (user.Location != null)
             {
-                Json += ",\n\"location_id\": \"" + user.Location.Id + "\""; 
+                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"";
             }
             else if (user.LocationId != null)
             {
-                Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" ;
             }
             /*
 
-            else
-            {
-                Json += "\n}";
-            }
-            */
-          //beginning of new stuff
-            Json += ",\n\"category_labels\":" + "[\n";
-            for (var i = 0; i < user.Labels.Count; i++)
-            {
-                Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
-                if ((i + 1) != user.Labels.Count)
-                {
-                    Json += ",";
-                }
-            }
-            Json += "\n]";
+           else
+           {
+               Json += "\n}";
+           }
 
-            Json += "\n}";
+            */
+            //beginning of new stuff
+            Json += ",\n\"category_labels\":" + "[\n";
+           for (var i = 0; i < user.Labels.Count; i++)
+           {
+               Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
+               if ((i + 1) != user.Labels.Count)
+               {
+                   Json += ",";
+               }
+           }
+           Json += "\n]";
+
+           Json += "\n}";
+            
             //end of  new stuff
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
