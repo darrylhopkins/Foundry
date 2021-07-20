@@ -336,6 +336,36 @@ namespace EVERFI.Foundry
             return metaData.Meta.Count;
         }
 
+        public UserProgress GetUserProgress(DateTime sinceDate, int scrollSize)
+        {
+            List<UserProgress> userProgressesList = new List<UserProgress>();
+            RestRequest request = new RestRequest();
+            request.Method = Method.GET;
+            request.Parameters.Clear();
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.Resource = "{version}/progress/user_assignments";
+            request.AddParameter("since", sinceDate, ParameterType.QueryString);
+            request.AddParameter("scroll_size", scrollSize, ParameterType.QueryString);
+            request.AddHeader("Content-Type", "application/json");
+
+            IRestResponse response = _client.Execute(request);
+            checkResponseSuccess(response, RequestType.GetRequest);
+
+            UserProgressDataHeaderList progressData = JsonConvert.DeserializeObject<UserProgressDataHeaderList>(response.Content);
+            foreach(UserProgressDataHeader data in progressData.ProgressDataHeaderList)
+            {
+                foreach(UserProgress list in data.ProgressList)
+                {
+                    userProgressesList.Add(list);
+                }
+            }
+
+            UserProgress userProgress = userProgressesList[0];
+
+            return userProgress;
+
+        }
+
     }
 
 }
