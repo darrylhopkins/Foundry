@@ -60,6 +60,7 @@
     <Compile Include="Foundry\API.Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Foundry.Classes\UserType.cs" />
+    <Compile Include="Foundry.Classes\UserProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Foundry\API.Categories.cs" />
