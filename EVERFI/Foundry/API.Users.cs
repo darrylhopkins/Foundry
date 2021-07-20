@@ -139,7 +139,7 @@ namespace EVERFI.Foundry
             request.Method = Method.POST;
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
-            IRestResponse response = _client.Execute<User>(request);
+            IRestResponse response = _client.Execute<List<User>>(request);
 
             checkResponseSuccess(response, RequestType.PostRequest);
 

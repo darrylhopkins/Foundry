@@ -130,11 +130,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("last_day_of_work", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime LastDay { get; set; }
     }
-    internal class CategoryLabel
-    {
-        
-    }
-
+   
     public class User
     {
         [JsonProperty("external_attributes")]
