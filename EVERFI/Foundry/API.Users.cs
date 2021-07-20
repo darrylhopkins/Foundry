@@ -53,16 +53,20 @@ namespace EVERFI.Foundry
             UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
             List<UserDataIncluded> labels = userDataIncluded.IncludedList;
             List<Label> userLabels = new List<Label>();
-            foreach (var labelAttribute in labels)
+            if (labels != null && labels.Any())
             {
-                Label newLabel = new Label();
-                newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
-                newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
-                newLabel.Id = labelAttribute.LabelId;
-                newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
-                userLabels.Add(newLabel);
+                foreach (var labelAttribute in labels)
+                {
+                    Label newLabel = new Label();
+                    newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
+                    newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
+                    newLabel.Id = labelAttribute.LabelId;
+                    newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
+                    userLabels.Add(newLabel);
 
+                }
             }
+          
             return userLabels;
 
         }
