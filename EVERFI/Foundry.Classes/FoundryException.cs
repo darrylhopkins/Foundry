@@ -31,9 +31,9 @@ namespace EVERFI.Foundry.Classes
         public int ErrorCode { get; set; }
 
         public string Response { get; set; }
-        internal ErrorList ErrorMessageList { get; set; }
-        public List<String> ErrorMessages { get; set; }
-
+        //internal ErrorList ErrorMessageList { get; set; }
+       
+        public override string Message { get; }
 
         public FoundryException(string message)
         {   
@@ -41,10 +41,10 @@ namespace EVERFI.Foundry.Classes
         }
         
 
-        public List<String> ConfigureErrorMessage(int ErrorCode, String Response)
+        public String ConfigureErrorMessage(int ErrorCode, String Response)
         {
-            List<String> AllErrors = new List<String>();
-
+            String message = " ";
+            ErrorList ErrorMessageList;
             if (ErrorCode == 422)
             {
                 List<ErrorList> error = JsonConvert.DeserializeObject<List<ErrorList>>(Response);
@@ -52,21 +52,24 @@ namespace EVERFI.Foundry.Classes
                 
             }
             else{
-                ErrorList error = JsonConvert.DeserializeObject<ErrorList>(Response);
+                ErrorMessageList = JsonConvert.DeserializeObject<ErrorList>(Response);
             }
             foreach (ErrorContent content in ErrorMessageList.ListOfErrors)
             {
                 if (content.Message1 != null)
                 {
-                    AllErrors.Add(content.Message1);
+                    message += content.Message1;
                 }
+
+                message += " ";
+
                 if (content.Message2 != null)
                 {
-                    AllErrors.Add(content.Message2);
+                    message += content.Message2;
                 }
 
             }
-            return AllErrors;
+            return message;
         }
 
    
@@ -74,7 +77,7 @@ namespace EVERFI.Foundry.Classes
     {
         this.ErrorCode = ErrorCode;
         this.Response = Response;
-        this.ErrorMessages = ConfigureErrorMessage(ErrorCode, Response);
+        this.Message = ConfigureErrorMessage(ErrorCode, Response);
        
 
     }
