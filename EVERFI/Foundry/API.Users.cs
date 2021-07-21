@@ -36,14 +36,14 @@ namespace EVERFI.Foundry
             {
                 if (numericCode != 200)
                 {
-                    throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                    throw new FoundryException(numericCode, response.Content);
                 }
             }
             else if (request == RequestType.PostRequest)
             {
                 if (numericCode != 201)
                 {
-                    throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                    throw new FoundryException(numericCode, response.Content);
                 }
             }
 

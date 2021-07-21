@@ -101,7 +101,7 @@ namespace EVERFI.Foundry
             _token = JsonConvert.DeserializeObject<AccessToken>(response.Content);
             if (_token.token_type == null)
             {
-                throw new FoundryException(response.ErrorMessage, (int)response.StatusCode, response.Content);
+                throw new FoundryException((int)response.StatusCode, response.Content);
             }
             else
             {
@@ -260,8 +260,8 @@ namespace EVERFI.Foundry
                 "\t\t\"address_postal_code\": \"" + location.PostalCode + "\",\n" +
                 "\t\t\"address_country\": \"" + location.Country + "\",\n" +
                 "\t\t\"address_latitude\": \"" + location.Latitude + "\",\n" +
-                "\t\t\"address_longitude\": \"" + location.Longitude + "\"\n" +
-                "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
+                "\t\t\"address_longitude\": \"" + location.Longitude + "\",\n" +
+                "\t\t\"address_name\": \"" + location.AddressName + "\",\n" +
                 "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
                 "\t}\n}\n}\n";
 
