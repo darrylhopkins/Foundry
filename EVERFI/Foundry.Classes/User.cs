@@ -119,6 +119,15 @@ namespace EVERFI.Foundry.Classes
         internal string LabelId { get; set; }
     }
 
+    public class UserRuleSetData
+    {
+        [JsonProperty("rule_set")]
+        public string RuleSet { get; set; }
+
+        [JsonProperty("role")]
+        public string Role { get; set; }
+    }
+
     internal class ExternalAttributes
     {
         [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
@@ -166,6 +175,9 @@ namespace EVERFI.Foundry.Classes
 
         [JsonProperty("student_id")]
         public string StudentId { get; set; }
+
+        [JsonProperty("user_rule_set_roles")]
+        public List<UserRuleSetData> UserRuleSet { get; set; }
 
         [JsonProperty("sign_in_count")]
         public int SignInCount { get; internal set; }
@@ -226,9 +238,9 @@ namespace EVERFI.Foundry.Classes
 
             this.UserId = data.UserId;
             
-            foreach (var type in this.TypesDictionary.Keys)
+            foreach (var type in this.UserRuleSet)
             {
-                this.UserTypes.Add(new UserType(UserType.StringToType(type), UserType.StringToRole(this.TypesDictionary[type])));
+                this.UserTypes.Add(new UserType(UserType.GetValueFromDescription<Types>(type.RuleSet), UserType.GetValueFromDescription<Roles>(type.Role)));
             }
         }
         

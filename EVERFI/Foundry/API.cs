@@ -181,15 +181,7 @@ namespace EVERFI.Foundry
             {
                 Json += ",\n\"location_id\": \"" + user.LocationId + "\"" ;
             }
-            /*
-
-           else
-           {
-               Json += "\n}";
-           }
-
-            */
-            //beginning of new stuff
+           
             Json += ",\n\"category_labels\":" + "[\n";
            for (var i = 0; i < user.Labels.Count; i++)
            {
@@ -203,7 +195,7 @@ namespace EVERFI.Foundry
 
            Json += "\n}";
             
-            //end of  new stuff
+         
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +

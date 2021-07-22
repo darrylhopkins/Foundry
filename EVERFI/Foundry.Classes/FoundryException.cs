@@ -58,14 +58,12 @@ namespace EVERFI.Foundry.Classes
             {
                 if (content.Message1 != null)
                 {
-                    message += content.Message1;
+                    message += content.Message1 +"\n";
                 }
-
-                message += " ";
 
                 if (content.Message2 != null)
                 {
-                    message += content.Message2;
+                    message += content.Message2 +"\n";
                 }
 
             }
