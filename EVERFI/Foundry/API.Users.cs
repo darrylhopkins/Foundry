@@ -93,8 +93,9 @@ namespace EVERFI.Foundry
                     user.Location = GetLocationById(user.LocationId);
                 }
                 user.Labels = userLabels;
-                users.Add(user);
                 user.createCategoryLabels();
+                users.Add(user);
+                
             }
             else
             {
@@ -103,7 +104,7 @@ namespace EVERFI.Foundry
                 {
                     User newUser = data.UserAttributes;
                     newUser.ConfigureUserData(data);
-                    newUser.createCategoryLabels();
+                    
 
                     foreach (Label lab in userLabels)
                     {
@@ -118,9 +119,10 @@ namespace EVERFI.Foundry
 
                                 }
                             }
+                            
                         }
                     }
-
+                    newUser.createCategoryLabels();
                     if (newUser.Location != null)
                     {
                         newUser.Location = GetLocationById(newUser.LocationId);
@@ -208,6 +210,7 @@ namespace EVERFI.Foundry
 
             List<User> users = getUsersInformation(response, true);
             User user = users[0];
+            
 
             return user;
         }
