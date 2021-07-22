@@ -118,7 +118,7 @@ namespace EVERFI.Foundry.Classes
                     ?.Description
                 ?? value.ToString();
         }
-
+        //method to match string to enum description in order to retrive enum value
         internal static E GetValueFromDescription<E>(string description) where E : Enum
         {
             foreach (var field in typeof(E).GetFields())

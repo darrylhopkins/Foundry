@@ -23,16 +23,13 @@ namespace EVERFI.Foundry.Classes
         public String Message2 { get; set; }
     }
 
-   
-
 
     public class FoundryException : Exception
     {
         public int ErrorCode { get; set; }
 
         public string Response { get; set; }
-        //internal ErrorList ErrorMessageList { get; set; }
-       
+        
         public override string Message { get; }
 
         public FoundryException(string message)
@@ -40,10 +37,10 @@ namespace EVERFI.Foundry.Classes
 
         }
         
-
+        //Creates error message using response 
         public String ConfigureErrorMessage(int ErrorCode, String Response)
         {
-            String message = " ";
+            String message = "";
             ErrorList ErrorMessageList;
             if (ErrorCode == 422)
             {
@@ -58,12 +55,12 @@ namespace EVERFI.Foundry.Classes
             {
                 if (content.Message1 != null)
                 {
-                    message += content.Message1 +"\n";
+                    message += content.Message1 + "\n";
                 }
 
                 if (content.Message2 != null)
                 {
-                    message += content.Message2 +"\n";
+                    message += content.Message2 + "\n";
                 }
 
             }
