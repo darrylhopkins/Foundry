@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+//using System.Text.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace EVERFI.Foundry.Classes
 {
@@ -205,7 +208,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("updated_at", Required = Required.Always)]
         public DateTime Updated { get; }
 
-        [JsonIgnore]
+        
         [JsonProperty("category_labels")]
         internal List<string> categoryLabels { get; set; }
        

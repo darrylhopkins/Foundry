@@ -38,11 +38,11 @@ namespace EVERFI.Foundry.Classes
         }
         
         //Creates error message using response 
-        public String ConfigureErrorMessage(int ErrorCode, String Response)
+        public String ConfigureErrorMessage(String Response)
         {
             String message = "";
             ErrorList ErrorMessageList;
-            if (ErrorCode == 422)
+            if (Response.Substring(0,1).Equals("["))
             {
                 List<ErrorList> error = JsonConvert.DeserializeObject<List<ErrorList>>(Response);
                 ErrorMessageList = error.ElementAt(0);
@@ -55,12 +55,12 @@ namespace EVERFI.Foundry.Classes
             {
                 if (content.Message1 != null)
                 {
-                    message += content.Message1 + "\n";
+                    message += content.Message1; 
                 }
-
+             
                 if (content.Message2 != null)
                 {
-                    message += content.Message2 + "\n";
+                    message += content.Message2;
                 }
 
             }
@@ -72,7 +72,7 @@ namespace EVERFI.Foundry.Classes
     {
         this.ErrorCode = ErrorCode;
         this.Response = Response;
-        this.Message = ConfigureErrorMessage(ErrorCode, Response);
+        this.Message = ConfigureErrorMessage(Response);
        
 
     }
