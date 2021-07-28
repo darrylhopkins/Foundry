@@ -48,7 +48,12 @@ namespace EVERFI.Foundry
         [Description("custom_grouping_values")]
         CustomGroupingValues,
         [Description("created_at")]
-        CreatedAt
+        CreatedAt,
+        [Description("sso_id")]
+        SingleSignOnId,
+        [Description("employee_id")]
+        EmployeeId
+
     }
 
     public partial class API
