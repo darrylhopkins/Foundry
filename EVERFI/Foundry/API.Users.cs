@@ -241,7 +241,8 @@ namespace EVERFI.Foundry
         public List<User> GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
         {
             Console.WriteLine("Getting user by search...");
-            RestRequest request = ConfigureRequest();
+            RestRequest request = new RestRequest();
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
             request.Resource = "{version}/admin/users/";
             request.Method = Method.GET;
             request.Parameters.Clear();
