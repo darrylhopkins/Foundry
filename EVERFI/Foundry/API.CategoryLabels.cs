@@ -13,7 +13,7 @@ namespace EVERFI.Foundry
         {
             if (usersList.Count > bulkActionCap)
             {
-                throw new FoundryException("The limit for the bulk add function is 500 users!");
+                throw new FoundryException(422, "limit", "The limit for the bulk add function is 500 users!");
             }
 
             Console.WriteLine("Assigning " + label.Name + " to users provided.");

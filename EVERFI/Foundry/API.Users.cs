@@ -230,6 +230,10 @@ namespace EVERFI.Foundry
             checkResponseSuccess(response, RequestType.GetRequest);
 
             List<User> users = getUsersInformation(response, false);
+            if (!users.Any())
+            {
+                throw new FoundryException(422, "email", "This email does not exist");
+            }
 
             User user = users[0];
 

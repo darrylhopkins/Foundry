@@ -54,12 +54,6 @@ namespace EVERFI.Foundry.Classes
 
         public List<ErrorMessage> ErrorMessages { get; set; }
 
-  
-        public FoundryException(string message)
-        {
-
-        }
-
         //Creates error message using response 
         internal String ConfigureErrorMessage(String Response)
         {
@@ -103,6 +97,13 @@ namespace EVERFI.Foundry.Classes
             return message;
         }
 
+        public FoundryException(int error, string field, string message)
+        {
+            this.ErrorMessages = new List<ErrorMessage>();
+            this.Message = message;
+            this.ErrorCode = error;
+            ErrorMessages.Add(new ErrorMessage(field, message));
+        }
 
         public FoundryException(int ErrorCode, string Response)
         {
