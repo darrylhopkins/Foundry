@@ -55,9 +55,9 @@ namespace EVERFI.Foundry.Classes
         public List<ErrorMessage> ErrorMessages { get; set; }
 
         //Creates error message using response 
-        internal String ConfigureErrorMessage(String Response)
+        internal String ConfigureErrorMessage(String Response1)
         {
-            
+           
             String message = "";
             ErrorList ErrorMessageList;
             ErrorContent e = new ErrorContent();

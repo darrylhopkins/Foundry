@@ -245,19 +245,22 @@ namespace EVERFI.Foundry
         public List<User> GetUsersBySearch(Dictionary<SearchTerms, string> searchTerms)
         {
             Console.WriteLine("Getting user by search...");
-            RestRequest request = new RestRequest();
-            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
-            request.Resource = "{version}/admin/users/";
-            request.Method = Method.GET;
+
+            RestRequest request = new RestRequest("{version}/admin/users/", Method.GET);
+
             request.Parameters.Clear();
-            request.AddParameter("include", "category_labels", ParameterType.QueryString);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
             foreach (SearchTerms term in searchTerms.Keys)
             {
                 request.AddParameter("filter[" + GetDescription(term) + "]", searchTerms[term], ParameterType.QueryString);
             }
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
+            request.AddParameter("include", "category_labels", ParameterType.QueryString);
+           
             IRestResponse response = _client.Execute(request);
+            Console.WriteLine(response);
             checkResponseSuccess(response, RequestType.GetRequest);
 
             List<User> users = getUsersInformation(response, false);
