@@ -24,6 +24,14 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("total_count")]
         internal Int32 Count { get; set; }
     }
+
+    internal class UserDataJson
+    {
+        [JsonProperty("data")]
+        internal UserData Data { get; set; }
+
+    }
+
     internal class UserDataJsonList
     {
 
@@ -46,54 +54,13 @@ namespace EVERFI.Foundry.Classes
 
     }
 
-    internal class UserDataJson
-    {
-        [JsonProperty("data")]
-        internal UserData Data { get; set; }    
-
-    }
-
-    internal class LabelsAttributes
-    {
-        [JsonProperty("category_id")]
-        internal string CategoryID { get; set; }
-
-        [JsonProperty("category_name")]
-        internal string CategoryLabelName { get; set; }
-
-        [JsonProperty("name")]
-        internal string LabelName { get; set; }
-    }
-
-    internal class MultRelationships
-    {
-        [JsonProperty("category_labels")]
-        internal IncludedCategoryDataList categoryLabels { get; set; }
-    }
-
-
-    internal class IncludedCategoryDataList
-    {
-        [JsonProperty("data")]
-        internal List<RelationshipData> RelationshipsData { get; set; }
-    }
-
-
-
-    internal class Relationships
-    {
-        [JsonProperty("category")]
-        internal IncludedCategoryData CategoryData { get; set; }
-    }
-
-
-
     internal class UserDataIncludedList
     {
 
         [JsonProperty("included")]
         internal List<UserDataIncluded> IncludedList { get; set; }
     }
+
     internal class UserDataIncludedJson
     {
         [JsonProperty("included")]
@@ -140,7 +107,6 @@ namespace EVERFI.Foundry.Classes
     }
 
 
-
     internal class Relationships
     {
         [JsonProperty("category")]
@@ -159,6 +125,8 @@ namespace EVERFI.Foundry.Classes
         internal string LabelId { get; set; }
     }
 
+
+    
     public class UserRuleSetData
     {
         [JsonProperty("rule_set")]
@@ -259,13 +227,6 @@ namespace EVERFI.Foundry.Classes
         public DateTime FirstDay { get; set; }
 
         public DateTime LastDay { get; set; }
-
-
-        [JsonProperty("under_13", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsUnderThirteen { get; set; }
-
-        [JsonProperty("last_sign_in_at", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime lastSignIn { get; set; }
 
         public string UserId { get; internal set; }
 

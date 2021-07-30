@@ -36,33 +36,6 @@ namespace EVERFI.Foundry
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
 
-            if (type == 1)
-            {
-                if (numericCode != 200)
-                {
-                    throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
-                }
-            }
-            else if (type == 2)
-            {
-                if (numericCode != 201)
-                {
-                    throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
-                }
-            }
-
-        }
-       
-        public User AddUser(User MyUser)
-        {
-
-            IRestRequest request = ConfigureRequest(3);
-            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
-
-            IRestResponse response = _client.Execute<User>(request);
-
-            responseModifer(response, 2);
-
             if (request == RequestType.GetRequest || request == RequestType.PatchRequest)
             {
                 if (numericCode != 200)
@@ -79,8 +52,11 @@ namespace EVERFI.Foundry
             }
 
         }
+       
+   
         public List<Label> CreateLabelList(IRestResponse response)
         {
+
             UserDataIncludedList userDataIncluded = JsonConvert.DeserializeObject<UserDataIncludedList>(response.Content);
             List<UserDataIncluded> labels = userDataIncluded.IncludedList;
             List<Label> userLabels = new List<Label>();
@@ -97,7 +73,7 @@ namespace EVERFI.Foundry
 
                 }
             }
-          
+
             return userLabels;
 
         }
@@ -288,7 +264,10 @@ namespace EVERFI.Foundry
             }
 
             request.AddParameter("include", "category_labels", ParameterType.QueryString);
-           
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+
             IRestResponse response = _client.Execute(request);
 
             Console.WriteLine(response);
