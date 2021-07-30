@@ -48,7 +48,12 @@ namespace EVERFI.Foundry
         [Description("custom_grouping_values")]
         CustomGroupingValues,
         [Description("created_at")]
-        CreatedAt
+        CreatedAt,
+        [Description("sso_id")]
+        SingleSignOnId,
+        [Description("employee_id")]
+        EmployeeId
+
     }
 
     public partial class API
@@ -101,7 +106,7 @@ namespace EVERFI.Foundry
             _token = JsonConvert.DeserializeObject<AccessToken>(response.Content);
             if (_token.token_type == null)
             {
-                throw new FoundryException(response.ErrorMessage, (int)response.StatusCode, response.Content);
+                throw new FoundryException((int)response.StatusCode, response.Content);
             }
             else
             {
@@ -175,28 +180,26 @@ namespace EVERFI.Foundry
 
             if (user.Location != null)
             {
-                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"" +
-                "\n}";
+                Json += ",\n\"location_id\": \"" + user.Location.Id + "\"";
             }
             else if (user.LocationId != null)
             {
-                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" +
-                "\n}";
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" ;
             }
-
+           
             Json += ",\n\"category_labels\":" + "[\n";
-            for (var i = 0; i < user.Labels.Count; i++)
-            {
-                Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
-                if ((i + 1) != user.Labels.Count)
-                {
-                    Json += ",";
-                }
-            }
-            Json += "\n]";
+           for (var i = 0; i < user.Labels.Count; i++)
+           {
+               Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
+               if ((i + 1) != user.Labels.Count)
+               {
+                   Json += ",";
+               }
+           }
+           Json += "\n]";
 
-            Json += "\n}";
-
+           Json += "\n}";
+            
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n" +
@@ -253,8 +256,8 @@ namespace EVERFI.Foundry
                 "\t\t\"address_postal_code\": \"" + location.PostalCode + "\",\n" +
                 "\t\t\"address_country\": \"" + location.Country + "\",\n" +
                 "\t\t\"address_latitude\": \"" + location.Latitude + "\",\n" +
-                "\t\t\"address_longitude\": \"" + location.Longitude + "\"\n" +
-                "\t\t\"address_name\": \"" + location.AddressName + "\"\n" +
+                "\t\t\"address_longitude\": \"" + location.Longitude + "\",\n" +
+                "\t\t\"address_name\": \"" + location.AddressName + "\",\n" +
                 "\t\t\"address_room\": \"" + location.AddressRoom + "\"\n" +
                 "\t}\n}\n}\n";
 

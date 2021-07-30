@@ -24,7 +24,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 201)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
@@ -53,7 +53,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
@@ -95,7 +95,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
@@ -136,7 +136,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
@@ -164,7 +164,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 204)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             Console.WriteLine("Category successfully deleted.");

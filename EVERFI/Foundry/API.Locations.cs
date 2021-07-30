@@ -25,7 +25,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 201)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             //verify if adding was okay with status code
@@ -56,7 +56,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException( numericCode, response.Content);
             }
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
@@ -84,7 +84,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
@@ -125,7 +125,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);

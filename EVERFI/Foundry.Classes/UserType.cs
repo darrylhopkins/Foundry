@@ -118,56 +118,29 @@ namespace EVERFI.Foundry.Classes
                     ?.Description
                 ?? value.ToString();
         }
-
-        internal static Types StringToType(string value)
+        //method to match string to enum description in order to retrive enum value
+        internal static E GetValueFromDescription<E>(string description) where E : Enum
         {
-            switch (value)
+            foreach (var field in typeof(E).GetFields())
             {
-                case "Higher Education Student":
-                    return Types.HELearner;
-                case "High Education Training Admin":
-                    return Types.HEAdmin;
-                case "Faculty/Staff Admin":
-                    return Types.FacStaffAdmin;
-                case "Faculty/Staff Learner":
-                    return Types.FacStaffLearner;
-                case "Employee Learner":
-                    return Types.CCLearner;
-                case "Employee Training Admin":
-                    return Types.CCAdmin;
-                case "Events Admin":
-                    return Types.EventManager;
-                case "Events Volunteer":
-                    return Types.EventVolunteer;
-                // TODO: Add Financial Learner and Manager
-                default:
-                    return Types.HELearner; // TODO: return something for default
+                if (Attribute.GetCustomAttribute(field,
+                typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                {
+                    if (attribute.Description == description)
+                        return (E)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (E)field.GetValue(null);
+                }
             }
-        }
 
-        internal static Roles StringToRole(string value)
-        {
-            switch (value)
-            {
-                case "Undergrad":
-                    return Roles.Undergraduate;
-                case "Primary":
-                    return Roles.Primary;
-                case "Graduate":
-                    return Roles.Graduate;
-                case "Greek":
-                    return Roles.Greek;
-                case "Non-supervisor": // Check to make sure the s is not capitalized
-                    return Roles.NonSupervisor;
-                case "Non-Traditional":
-                    return Roles.NonTraditional;
-                case "Supervisor":
-                    return Roles.Supervisor;
-                case "Default":
-                    return Roles.Default;
-                default:
-                    return Roles.Default; // TODO: return something for default
-            }
+            throw new ArgumentException("Description not valid", nameof(description));
+           
         }
+    
+     
+        
     }
 }

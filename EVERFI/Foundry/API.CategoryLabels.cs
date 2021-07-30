@@ -13,7 +13,7 @@ namespace EVERFI.Foundry
         {
             if (usersList.Count > bulkActionCap)
             {
-                throw new FoundryException("The limit for the bulk add function is 500 users!");
+                throw new FoundryException(422, "limit", "The limit for the bulk add function is 500 users!");
             }
 
             Console.WriteLine("Assigning " + label.Name + " to users provided.");
@@ -29,7 +29,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 201)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             JobJson jobJson = JsonConvert.DeserializeObject<JobJson>(response.Content);
@@ -53,7 +53,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             JobJson jobJson = JsonConvert.DeserializeObject<JobJson>(response.Content);

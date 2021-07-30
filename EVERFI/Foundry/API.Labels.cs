@@ -24,7 +24,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 201)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
@@ -52,7 +52,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
@@ -80,7 +80,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 204)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             Console.WriteLine("Label successfully deleted.");
@@ -104,7 +104,7 @@ namespace EVERFI.Foundry
 
             if (numericCode != 200)
             {
-                throw new FoundryException(response.ErrorMessage, numericCode, response.Content);
+                throw new FoundryException(numericCode, response.Content);
             }
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
