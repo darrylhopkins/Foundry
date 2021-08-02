@@ -55,14 +55,20 @@ namespace EVERFI.Foundry.Classes
         public List<ErrorMessage> ErrorMessages { get; set; }
 
         //Creates error message using response 
-        internal String ConfigureErrorMessage(String Response1)
+        internal String ConfigureErrorMessage(String Response)
         {
-           
             String message = "";
             ErrorList ErrorMessageList;
             ErrorContent e = new ErrorContent();
             this.ErrorMessages = new List<ErrorMessage>();
-            if (Response.Substring(0, 1).Equals("["))
+
+            if (Response.Length < 1)
+            {
+                message = "error";
+                return message;
+            }
+            
+            else if (Response.Substring(0, 1).Equals("["))
             {
 
                 List<ErrorList> error = JsonConvert.DeserializeObject<List<ErrorList>>(Response);
