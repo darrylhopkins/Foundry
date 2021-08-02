@@ -358,9 +358,9 @@ namespace EVERFI.Foundry
             return metaData.Meta.Count;
         }
 
-        public UserProgress GetUserProgress(DateTime sinceDate, int scrollSize)
+        public List<UserProgress> GetUserProgress(String sinceDate, int scrollSize)
         {
-            List<UserProgress> userProgressesList = new List<UserProgress>();
+            List<UserProgress> userProgressList = new List<UserProgress>();
             RestRequest request = new RestRequest();
             request.Method = Method.GET;
             request.Parameters.Clear();
@@ -372,19 +372,16 @@ namespace EVERFI.Foundry
 
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response, RequestType.GetRequest);
-
+            NextUserData next = JsonConvert.DeserializeObject<NextUserData>(response.Content);
             UserProgressDataHeaderList progressData = JsonConvert.DeserializeObject<UserProgressDataHeaderList>(response.Content);
-            foreach(UserProgressDataHeader data in progressData.ProgressDataHeaderList)
+            foreach(UserProgress data in progressData.ProgressDataHeaderList)
             {
-                foreach(UserProgress list in data.ProgressList)
-                {
-                    userProgressesList.Add(list);
-                }
-            }
+               
+                userProgressList.Add(data);
+               
+            } 
 
-            UserProgress userProgress = userProgressesList[0];
-
-            return userProgress;
+            return userProgressList;
 
         }
 
