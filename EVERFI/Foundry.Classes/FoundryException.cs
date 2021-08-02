@@ -16,7 +16,7 @@ namespace EVERFI.Foundry.Classes
         internal List<ErrorContent> ListOfErrors { get; set; }
     }
 
-   
+   //2 headers for message, need to deserialize seperately
     public class ErrorContent
     {
         [JsonProperty("field_name")]
@@ -96,7 +96,7 @@ namespace EVERFI.Foundry.Classes
             }
             return message;
         }
-
+       
         public FoundryException(int error, string field, string message)
         {
             this.ErrorMessages = new List<ErrorMessage>();
