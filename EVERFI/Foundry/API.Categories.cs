@@ -19,13 +19,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 201)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.PostRequest);
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully added.");
@@ -48,13 +42,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.GetRequest);
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
 
@@ -90,13 +78,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.GetRequest);
 
             CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
             List<Category> categories = new List<Category>();
@@ -131,14 +113,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
-
+            checkResponseSuccess(response, RequestType.PatchRequest);
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully updated.");
             Category category = categoryData.Data;
@@ -159,14 +134,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 204)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
-
+            checkResponseSuccess(response, RequestType.DeleteRequest);
             Console.WriteLine("Category successfully deleted.");
 
             return response.Content;

@@ -19,13 +19,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 201)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.PostRequest);
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully added.");
@@ -47,13 +41,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.PatchRequest);
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully updated.");
@@ -75,13 +63,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 204)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.DeleteRequest);
 
             Console.WriteLine("Label successfully deleted.");
 
@@ -99,14 +81,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
-
+            checkResponseSuccess(response, RequestType.GetRequest);
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Label label = labelData.Data;
 

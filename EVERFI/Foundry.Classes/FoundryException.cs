@@ -62,13 +62,8 @@ namespace EVERFI.Foundry.Classes
             ErrorContent e = new ErrorContent();
             this.ErrorMessages = new List<ErrorMessage>();
 
-            if (Response.Length < 1)
-            {
-                message = "error";
-                return message;
-            }
-            
-            else if (Response.Substring(0, 1).Equals("["))
+
+            if (Response.Substring(0, 1).Equals("["))
             {
 
                 List<ErrorList> error = JsonConvert.DeserializeObject<List<ErrorList>>(Response);
@@ -102,6 +97,32 @@ namespace EVERFI.Foundry.Classes
             }
             return message;
         }
+        //Override method above - if  there is an empty response message
+        internal String ConfigureErrorMessage(int code)
+        {
+            String message = "  ";
+            if (Response.Length < 1 && code == 401)
+            {
+                message = "Unauthorized";
+              
+            }
+            else if (Response.Length < 1 && code == 403)
+            {
+                message = "Forbidden";
+              
+            }
+            else if (Response.Length < 1 && code == 404)
+            {
+                message = "Not Found";
+              
+            }
+            else if (Response.Length < 1)
+            {
+                message = "Error";
+                
+            }
+            return message;
+        }
        
         public FoundryException(int error, string field, string message)
         {
@@ -115,9 +136,13 @@ namespace EVERFI.Foundry.Classes
         {
             this.ErrorCode = ErrorCode;
             this.Response = Response;
-            this.Message = ConfigureErrorMessage(Response);
-
-
+            if (Response.Length < 1)
+            {
+                this.Message = ConfigureErrorMessage(ErrorCode);
+            }
+            else {
+                this.Message = ConfigureErrorMessage(Response);
+            }
         }
 
     }

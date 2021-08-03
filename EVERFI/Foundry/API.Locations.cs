@@ -20,14 +20,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 201)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
-
+            checkResponseSuccess(response, RequestType.PostRequest);
             //verify if adding was okay with status code
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
@@ -51,13 +44,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException( numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.PatchRequest);
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             Location location = locationData.LocationData.LocationAttributes;
@@ -71,7 +58,7 @@ namespace EVERFI.Foundry
 
         public List<Location> GetLocations()
         {
-            RestRequest request = new RestRequest("/{version}/admin/locations");
+            RestRequest request = new RestRequest("/{version}/admin/locations", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("SDK_Method", "GetLocations");
@@ -79,13 +66,7 @@ namespace EVERFI.Foundry
 
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.GetRequest);
 
             LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
             List<Location> locations = new List<Location>();
@@ -120,13 +101,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (numericCode != 200)
-            {
-                throw new FoundryException(numericCode, response.Content);
-            }
+            checkResponseSuccess(response, RequestType.GetRequest);
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             location = locationData.LocationData.LocationAttributes;

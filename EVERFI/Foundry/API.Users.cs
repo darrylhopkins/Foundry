@@ -22,36 +22,6 @@ namespace EVERFI.Foundry
             return request;
 
         }
-        
-        internal enum RequestType
-        {
-            GetRequest,
-            PatchRequest,
-            PostRequest
-
-        }
-        internal void checkResponseSuccess(IRestResponse response, RequestType request)
-        {
-
-            HttpStatusCode statusCode = response.StatusCode;
-            int numericCode = (int)statusCode;
-
-            if (request == RequestType.GetRequest || request == RequestType.PatchRequest)
-            {
-                if (numericCode != 200)
-                {
-                    throw new FoundryException(numericCode, response.Content);
-                }
-            }
-            else if (request == RequestType.PostRequest)
-            {
-                if (numericCode != 201)
-                {
-                    throw new FoundryException(numericCode, response.Content);
-                }
-            }
-
-        }
        
    
         public List<Label> CreateLabelList(IRestResponse response)
@@ -81,7 +51,7 @@ namespace EVERFI.Foundry
          * if-else statement to decide whether to configure a user using the API response that has an array format
          * or just 1 user
          */
-        public List<User> getUsersInformation(IRestResponse response, bool oneUser)
+        internal List<User> getUsersInformation(IRestResponse response, bool oneUser)
         {
             UserDataJson userData;
             UserDataJsonList userDataList;
