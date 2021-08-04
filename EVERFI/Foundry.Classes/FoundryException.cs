@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using RestSharp;
+using System.Web;
 using System.DirectoryServices;
 using System.Json;
+using System.Net.Http;
 
 namespace EVERFI.Foundry.Classes
 {
@@ -14,6 +16,9 @@ namespace EVERFI.Foundry.Classes
     {
         [JsonProperty("errors")]
         internal List<ErrorContent> ListOfErrors { get; set; }
+
+        [JsonProperty("error")]
+        internal string errorMessage { get; set; }
     }
 
    //2 headers for message, need to deserialize seperately
@@ -75,54 +80,37 @@ namespace EVERFI.Foundry.Classes
              
                 ErrorMessageList = JsonConvert.DeserializeObject<ErrorList>(Response);
             }
-            //assigns message - excudes null values that appear during deseraizliation 
-            foreach (ErrorContent content in ErrorMessageList.ListOfErrors)
+            if (ErrorMessageList.ListOfErrors != null)
             {
-                //creates new error message for error message list - will only include non null values from ErrorContent
-                ErrorMessage em = new ErrorMessage("","");
-                em.FieldName = content.FieldName;
-                if (content.Message1 != null)
+                //assigns message - excudes null values that appear during deseraizliation 
+                foreach (ErrorContent content in ErrorMessageList.ListOfErrors)
                 {
-                    em.Message = content.Message1;
-                    message += content.Message1 + "  ";
-                }
+                    //creates new error message for error message list - will only include non null values from ErrorContent
+                    ErrorMessage em = new ErrorMessage("", "");
+                    em.FieldName = content.FieldName;
+                    if (content.Message1 != null)
+                    {
+                        em.Message = content.Message1;
+                        message += content.Message1 + "  ";
+                    }
 
-                if (content.Message2 != null)
-                {
-                    em.Message = content.Message2;
-                    message += content.Message2 + "  ";
+                    if (content.Message2 != null)
+                    {
+                        em.Message = content.Message2;
+                        message += content.Message2 + "  ";
 
+                    }
+                    ErrorMessages.Add(em);
                 }
-                ErrorMessages.Add(em);
+            }
+            else
+            {
+                message = ErrorMessageList.errorMessage;
+               
             }
             return message;
         }
-        //Override method above - if  there is an empty response message
-        internal String ConfigureErrorMessage(int code)
-        {
-            String message = "  ";
-            if (Response.Length < 1 && code == 401)
-            {
-                message = "Unauthorized";
-              
-            }
-            else if (Response.Length < 1 && code == 403)
-            {
-                message = "Forbidden";
-              
-            }
-            else if (Response.Length < 1 && code == 404)
-            {
-                message = "Not Found";
-              
-            }
-            else if (Response.Length < 1)
-            {
-                message = "Error";
-                
-            }
-            return message;
-        }
+      
        
         public FoundryException(int error, string field, string message)
         {
@@ -136,13 +124,18 @@ namespace EVERFI.Foundry.Classes
         {
             this.ErrorCode = ErrorCode;
             this.Response = Response;
+
             if (Response.Length < 1)
             {
-                this.Message = ConfigureErrorMessage(ErrorCode);
+                var description = ((System.Net.HttpStatusCode)ErrorCode).ToString();
+                this.Message = description;
             }
-            else {
+
+            else
+            {
                 this.Message = ConfigureErrorMessage(Response);
             }
+           
         }
 
     }

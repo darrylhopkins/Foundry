@@ -83,6 +83,7 @@ namespace EVERFI.Foundry
 
         public Location GetLocationById(string LocationId)
         {
+            
             var location = new Location();
             try
             {
@@ -90,10 +91,10 @@ namespace EVERFI.Foundry
             }
             catch (Exception ex)
             { }
-
+            /*
             if (!string.IsNullOrEmpty(location.Id))
                 return location;
-
+            */
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
