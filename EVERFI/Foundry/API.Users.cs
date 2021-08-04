@@ -95,9 +95,19 @@ namespace EVERFI.Foundry
                 user = userData.Data.UserAttributes;
 
                 user.ConfigureUserData(userData.Data);
-                if (user.Location != null)
+                try
                 {
-                    user.Location = GetLocationById(user.LocationId);
+                    if (!String.IsNullOrEmpty(user.LocationId) && String.IsNullOrEmpty(user.Location.Name))
+                    {
+                        user.Location = GetLocationById(user.LocationId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (!String.IsNullOrEmpty(user.LocationId))
+                    {
+                        user.Location = GetLocationById(user.LocationId);
+                    }
                 }
                 user.Labels = userLabels;
                 user.createCategoryLabels();
@@ -130,9 +140,20 @@ namespace EVERFI.Foundry
                         }
                     }
                     newUser.createCategoryLabels();
-                    if (newUser.Location != null)
+
+                    try
                     {
-                        newUser.Location = GetLocationById(newUser.LocationId);
+                        if (!String.IsNullOrEmpty(newUser.LocationId) && String.IsNullOrEmpty(newUser.Location.Name))
+                        {
+                            newUser.Location = GetLocationById(newUser.LocationId);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!String.IsNullOrEmpty(newUser.LocationId))
+                        {
+                            newUser.Location = GetLocationById(newUser.LocationId);
+                        }
                     }
                     users.Add(newUser);
                 }
