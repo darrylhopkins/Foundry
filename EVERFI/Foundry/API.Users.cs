@@ -141,7 +141,7 @@ namespace EVERFI.Foundry
 
             IRestResponse response = _client.Execute<List<User>>(request);
 
-            checkResponseSuccess(response, RequestType.PostRequest);
+            checkResponseSuccess(response);
 
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
@@ -174,7 +174,7 @@ namespace EVERFI.Foundry
             _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PatchRequest);
+            checkResponseSuccess(response);
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
 
@@ -204,7 +204,7 @@ namespace EVERFI.Foundry
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, true);
             User user = users[0];
@@ -224,7 +224,7 @@ namespace EVERFI.Foundry
             request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
             if (!users.Any())
@@ -262,7 +262,7 @@ namespace EVERFI.Foundry
             IRestResponse response = _client.Execute(request);
 
             Console.WriteLine(response);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
 
@@ -282,7 +282,7 @@ namespace EVERFI.Foundry
             request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
 
@@ -303,7 +303,7 @@ namespace EVERFI.Foundry
             request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
 
@@ -342,7 +342,7 @@ namespace EVERFI.Foundry
             request.AddParameter("num_per", returnPerPage, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             MetaJson metaData = JsonConvert.DeserializeObject<MetaJson>(response.Content);
 
@@ -362,7 +362,7 @@ namespace EVERFI.Foundry
             request.AddHeader("Content-Type", "application/json");
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
             NextUserData next = JsonConvert.DeserializeObject<NextUserData>(response.Content);
             UserProgressDataHeaderList progressData = JsonConvert.DeserializeObject<UserProgressDataHeaderList>(response.Content);
             foreach(UserProgress data in progressData.ProgressDataHeaderList)

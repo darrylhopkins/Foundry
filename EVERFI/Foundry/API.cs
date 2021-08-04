@@ -55,14 +55,7 @@ namespace EVERFI.Foundry
         EmployeeId
 
     }
-    internal enum RequestType
-    {
-        GetRequest,
-        PatchRequest,
-        PostRequest,
-        DeleteRequest
-
-    }
+ 
 
     public partial class API
     {
@@ -140,33 +133,15 @@ namespace EVERFI.Foundry
             return response.Data;
         }
 
-        internal void checkResponseSuccess(IRestResponse response, RequestType request)
+        internal void checkResponseSuccess(IRestResponse response)
         {
 
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
 
-            if (request == RequestType.GetRequest || request == RequestType.PatchRequest)
+            if(numericCode/100 != 2)
             {
-                if (numericCode != 200)
-                {
-                    throw new FoundryException(numericCode, response.Content);
-                }
-            }
-            else if (request == RequestType.PostRequest)
-            {
-                if (numericCode != 201)
-                {
-                    throw new FoundryException(numericCode, response.Content);
-                }
-            }
-            else if (request  == RequestType.DeleteRequest)
-            {
-                if (numericCode != 204)
-                {
-                    throw new FoundryException(numericCode, response.Content);
-                }
-
+                throw new FoundryException(numericCode, response.Content);
             }
 
         }

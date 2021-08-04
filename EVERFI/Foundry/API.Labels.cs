@@ -19,7 +19,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PostRequest);
+            checkResponseSuccess(response);
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully added.");
@@ -41,7 +41,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PatchRequest);
+            checkResponseSuccess(response);
 
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Console.WriteLine("Label successfully updated.");
@@ -63,7 +63,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.DeleteRequest);
+            checkResponseSuccess(response);
 
             Console.WriteLine("Label successfully deleted.");
 
@@ -81,7 +81,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
             LabelData labelData = JsonConvert.DeserializeObject<LabelData>(response.Content);
             Label label = labelData.Data;
 

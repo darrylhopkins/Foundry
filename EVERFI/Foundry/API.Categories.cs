@@ -19,7 +19,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PostRequest);
+            checkResponseSuccess(response);
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully added.");
@@ -42,7 +42,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
 
@@ -78,7 +78,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
             List<Category> categories = new List<Category>();
@@ -113,7 +113,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PatchRequest);
+            checkResponseSuccess(response);
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
             Console.WriteLine("Category successfully updated.");
             Category category = categoryData.Data;
@@ -134,7 +134,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.DeleteRequest);
+            checkResponseSuccess(response);
             Console.WriteLine("Category successfully deleted.");
 
             return response.Content;

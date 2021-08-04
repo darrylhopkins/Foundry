@@ -20,7 +20,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PostRequest);
+            checkResponseSuccess(response);
             //verify if adding was okay with status code
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
@@ -44,7 +44,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.PatchRequest);
+            checkResponseSuccess(response);
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             Location location = locationData.LocationData.LocationAttributes;
@@ -66,7 +66,7 @@ namespace EVERFI.Foundry
 
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             LocationDataJsonList locationData = JsonConvert.DeserializeObject<LocationDataJsonList>(response.Content);
             List<Location> locations = new List<Location>();
@@ -102,7 +102,7 @@ namespace EVERFI.Foundry
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response, RequestType.GetRequest);
+            checkResponseSuccess(response);
 
             LocationDataJson locationData = JsonConvert.DeserializeObject<LocationDataJson>(response.Content);
             location = locationData.LocationData.LocationAttributes;
