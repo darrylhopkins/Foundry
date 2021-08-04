@@ -6,6 +6,7 @@ using System.Net;
 using EVERFI.Foundry.Classes;
 using RestSharp.Authenticators;
 using System.Linq;
+using System.Globalization;
 
 namespace EVERFI.Foundry
 {
@@ -349,15 +350,16 @@ namespace EVERFI.Foundry
             return metaData.Meta.Count;
         }
 
-        public List<UserProgress> GetUserProgress(String sinceDate, int scrollSize)
+        public List<UserProgress> GetUserProgress(DateTime sinceDate, int scrollSize)
         {
+            string since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
             List<UserProgress> userProgressList = new List<UserProgress>();
             RestRequest request = new RestRequest();
             request.Method = Method.GET;
             request.Parameters.Clear();
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.Resource = "{version}/progress/user_assignments";
-            request.AddParameter("since", sinceDate, ParameterType.QueryString);
+            request.AddParameter("since", since, ParameterType.QueryString);
             request.AddParameter("scroll_size", scrollSize, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
 
