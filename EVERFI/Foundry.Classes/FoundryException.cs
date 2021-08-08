@@ -18,14 +18,14 @@ namespace EVERFI.Foundry.Classes
         internal List<ErrorContent> ListOfErrors { get; set; }
 
         [JsonProperty("error")]
-        internal string errorMessage { get; set; }
+        internal string errorMessage { get;   }
     }
 
    //2 headers for message, need to deserialize seperately
-    public class ErrorContent
+    internal class ErrorContent
     {
         [JsonProperty("field_name")]
-        public String FieldName { get; set; }
+        public String FieldName { get; }
 
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public String Message1 { get; set; }
@@ -51,9 +51,9 @@ namespace EVERFI.Foundry.Classes
 
     public class FoundryException : Exception
     {
-        public int ErrorCode { get; set; }
+        public int ErrorCode { get;}
 
-        public string Response { get; set; }
+        public string Response { get; }
 
         public override string Message { get; }
 
