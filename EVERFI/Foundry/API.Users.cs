@@ -138,7 +138,7 @@ namespace EVERFI.Foundry
             IRestRequest request = ConfigureRequest();
             request.Resource = "{version}/admin/registration_sets";
             request.Method = Method.POST;
-            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.UserJson(MyUser, false), ParameterType.RequestBody);
 
             IRestResponse response = _client.Execute<List<User>>(request);
 
@@ -164,14 +164,14 @@ namespace EVERFI.Foundry
 
         }
 
-        public User UpdateUser(User MyUser)
+        public User UpdateUser(User MyUser, Boolean remove)
         {
             Console.WriteLine("Updating user...");
             RestRequest request = ConfigureRequest();
             request.Resource = "{version}/admin/registration_sets/{id}";
             request.Method = Method.PATCH;
             request.AddParameter("id", MyUser.UserId, ParameterType.UrlSegment);
-            request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
+            request.AddParameter("application/json", API.UserJson(MyUser, remove), ParameterType.RequestBody);
             _client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token.access_token, _token.token_type);
 
             IRestResponse response = _client.Execute(request);
