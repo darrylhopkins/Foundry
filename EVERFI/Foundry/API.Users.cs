@@ -378,6 +378,27 @@ namespace EVERFI.Foundry
 
         }
 
+        public List<ProgramUser> GetProgramUsers(DateTime sinceDate, int scrollSize, String scrollId)
+        {
+            string since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
+            List<ProgramUser> programUserList = new List<ProgramUser>();
+            RestRequest request = ConfigureRequest();
+            request.Method = Method.GET;
+            request.AddParameter("since", since, ParameterType.QueryString);
+            request.AddParameter("scroll_size", scrollSize, ParameterType.QueryString);
+            request.AddParameter("scroll_id", scrollId, ParameterType.QueryString);
+            request.AddHeader("Content-Type", "application/json");
+            IRestResponse response = _client.Execute(request);
+            checkResponseSuccess(response);
+            NextUserData next = JsonConvert.DeserializeObject<NextUserData>(response.Content);
+            ProgramUserDataHeaderList programUserData = JsonConvert.DeserializeObject<ProgramUserDataHeaderList>(response.Content);
+            foreach(ProgramUser program in programUserData.ProgressDataHeaderList)
+            {
+                programUserList.Add(program);
+            }
+            return programUserList;
+        }
+
     }
 }
 

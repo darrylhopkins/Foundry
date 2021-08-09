@@ -55,7 +55,7 @@ namespace EVERFI.Foundry
         EmployeeId
 
     }
- 
+
 
     public partial class API
     {
@@ -139,7 +139,7 @@ namespace EVERFI.Foundry
             HttpStatusCode statusCode = response.StatusCode;
             int numericCode = (int)statusCode;
 
-            if(numericCode/100 != 2)
+            if (numericCode / 100 != 2)
             {
                 throw new FoundryException(numericCode, response.Content);
             }
@@ -160,7 +160,7 @@ namespace EVERFI.Foundry
                 ?? value.ToString();
         }
 
-        internal static string UserJson(User user, Boolean updateRemoveUserType) //Change to internal when done
+        internal static string UserJson(User user, Boolean removeUserType) //Change to internal when done
         {
             Boolean strict_rule_sets = true;
             string Json = "{\n" +
@@ -168,12 +168,12 @@ namespace EVERFI.Foundry
                 "\"type\": \"registration_sets\",\n";
 
             // add "id" for updates
-            if(!string.IsNullOrEmpty(user.UserId))
+            if (!string.IsNullOrEmpty(user.UserId))
             {
                 Json += "\"id\": \"" + user.UserId + "\",\n";
             }
 
-            Json+=
+            Json +=
                 "\"attributes\": {\n" +
                 "\"registrations\": [\n" +
                 "{\n" +
@@ -200,32 +200,31 @@ namespace EVERFI.Foundry
             }
             else if (user.LocationId != null)
             {
-                Json += ",\n\"location_id\": \"" + user.LocationId + "\"" ;
+                Json += ",\n\"location_id\": \"" + user.LocationId + "\"";
             }
-            if (!updateRemoveUserType)
+
+            Json += ",\n\"category_labels\":" + "[\n";
+            for (var i = 0; i < user.Labels.Count; i++)
             {
-                Json += ",\n\"category_labels\":" + "[\n";
-                for (var i = 0; i < user.Labels.Count; i++)
+                Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
+                if ((i + 1) != user.Labels.Count)
                 {
-                    Json += "\"" + user.Labels.ElementAt(i).Id + "\"";
-                    if ((i + 1) != user.Labels.Count)
-                    {
-                        Json += ",";
-                    }
+                    Json += ",";
                 }
-                Json += "\n]";
             }
-           Json += "\n}";
-            
+            Json += "\n]";
+
+            Json += "\n}";
+
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n";
-                if (updateRemoveUserType)
+                if (removeUserType)
                 {
                     Json += "\"id\": \"" + user.UserId + "\",\n";
                 }
-               Json+= "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
-                "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
+                Json += "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
+                 "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
                 if (i == 0)
                 {
                     if (user.Position != null)
@@ -244,7 +243,7 @@ namespace EVERFI.Foundry
 
                 Json += "\n}";
             }
-            if (updateRemoveUserType)
+            if (removeUserType)
             {
                 Json += "\n],\n";
 
