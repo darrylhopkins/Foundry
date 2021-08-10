@@ -32,15 +32,27 @@ namespace EVERFI.Foundry.Classes
 
     public class Location
     {
+
+        /// <summary>
+        /// The unique Location Id for a Location. This is in the form of a number, but in a string data type.
+        /// </summary>
         [JsonProperty("id")]
         public string Id { get; internal set; }
 
+        /// <summary>
+        /// The Name of a location. For example, "Headquarters" or "CA, USA" or any other name.
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("organization_id")]
         public string OrgId { get; set; }
 
+
+        /// <summary>
+        /// The External Location ID, which is an organization-defined code
+        /// for each Location.
+        /// </summary>
         [JsonProperty("external_id")]
         public string ExternalId { get; set; }
 

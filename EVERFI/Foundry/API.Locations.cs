@@ -81,9 +81,14 @@ namespace EVERFI.Foundry
             return locations;
         }
 
+        /// <summary>
+        /// Returns the Location with the specified LocationId. This property is a backend auto-generated number for a Location
+        /// and is used to look up a specific Location.
+        /// </summary>
+        /// <param name="LocationId"></param>
+        /// <returns></returns>
         public Location GetLocationById(string LocationId)
-        {
-            
+        {            
             var location = new Location();
             try
             {
@@ -91,10 +96,11 @@ namespace EVERFI.Foundry
             }
             catch (Exception ex)
             { }
-            /*
+
+
             if (!string.IsNullOrEmpty(location.Id))
                 return location;
-            */
+            
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
@@ -109,6 +115,17 @@ namespace EVERFI.Foundry
             location.AddIdFromData(locationData.LocationData);
 
             return location;
+        }
+
+        /// <summary>
+        /// Return the Location with the specified External Location ID, which is an organization-defined code
+        /// for each Location.
+        /// </summary>
+        /// <param name="ExternalLocationId">The External Location ID</param>
+        /// <returns></returns>
+        public Location GetLocationByExternalId(string ExternalLocationId)
+        {
+            return FoundryLocations.Find(x => x.ExternalId == ExternalLocationId);
         }
 
         private Location GetLocationFromCache(string LocationId)
