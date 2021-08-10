@@ -40,6 +40,7 @@ namespace EVERFI.Foundry
                     newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
                     newLabel.Id = labelAttribute.LabelId;
                     newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
+                    
                     userLabels.Add(newLabel);
 
                 }
@@ -262,7 +263,7 @@ namespace EVERFI.Foundry
 
             IRestResponse response = _client.Execute(request);
 
-            Console.WriteLine(response);
+            Console.WriteLine(response.Content);
             checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);

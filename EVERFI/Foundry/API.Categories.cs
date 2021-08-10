@@ -4,11 +4,37 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using EVERFI.Foundry.Classes;
+using System.Linq;
 
 namespace EVERFI.Foundry
 {
     public partial class API
     {
+       
+        public List<Label> CreateCategoryLabelList(IRestResponse response)
+        {
+
+            CategoryLabels categorylabelslist = JsonConvert.DeserializeObject<CategoryLabels>(response.Content);
+            List<LabelInformation> labelsIncluded = categorylabelslist.AllLabels;
+            List<Label> catLabels = new List<Label>();
+            if (labelsIncluded != null && labelsIncluded.Any())
+            {
+                foreach (var categoryLabel in labelsIncluded)
+                {
+                    Label l = new Label();
+                    l.Name = categoryLabel.Attributes.CategoryName;
+                    l.CategoryId = categoryLabel.Attributes.CategoryId;
+                    l.Id = categoryLabel.CategoryLabelId;
+                    l.UserCount = categoryLabel.Attributes.UserCount;
+                    catLabels.Add(l);
+
+                }
+            }
+
+            return catLabels;
+
+        }
+       
         public Category AddCategory(Category MyCategory)
         {
             Console.WriteLine("Adding category " + MyCategory.Name + "...");
@@ -27,78 +53,81 @@ namespace EVERFI.Foundry
             return categoryData.Data;
         }
 
-        public Category GetCategoryById(string CategoryId, bool WithLabels) // Should we always return with List<Label>?
+        public Category GetCategoryById(string CategoryId) // Should we always return with List<Label>?
         {
             Console.WriteLine("Getting category " + CategoryId + "...");
 
             RestRequest request = new RestRequest("/{version}/admin/categories/{id}", Method.GET); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("id", CategoryId, ParameterType.UrlSegment);
-            if (WithLabels)
-            {
-                request.AddParameter("include", "category_labels", ParameterType.QueryString);
-            }
+            
+            request.AddParameter("include", "category_labels", ParameterType.QueryString);
+            
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response);
-
+         
             CategoryData categoryData = JsonConvert.DeserializeObject<CategoryData>(response.Content);
 
             Category category = categoryData.Data;
-
+            var catLabels = CreateCategoryLabelList(response);
+            category.Labels = catLabels;
             category.ConfigureCategory();
-            if (WithLabels)
-            {
-                for (int i = 0; i < category.Labels.Count; i++)
-                {
-                    category.Labels[i] = GetLabelById(category.Labels[i].Id);
-                }
-            }
-            /*else
-            {
-                category.Labels.Clear();
-            }*/
-
+            
             return category;
         }
 
-        public List<Category> GetCategories(bool WithLabels)
+        public List<Category> GetCategories()
         {
             Console.WriteLine("Getting categories...");
 
             RestRequest request = new RestRequest("/{version}/admin/categories", Method.GET); //TODO
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
-            if (WithLabels)
-            {
-                request.AddParameter("include", "category_labels", ParameterType.QueryString);
-            }
+          
+           
+            request.AddParameter("include", "category_labels", ParameterType.QueryString);
+            
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response);
-
+            //CategoryLabelsIncludedList categorylabelslist = JsonConvert.DeserializeObject<CategoryLabelsIncludedList>(response.Content);
             CategoryListData categoryData = JsonConvert.DeserializeObject<CategoryListData>(response.Content);
+           
             List<Category> categories = new List<Category>();
 
             foreach (Category category in categoryData.Data)
             {
-                category.ConfigureCategory();
-                if (WithLabels)
+                var catLabels = CreateCategoryLabelList(response);
+                category.Labels = new List<Label>();
+                if (catLabels != null && catLabels.Any())
                 {
-                    for (int i = 0; i < category.Labels.Count; i++)
+                    foreach (Label lab in catLabels)
                     {
-                        category.Labels[i] = GetLabelById(category.Labels[i].Id);
+
+                        List<CategoryLabelsIncluded> labels = category.Relationships.CategoryLabels.Label;
+                            foreach (CategoryLabelsIncluded labelInfo in labels)
+                            {
+                                if (labelInfo.CategoryLabelId == lab.Id)
+                                {
+                                    category.Labels.Add(lab);
+
+                                }
+                            }
+
+                        }
                     }
-                }
-                /*else
-                {
-                    category.Labels.Clear();
-                }*/
+
+                category.ConfigureCategory();
+
                 categories.Add(category);
+               
             }
+              
+             
             return categories;
         }
 

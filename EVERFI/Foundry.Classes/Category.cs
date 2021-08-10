@@ -31,15 +31,71 @@ namespace EVERFI.Foundry.Classes
     internal class CategoryRelationships
     {
         [JsonProperty("category_labels")]
-        internal CategoryLabels CategoryLabels { get; set; }
+        internal CategoryLabelsData CategoryLabels { get; set; }
     }
 
-    internal class CategoryLabels
+    internal class CategoryLabelsData
     {
         [JsonProperty("data")]
-        internal List<Label> Labels { get; set; }
+        internal List<CategoryLabelsIncluded> Label { get; set; }
+    }
+   
+    internal class CategoryLabels
+    {
+        [JsonProperty("included")]
+        internal List<LabelInformation> AllLabels { get; set; }
+    }
+   
+    public class CategoryLabelsIncluded{
+
+        [JsonProperty("id")]
+        internal String CategoryLabelId { get; set; }
+
+        [JsonProperty("type")]
+        internal String Type { get; set; }
+  
+   
     }
 
+    internal class LabelInformation
+    {
+        [JsonProperty("id")]
+        internal string CategoryLabelId { get; set; }
+
+        [JsonProperty("attributes")]
+        internal CategoryLabelAttributes Attributes { get; set; }
+
+        [JsonProperty("relationships")]
+        internal CategoryLabelRelationships CategoryLabelRelationships { get; set; }
+    }
+   
+
+    internal class CategoryLabelRelationships
+    {
+        [JsonProperty("category")]
+        internal CategoryLabelData Category { get; set; }
+    }
+    internal class CategoryLabelData
+    {
+        [JsonProperty("data")]
+        internal CategoryLabelsIncluded CategoryLabel { get; set; }
+    }
+     
+    internal class CategoryLabelAttributes
+    {
+        [JsonProperty("category_id")]
+        internal string CategoryId { get; set; }
+
+        [JsonProperty("category_name")]
+        internal String CategoryName { get; set; }
+
+        [JsonProperty("name")]
+        internal String CategoryLabelName { get; set; }
+
+        [JsonProperty("users_count")]
+        internal int UserCount { get; set; }
+    }
+    
     public class Category
     {
         [JsonProperty("id")]
@@ -55,6 +111,8 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("relationships")]
         internal CategoryRelationships Relationships { get; set; }
 
+        public List<CategoryLabelsIncluded> LabelInfo { get; internal set; }
+
         public List<Label> Labels { get; internal set; }
 
         internal void ConfigureCategory()
@@ -63,7 +121,9 @@ namespace EVERFI.Foundry.Classes
             this.UserCount = Attributes.UserCount;
 
             // This only holds the ids of the Labels
-            this.Labels = Relationships.CategoryLabels.Labels;
+            this.LabelInfo = Relationships.CategoryLabels.Label;
+
         }
+        
     }
 }
