@@ -160,9 +160,10 @@ namespace EVERFI.Foundry
                 ?? value.ToString();
         }
 
-        internal static string UserJson(User user, Boolean removeUserType) //Change to internal when done
+        internal static string UserJson(User user) //Change to internal when done
         {
-            Boolean strict_rule_sets = true;
+            
+            string strict_rule_sets = "true";
             string Json = "{\n" +
                 "\"data\": {\n" +
                 "\"type\": \"registration_sets\",\n";
@@ -174,7 +175,7 @@ namespace EVERFI.Foundry
             }
 
             Json +=
-                "\"attributes\": {\n" +
+                "\"attributes\": {\n" + "\"strict_rule_sets\":" + strict_rule_sets + ",\n" +
                 "\"registrations\": [\n" +
                 "{\n" +
                 "\"rule_set\": \"user_rule_set\",\n" +
@@ -219,10 +220,13 @@ namespace EVERFI.Foundry
             for (var i = 0; i < user.UserTypes.Count; i++)
             {
                 Json += ",\n{\n";
-                if (removeUserType)
+
+                if (!string.IsNullOrEmpty(user.UserId))
                 {
                     Json += "\"id\": \"" + user.UserId + "\",\n";
                 }
+
+
                 Json += "\"rule_set\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Type) + "\",\n" +
                  "\"role\": \"" + UserType.GetDescription(user.UserTypes.ElementAt(i).Role) + "\"";
                 if (i == 0)
@@ -243,16 +247,10 @@ namespace EVERFI.Foundry
 
                 Json += "\n}";
             }
-            if (removeUserType)
-            {
-                Json += "\n],\n";
-
-                Json += "\"strict_rule_sets\":\"" + strict_rule_sets;
-            }
-            else
-            {
-                Json += "\n]";
-            }
+           
+ 
+            Json += "\n]";
+            
             Json += "\n}\n}\n}";
 
             return Json;

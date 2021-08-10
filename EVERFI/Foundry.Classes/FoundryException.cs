@@ -130,6 +130,11 @@ namespace EVERFI.Foundry.Classes
                 var description = ((System.Net.HttpStatusCode)ErrorCode).ToString();
                 this.Message = description;
             }
+            else if(!(Response.Substring(0,1).Equals("[")  && Response.Substring(0, 1).Equals("{")))
+            {
+                this.Message = Response;
+            }
+
 
             else
             {
