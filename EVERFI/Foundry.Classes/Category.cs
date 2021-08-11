@@ -111,9 +111,9 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("relationships")]
         internal CategoryRelationships Relationships { get; set; }
 
-        public List<CategoryLabelsIncluded> Labels { get; internal set; }
+        public List<CategoryLabelsIncluded> LabelsInfo { get; internal set; }
 
-        public List<Label> AllLabels { get; internal set; }
+        public List<Label> Labels { get; internal set; }
 
         internal void ConfigureCategory()
         {
@@ -121,7 +121,7 @@ namespace EVERFI.Foundry.Classes
             this.UserCount = Attributes.UserCount;
 
             // This only holds the ids of the Labels
-            this.Labels = Relationships.CategoryLabels.Label;
+            this.LabelsInfo = Relationships.CategoryLabels.Label;
 
         }
         

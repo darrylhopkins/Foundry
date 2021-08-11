@@ -25,7 +25,7 @@ namespace EVERFI.Foundry.Classes
     internal class ErrorContent
     {
         [JsonProperty("field_name")]
-        public String FieldName { get; }
+        public String FieldName { get; set; }
 
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public String Message1 { get; set; }
@@ -100,7 +100,7 @@ namespace EVERFI.Foundry.Classes
                         message += content.Message2 + "  ";
 
                     }
-                    ErrorMessages.Add(em);
+                    this.ErrorMessages.Add(em);
                 }
             }
             else
@@ -130,11 +130,12 @@ namespace EVERFI.Foundry.Classes
                 var description = ((System.Net.HttpStatusCode)ErrorCode).ToString();
                 this.Message = description;
             }
-            else if(!(Response.Substring(0,1).Equals("[")  && Response.Substring(0, 1).Equals("{")))
+            
+            else if(!(Response.Substring(0,1).Equals("[")  || Response.Substring(0, 1).Equals("{")))
             {
                 this.Message = Response;
             }
-
+            
 
             else
             {
