@@ -58,6 +58,11 @@ namespace EVERFI.Foundry
 
         public List<Location> GetLocations()
         {
+            if (FoundryLocations != null && FoundryLocations.Count > 0)
+            {
+                return FoundryLocations;
+            }
+
             RestRequest request = new RestRequest("/{version}/admin/locations", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddHeader("Content-Type", "application/json");
@@ -83,24 +88,17 @@ namespace EVERFI.Foundry
 
         /// <summary>
         /// Returns the Location with the specified LocationId. This property is a backend auto-generated number for a Location
-        /// and is used to look up a specific Location.
+        /// and is used to look up a specific Location. If not found, then expect a FoundryException.
         /// </summary>
         /// <param name="LocationId"></param>
         /// <returns></returns>
         public Location GetLocationById(string LocationId)
-        {            
-            var location = new Location();
-            try
-            {
-                location = GetLocationFromCache(LocationId);
-            }
-            catch (Exception ex)
-            { }
+        {
+            Location location = GetLocationFromCache(LocationId);
 
-
-            if (!string.IsNullOrEmpty(location.Id))
+            if (location != null && !string.IsNullOrEmpty(location.Id))
                 return location;
-            
+
             RestRequest request = new RestRequest("/{version}/admin/locations/{location_id}", Method.GET);
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.AddParameter("location_id", LocationId, ParameterType.UrlSegment);
@@ -118,14 +116,56 @@ namespace EVERFI.Foundry
         }
 
         /// <summary>
+        /// Deletes the provided Location. If the Location cannot be deleted, then a FoundryException will be returned.
+        /// A Location that is referenced by other objects, like Users, cannot be delted.
+        /// </summary>
+        /// <param name="LocationToDelete">The Location to delete</param>
+        /// <returns></returns>
+        public string DeleteLocation(Location LocationToDelete)
+        {
+            Console.WriteLine("Deleting location " + LocationToDelete.Name + "...");
+
+            RestRequest request = new RestRequest("/{version}/admin/locations/{id}", Method.DELETE);
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.AddParameter("id", LocationToDelete.Id, ParameterType.UrlSegment);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
+
+            IRestResponse response = _client.Execute(request);
+            checkResponseSuccess(response);
+
+            var message = "Location " + LocationToDelete.Name + " successfully deleted.";
+
+            FoundryLocations.Remove(LocationToDelete);
+
+            Console.WriteLine(message);
+
+            return (String.IsNullOrEmpty(response.Content) ? message : response.Content);
+        }
+
+        /// <summary>
         /// Return the Location with the specified External Location ID, which is an organization-defined code
-        /// for each Location.
+        /// for each Location. If more than one Location has this External Location ID,
+        /// then you will get a FoundryException with a 422.
+        /// If there is no Location with this Id, then you will get a FoundryException with a 404.
         /// </summary>
         /// <param name="ExternalLocationId">The External Location ID</param>
-        /// <returns></returns>
+        /// <returns>Location</returns>
         public Location GetLocationByExternalId(string ExternalLocationId)
         {
-            return FoundryLocations.Find(x => x.ExternalId == ExternalLocationId);
+            var locs = FoundryLocations.FindAll(x => x.ExternalId == ExternalLocationId);
+
+            if (locs.Count < 1)
+            {
+                throw new FoundryException(404, "Not Found");
+            }
+            else if (locs.Count > 1)
+            {
+                throw new FoundryException(422, "Multiple Locations have an External Location Id of '" + ExternalLocationId + "'. " +
+                    "You must run GetLocations and find the specific Location you need, or else " +
+                    "resolve the source issue of having duplicate External Location Id values.");
+            }
+            return locs[0];
         }
 
         private Location GetLocationFromCache(string LocationId)
