@@ -20,4 +20,4 @@ string endpoint = "";
 
 API foundry = new API(accountSid: client_id, secretKey: client_secret, BaseUrl: endpoint);
 ```
-You can now interact with the API and all of it's functionalities. See the [Foundry Wiki](../../wiki) for more information.
+You can now interact with the API and all of its functionalities. See the [Foundry Wiki](../../wiki) for more information.
