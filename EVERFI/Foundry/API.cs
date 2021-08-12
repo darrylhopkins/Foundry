@@ -117,7 +117,6 @@ namespace EVERFI.Foundry
 
             _accountSid = accountSid;
             currPage = 1;
-            since = "1999-05-30T11:32:15.01Z";
             scrollId = " ";
             FoundryLocations = GetLocations();
         }
