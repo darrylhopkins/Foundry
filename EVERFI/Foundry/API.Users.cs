@@ -36,11 +36,13 @@ namespace EVERFI.Foundry
                 foreach (var labelAttribute in labels)
                 {
                     Label newLabel = new Label();
+           
                     newLabel.Name = labelAttribute.LabelsAttributes.LabelName;
                     newLabel.CategoryName = labelAttribute.LabelsAttributes.CategoryLabelName;
                     newLabel.Id = labelAttribute.LabelId;
                     newLabel.CategoryId = labelAttribute.LabelsAttributes.CategoryID;
-                    
+                  
+
                     userLabels.Add(newLabel);
 
                 }
@@ -141,10 +143,8 @@ namespace EVERFI.Foundry
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
             IRestResponse response = _client.Execute<List<User>>(request);
-            //Console.WriteLine(response.Content);
-
+           
             checkResponseSuccess(response);
-
 
             UserDataJson userData = JsonConvert.DeserializeObject<UserDataJson>(response.Content);
             Console.WriteLine("User successfully added.");
@@ -204,11 +204,11 @@ namespace EVERFI.Foundry
             request.AddParameter("include", "category_labels", ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("id", UserId, ParameterType.UrlSegment);
-
             IRestResponse response = _client.Execute(request);
-            checkResponseSuccess(response);
 
+            checkResponseSuccess(response);
             List<User> users = getUsersInformation(response, true);
+
             User user = users[0];
 
             return user;
@@ -226,7 +226,6 @@ namespace EVERFI.Foundry
             request.AddParameter("filter[email]", UserEmail, ParameterType.QueryString);
 
             IRestResponse response = _client.Execute(request);
-            Console.WriteLine(response.Content);
             checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
@@ -261,10 +260,7 @@ namespace EVERFI.Foundry
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("Authorization", _token.token_type + " " + _token.access_token, ParameterType.HttpHeader);
 
-
             IRestResponse response = _client.Execute(request);
-
-            Console.WriteLine(response.Content);
             checkResponseSuccess(response);
 
             List<User> users = getUsersInformation(response, false);
@@ -284,6 +280,7 @@ namespace EVERFI.Foundry
             request.AddParameter("include", "category_labels", ParameterType.QueryString);
             request.AddParameter("page[per_page]", returnPerPage, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
+
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response);
 

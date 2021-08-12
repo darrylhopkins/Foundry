@@ -107,19 +107,19 @@ namespace EVERFI.Foundry.Classes
 
    
 
-    internal class AssignmentData
+    public class AssignmentData
     {
         [JsonProperty("id")]
-        internal int AssignmentID { get; set; }
+        public int AssignmentID { get; set; }
 
         [JsonProperty("name")]
-        internal string AssignmentName { get; set; }
+        public string AssignmentName { get; set; }
 
         [JsonProperty("training_period_id")]
-        internal string TrainingPeriodID { get; set; }
+        public string TrainingPeriodID { get; set; }
 
         [JsonProperty("training_period_name")]
-        internal string TrainingPeriodName { get; set; }
+        public string TrainingPeriodName { get; set; }
 
 
 
@@ -131,16 +131,16 @@ namespace EVERFI.Foundry.Classes
         internal List<UserProgressDataHeader> ProgressList { get; set; }
 
         [JsonProperty("assignment")]
-        internal AssignmentData Assignment { get; set; }
+        public AssignmentData Assignment { get; set; }
 
         [JsonProperty("user")]
         internal UserDataShortened UserInformation { get; set; }
 
         [JsonProperty("id")]
-        internal int ID { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty("assigned_at", NullValueHandling = NullValueHandling.Ignore)]
-        internal DateTime AssignedAt { get; set; }
+        public DateTime AssignedAt { get; set; }
 
 
        

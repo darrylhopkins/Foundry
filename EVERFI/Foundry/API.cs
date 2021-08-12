@@ -255,7 +255,7 @@ namespace EVERFI.Foundry
             
             Json += "\n}\n}\n}";
 
-            Console.WriteLine(Json);
+         
 
             return Json;
         }

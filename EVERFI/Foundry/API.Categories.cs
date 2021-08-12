@@ -22,7 +22,8 @@ namespace EVERFI.Foundry
                 foreach (var categoryLabel in labelsIncluded)
                 {
                     Label l = new Label();
-                    l.Name = categoryLabel.Attributes.CategoryName;
+                    l.Name = categoryLabel.Attributes.CategoryLabelName;
+                    l.CategoryName = categoryLabel.Attributes.CategoryName;
                     l.CategoryId = categoryLabel.Attributes.CategoryId;
                     l.Id = categoryLabel.CategoryLabelId;
                     l.UserCount = categoryLabel.Attributes.UserCount;
