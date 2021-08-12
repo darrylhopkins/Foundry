@@ -64,13 +64,13 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("state")]
         internal String State { get; set; }
 
-        [JsonProperty("opened_at")]
+        [JsonProperty("opened_at", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime OpenedAt { get; set; }
 
-        [JsonProperty("started_at")]
+        [JsonProperty("started_at", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime StartedAt { get; set; }
 
-        [JsonProperty("completed_at")]
+        [JsonProperty("completed_at", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime CompletedAt { get; set; }
 
         [JsonProperty("content_name")]
@@ -122,7 +122,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("reponses")]
         internal List<ResponseData>  Responses { get; set; }
 
-        [JsonProperty("updated_at")]
+        [JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime UpdatedAt { get; set; }
 
         [JsonProperty("user_content")]

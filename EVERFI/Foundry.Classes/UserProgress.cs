@@ -139,7 +139,7 @@ namespace EVERFI.Foundry.Classes
         [JsonProperty("id")]
         internal int ID { get; set; }
 
-        [JsonProperty("assigned_at")]
+        [JsonProperty("assigned_at", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTime AssignedAt { get; set; }
 
 

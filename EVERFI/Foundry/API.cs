@@ -64,8 +64,9 @@ namespace EVERFI.Foundry
 
         const int bulkActionCap = 500;
         const int returnPerPage = 100;
+        String since;
         int currPage;
-
+        String scrollId;
         readonly IRestClient _client;
         readonly AccessToken _token;
 
@@ -116,6 +117,8 @@ namespace EVERFI.Foundry
 
             _accountSid = accountSid;
             currPage = 1;
+            since = "1999-05-30T11:32:15.01Z";
+            scrollId = " ";
             FoundryLocations = GetLocations();
         }
 
@@ -181,9 +184,9 @@ namespace EVERFI.Foundry
                 "\"rule_set\": \"user_rule_set\",\n" +
                 "\"first_name\": \"" + user.FirstName + "\",\n" +
                 "\"last_name\": \"" + user.LastName + "\",\n" +
-                "\"email\": \"" + user.Email + "\"";
+                 "\"email\": \"" + user.Email + "\"";
             if (user.SingleSignOnId != null)
-            {
+            { 
                 Json += ",\n\"sso_id\": \"" + user.SingleSignOnId + "\"";
             }
             if (user.EmployeeId != null)
@@ -252,6 +255,8 @@ namespace EVERFI.Foundry
             Json += "\n]";
             
             Json += "\n}\n}\n}";
+
+            Console.WriteLine(Json);
 
             return Json;
         }

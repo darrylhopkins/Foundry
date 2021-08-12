@@ -107,8 +107,7 @@ namespace EVERFI.Foundry
                                     newUser.Labels.Add(lab);
 
                                 }
-                            }
-                            
+                            } 
                         }
                     }
                     newUser.createCategoryLabels();
@@ -142,6 +141,7 @@ namespace EVERFI.Foundry
             request.AddParameter("application/json", API.UserJson(MyUser), ParameterType.RequestBody);
 
             IRestResponse response = _client.Execute<List<User>>(request);
+            //Console.WriteLine(response.Content);
 
             checkResponseSuccess(response);
 
@@ -352,9 +352,10 @@ namespace EVERFI.Foundry
             return metaData.Meta.Count;
         }
 
-        public List<UserProgress> GetUserProgress(DateTime sinceDate, int scrollSize)
+        public (List<UserProgress>, bool) GetUserProgress(int scrollSize)
         {
-            string since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
+            
+            bool keepGoing = true;
             List<UserProgress> userProgressList = new List<UserProgress>();
             RestRequest request = new RestRequest();
             request.Method = Method.GET;
@@ -362,12 +363,32 @@ namespace EVERFI.Foundry
             request.AddParameter("version", _ver, ParameterType.UrlSegment);
             request.Resource = "{version}/progress/user_assignments";
             request.AddParameter("since", since, ParameterType.QueryString);
+            request.AddParameter("scroll_id", scrollId, ParameterType.QueryString);
             request.AddParameter("scroll_size", scrollSize, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
 
             IRestResponse response = _client.Execute(request);
             checkResponseSuccess(response);
+
             NextUserData next = JsonConvert.DeserializeObject<NextUserData>(response.Content);
+
+            if(next.Next.ScrollId != null)
+            {
+                DateTime sinceDate = next.Next.Since;
+                since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
+                Console.WriteLine(next.Next.ScrollId);
+                scrollId = next.Next.ScrollId;
+            }
+            else
+            {
+                Console.WriteLine("null");
+                
+                keepGoing = false;
+
+            }
+            
+               
+            
             UserProgressDataHeaderList progressData = JsonConvert.DeserializeObject<UserProgressDataHeaderList>(response.Content);
             foreach(UserProgress data in progressData.ProgressDataHeaderList)
             {
@@ -376,29 +397,53 @@ namespace EVERFI.Foundry
                
             } 
 
-            return userProgressList;
+            return (userProgressList, keepGoing);
 
         }
 
-        public List<ProgramUser> GetProgramUsers(DateTime sinceDate, int scrollSize, String scrollId)
+        public (List<ProgramUser>, bool) GetProgramUsers(int scrollSize)
         {
-            string since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
+            Console.WriteLine(since);
+            Console.WriteLine(scrollId);
+            Console.WriteLine(scrollSize);
+            bool keepGoing = true;
             List<ProgramUser> programUserList = new List<ProgramUser>();
-            RestRequest request = ConfigureRequest();
+            RestRequest request = new RestRequest();
+            request.Parameters.Clear();
             request.Method = Method.GET;
+            request.AddParameter("version", _ver, ParameterType.UrlSegment);
+            request.Resource = "{version}/progress/program_users";
             request.AddParameter("since", since, ParameterType.QueryString);
             request.AddParameter("scroll_size", scrollSize, ParameterType.QueryString);
             request.AddParameter("scroll_id", scrollId, ParameterType.QueryString);
             request.AddHeader("Content-Type", "application/json");
+
             IRestResponse response = _client.Execute(request);
+
+   
             checkResponseSuccess(response);
             NextUserData next = JsonConvert.DeserializeObject<NextUserData>(response.Content);
             ProgramUserDataHeaderList programUserData = JsonConvert.DeserializeObject<ProgramUserDataHeaderList>(response.Content);
-            foreach(ProgramUser program in programUserData.ProgressDataHeaderList)
+            if (next.Next.ScrollId != null)
+            {
+                DateTime sinceDate = next.Next.Since;
+                since = sinceDate.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture);
+                Console.WriteLine(next.Next.ScrollId);
+                scrollId = next.Next.ScrollId;
+            }
+            else
+            {
+                
+                keepGoing = false;
+
+            }
+            foreach (ProgramUser program in programUserData.ProgressDataHeaderList)
             {
                 programUserList.Add(program);
             }
-            return programUserList;
+        
+            
+            return (programUserList, keepGoing);
         }
 
     }
